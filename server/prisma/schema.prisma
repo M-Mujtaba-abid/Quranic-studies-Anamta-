@@ -1,0 +1,57 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  
+  
+}
+
+model Student {
+  id          String   @id @default(cuid())
+
+  firstName   String
+  lastName    String
+
+  email       String   @unique
+  phone       String   @unique
+
+  gender      String?
+
+  city        String?
+  country     String?
+  address     String?
+
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("students")
+}
+
+
+// Test karne ke liye ek model
+model Course {
+  id          String   @id @default(cuid())
+
+  image       String
+
+  title       String
+
+  description String
+
+  duration    String
+
+  days        String
+
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("courses")
+}
