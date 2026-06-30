@@ -6,7 +6,10 @@ export class Course {
   id!: string;
 
   @Field()
-  image!: string;
+  imageUrl!: string;
+
+  @Field()
+  imageId!: string;
 
   @Field()
   title!: string;

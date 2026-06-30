@@ -3,17 +3,24 @@ import { Student } from './models/student.model';
 import { StudentsService } from './students.service';
 import { CreateStudentInput } from './dto/create-student.input';
 import { UpdateStudentInput } from './dto/update-student.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Resolver(() => Student)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 export class StudentsResolver {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Mutation(() => Student)
   async createStudent(
     @Args('createStudentInput')
-    CreateStudentInput: CreateStudentInput,
+    createStudentInput: CreateStudentInput,
   ) {
-    return await this.studentsService.create(CreateStudentInput);
+    return await this.studentsService.create(createStudentInput);
   }
 
   @Query(() => [Student], {

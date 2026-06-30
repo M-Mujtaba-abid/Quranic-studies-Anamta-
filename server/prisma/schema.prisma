@@ -6,8 +6,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  
-  
 }
 
 model Student {
@@ -34,19 +32,17 @@ model Student {
 }
 
 
-// Test karne ke liye ek model
 model Course {
   id          String   @id @default(cuid())
 
-  image       String
-
   title       String
-
   description String
 
   duration    String
-
   days        String
+
+  imageUrl    String
+  imageId     String
 
   isActive    Boolean  @default(true)
 
@@ -54,4 +50,24 @@ model Course {
   updatedAt   DateTime @updatedAt
 
   @@map("courses")
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  password         String
+  firstName        String
+  lastName         String
+  role             Role      @default(ADMIN)
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  USER
 }

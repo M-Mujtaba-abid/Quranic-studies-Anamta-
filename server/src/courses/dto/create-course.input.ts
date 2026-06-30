@@ -1,11 +1,17 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, Length, IsString } from 'class-validator';
 
 @InputType()
 export class CreateCourseInput {
   @Field()
-  @IsNotEmpty({ message: 'Course image is required.' })
-  image!: string;
+  @IsNotEmpty({ message: 'Image URL is required.' })
+  @IsString()
+  imageUrl!: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'Image ID is required.' })
+  @IsString()
+  imageId!: string;
 
   @Field()
   @IsNotEmpty({ message: 'Course title is required.' })
