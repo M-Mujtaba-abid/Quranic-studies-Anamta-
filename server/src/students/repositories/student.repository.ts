@@ -55,4 +55,12 @@ export class StudentRepository {
       },
     });
   }
+
+  async findEnrollments(studentId: string) {
+    return await this.database.enrollment.findMany({
+      where: {
+        studentId,
+      },
+    });
+  }
 }

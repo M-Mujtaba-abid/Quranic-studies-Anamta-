@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Enrollment } from '../../enrollments/models/enrollment.model';
 
 @ObjectType()
 export class Student {
@@ -31,6 +32,9 @@ export class Student {
 
   @Field()
   isActive: boolean;
+
+  @Field(() => [Enrollment], { nullable: true })
+  enrollments?: Enrollment[];
 
   @Field()
   createdAt: Date;

@@ -53,4 +53,8 @@ export class StudentsService {
 
     return await this.studentRepository.delete(id);
   }
+
+  async findEnrollments(studentId: string) {
+    return await this.studentRepository.findEnrollments(studentId);
+  }
 }

@@ -13,6 +13,8 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { Student } from '../students/models/student.model';
 import { Course } from '../courses/models/course.model';
+import { DatabaseService } from '../database/database.service';
+import { Payment } from '../payments/models/payment.model';
 
 @Resolver(() => Enrollment)
 export class EnrollmentResolver {
@@ -20,6 +22,7 @@ export class EnrollmentResolver {
     private readonly enrollmentService: EnrollmentService,
     private readonly studentsService: StudentsService,
     private readonly coursesService: CoursesService,
+    private readonly database: DatabaseService,
   ) {}
 
   // --- Public Mutation (Student Registration & Enrollment) ---
@@ -87,5 +90,12 @@ export class EnrollmentResolver {
   @ResolveField(() => Course)
   async course(@Parent() enrollment: Enrollment) {
     return await this.coursesService.findOne(enrollment.courseId);
+  }
+
+  @ResolveField(() => Payment, { nullable: true })
+  async payment(@Parent() enrollment: Enrollment) {
+    return await this.database.payment.findUnique({
+      where: { enrollmentId: enrollment.id },
+    });
   }
 }

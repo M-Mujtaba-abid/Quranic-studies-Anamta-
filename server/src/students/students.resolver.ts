@@ -1,4 +1,4 @@
-import { Args, ID, Query, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Query, Mutation, Resolver, ResolveField, Parent } from '@nestjs/graphql';
 import { Student } from './models/student.model';
 import { StudentsService } from './students.service';
 import { CreateStudentInput } from './dto/create-student.input';
@@ -7,15 +7,23 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Role } from '@prisma/client';
+import { Enrollment } from '../enrollments/models/enrollment.model';
 
 @Resolver(() => Student)
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.ADMIN)
 export class StudentsResolver {
   constructor(private readonly studentsService: StudentsService) {}
 
+  @Query(() => Student, { name: 'myStudentProfile' })
+  @UseGuards(JwtAuthGuard)
+  async myStudentProfile(@CurrentUser() user: any) {
+    return await this.studentsService.findOneByEmail(user.email);
+  }
+
   @Mutation(() => Student)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async createStudent(
     @Args('createStudentInput')
     createStudentInput: CreateStudentInput,
@@ -26,6 +34,8 @@ export class StudentsResolver {
   @Query(() => [Student], {
     name: 'students',
   })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async findAllStudents() {
     return await this.studentsService.findAll();
   }
@@ -33,6 +43,8 @@ export class StudentsResolver {
   @Query(() => Student, {
     name: 'student',
   })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async findStudentById(
     @Args('id', { type: () => ID })
     id: string,
@@ -41,6 +53,8 @@ export class StudentsResolver {
   }
 
   @Mutation(() => Student)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async updateStudent(
     @Args('updateStudentInput')
     updateStudentInput: UpdateStudentInput,
@@ -49,10 +63,17 @@ export class StudentsResolver {
   }
 
   @Mutation(() => Student)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async deleteStudent(
     @Args('id', { type: () => ID })
     id: string,
   ) {
     return await this.studentsService.remove(id);
+  }
+
+  @ResolveField(() => [Enrollment], { nullable: true })
+  async enrollments(@Parent() student: Student) {
+    return await this.studentsService.findEnrollments(student.id);
   }
 }

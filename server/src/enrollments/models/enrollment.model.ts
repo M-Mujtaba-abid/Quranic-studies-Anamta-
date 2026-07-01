@@ -2,6 +2,7 @@ import { Field, ID, ObjectType, Int, registerEnumType } from '@nestjs/graphql';
 import { EnrollmentStatus } from '@prisma/client';
 import { Student } from '../../students/models/student.model';
 import { Course } from '../../courses/models/course.model';
+import { Payment } from '../../payments/models/payment.model';
 
 registerEnumType(EnrollmentStatus, {
   name: 'EnrollmentStatus',
@@ -39,6 +40,9 @@ export class Enrollment {
 
   @Field(() => Course, { nullable: true })
   course?: Course;
+
+  @Field(() => Payment, { nullable: true })
+  payment?: Payment;
 
   @Field()
   createdAt!: Date;
