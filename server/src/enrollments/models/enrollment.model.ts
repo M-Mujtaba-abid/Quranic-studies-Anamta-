@@ -28,6 +28,9 @@ export class Enrollment {
   @Field()
   preferredPeriod!: string; // "AM" or "PM"
 
+  @Field()
+  preferredDays!: string; // "Monday, Wednesday, Friday"
+
   @Field(() => EnrollmentStatus)
   status!: EnrollmentStatus;
 

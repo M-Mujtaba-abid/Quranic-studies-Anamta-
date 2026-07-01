@@ -1,14 +1,45 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNotEmpty, IsString, IsInt, Min, Max, IsIn, IsOptional, IsEnum } from 'class-validator';
-import { EnrollmentStatus } from '@prisma/client';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsInt, Min, Max, IsIn } from 'class-validator';
 
 @InputType()
-export class CreateEnrollmentInput {
+export class EnrollStudentInput {
+  // --- Student Fields ---
   @Field()
-  @IsNotEmpty({ message: 'Student ID is required.' })
+  @IsNotEmpty({ message: 'First name is required.' })
   @IsString()
-  studentId!: string;
+  firstName!: string;
 
+  @Field()
+  @IsNotEmpty({ message: 'Last name is required.' })
+  @IsString()
+  lastName!: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'Email is required.' })
+  @IsEmail({}, { message: 'Please enter a valid email address.' })
+  email!: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'Phone number is required.' })
+  @IsString()
+  phone!: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  // --- Enrollment Fields ---
   @Field()
   @IsNotEmpty({ message: 'Course ID is required.' })
   @IsString()
@@ -38,9 +69,4 @@ export class CreateEnrollmentInput {
   @IsNotEmpty({ message: 'Preferred days are required.' })
   @IsString()
   preferredDays!: string;
-
-  @Field(() => EnrollmentStatus, { nullable: true })
-  @IsOptional()
-  @IsEnum(EnrollmentStatus)
-  status?: EnrollmentStatus;
 }

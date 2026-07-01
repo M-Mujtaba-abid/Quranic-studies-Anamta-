@@ -78,6 +78,7 @@ model Enrollment {
   preferredHour   Int
   preferredMinute Int
   preferredPeriod String           // e.g. "AM" or "PM"
+  preferredDays   String           // e.g. "Monday, Wednesday, Friday"
   status          EnrollmentStatus @default(PENDING)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt

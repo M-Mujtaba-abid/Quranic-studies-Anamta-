@@ -73,6 +73,7 @@ type Enrollment {
   preferredHour: Int!
   preferredMinute: Int!
   preferredPeriod: String!
+  preferredDays: String!
   status: EnrollmentStatus!
   student: Student
   course: Course
@@ -193,6 +194,7 @@ input CreateEnrollmentInput {
   preferredHour: Int!
   preferredMinute: Int!
   preferredPeriod: String!
+  preferredDays: String!
   status: EnrollmentStatus
 }
 
@@ -202,6 +204,7 @@ input UpdateEnrollmentInput {
   preferredHour: Int
   preferredMinute: Int
   preferredPeriod: String
+  preferredDays: String
   status: EnrollmentStatus
   id: ID!
 }

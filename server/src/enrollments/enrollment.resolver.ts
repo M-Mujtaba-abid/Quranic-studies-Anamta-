@@ -4,6 +4,7 @@ import { Enrollment } from './models/enrollment.model';
 import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentInput } from './dto/create-enrollment.input';
 import { UpdateEnrollmentInput } from './dto/update-enrollment.input';
+import { EnrollStudentInput } from './dto/enroll-student.input';
 import { StudentsService } from '../students/students.service';
 import { CoursesService } from '../courses/courses.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -14,8 +15,6 @@ import { Student } from '../students/models/student.model';
 import { Course } from '../courses/models/course.model';
 
 @Resolver(() => Enrollment)
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.ADMIN)
 export class EnrollmentResolver {
   constructor(
     private readonly enrollmentService: EnrollmentService,
@@ -23,7 +22,19 @@ export class EnrollmentResolver {
     private readonly coursesService: CoursesService,
   ) {}
 
+  // --- Public Mutation (Student Registration & Enrollment) ---
   @Mutation(() => Enrollment)
+  async enrollStudent(
+    @Args('enrollStudentInput')
+    enrollStudentInput: EnrollStudentInput,
+  ) {
+    return await this.enrollmentService.enrollStudent(enrollStudentInput);
+  }
+
+  // --- Admin-only Operations ---
+  @Mutation(() => Enrollment)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async createEnrollment(
     @Args('createEnrollmentInput')
     createEnrollmentInput: CreateEnrollmentInput,
@@ -32,11 +43,15 @@ export class EnrollmentResolver {
   }
 
   @Query(() => [Enrollment], { name: 'enrollments' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async findAll() {
     return await this.enrollmentService.findAll();
   }
 
   @Query(() => Enrollment, { name: 'enrollment' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async findOne(
     @Args('id', { type: () => ID })
     id: string,
@@ -45,6 +60,8 @@ export class EnrollmentResolver {
   }
 
   @Mutation(() => Enrollment)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async updateEnrollment(
     @Args('updateEnrollmentInput')
     updateEnrollmentInput: UpdateEnrollmentInput,
@@ -53,6 +70,8 @@ export class EnrollmentResolver {
   }
 
   @Mutation(() => Enrollment)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async deleteEnrollment(
     @Args('id', { type: () => ID })
     id: string,

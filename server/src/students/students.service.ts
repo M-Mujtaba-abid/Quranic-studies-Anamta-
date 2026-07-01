@@ -38,6 +38,10 @@ export class StudentsService {
     return student;
   }
 
+  async findOneByEmail(email: string) {
+    return await this.studentRepository.findByEmail(email);
+  }
+
   async update(updateStudentInput: UpdateStudentInput) {
     await this.findOne(updateStudentInput.id);
 
