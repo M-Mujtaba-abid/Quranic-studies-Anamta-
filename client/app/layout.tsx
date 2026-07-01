@@ -17,18 +17,8 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Anamta Institute | Online Quran Learning",
   description:
-    "Learn Quran with certified teachers — Tajweed, Hifz, Tafsir and Arabic, online, at your own pace.",
+    "Learn Quran with certified teachers — Tajweed, Hifz, Tafsir and Arabic.",
 };
-
-const themeScript = `
-  (function() {
-    try {
-      var stored = localStorage.getItem('anamta-theme');
-      var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      if (theme === 'dark') document.documentElement.classList.add('dark');
-    } catch (e) {}
-  })();
-`;
 
 export default function RootLayout({
   children,
@@ -36,11 +26,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className={`${cinzel.variable} ${poppins.variable} font-body antialiased`}>
+    <html lang="en" className="dark">
+      <body
+        className={`${cinzel.variable} ${poppins.variable} font-body antialiased`}
+      >
         {children}
       </body>
     </html>

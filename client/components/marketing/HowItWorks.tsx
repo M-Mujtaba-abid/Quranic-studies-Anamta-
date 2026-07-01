@@ -10,9 +10,9 @@ const steps = [
     icon: Search,
     title: "Choose a Course",
     description: "Browse our programs — Tajweed, Hifz, Arabic, Tafsir, and Kids. Filter by level or teacher.",
-    color: "text-emerald-400",
-    border: "border-emerald-400/25",
-    bg: "bg-emerald-400/10",
+    color: "text-text",
+    border: "border-primary/30 group-hover:border-primary/60",
+    bg: "bg-primary/10",
   },
   {
     number: "02",
@@ -20,7 +20,7 @@ const steps = [
     title: "Book a Free Trial",
     description: "Schedule a free 30-minute trial class with your chosen teacher at a time that suits you.",
     color: "text-gold",
-    border: "border-gold/25",
+    border: "border-gold/30 group-hover:border-gold/60",
     bg: "bg-gold/10",
   },
   {
@@ -28,25 +28,26 @@ const steps = [
     icon: BookOpen,
     title: "Start Learning",
     description: "Enroll, pay securely, and begin your personalized Quran journey from lesson one.",
-    color: "text-sky-400",
-    border: "border-sky-400/25",
-    bg: "bg-sky-400/10",
+    color: "text-text",
+    border: "border-primary/30 group-hover:border-primary/60",
+    bg: "bg-primary/10",
   },
   {
     number: "04",
     icon: Award,
     title: "Earn Your Certificate",
     description: "Complete the course, track your progress, and receive a certified completion certificate.",
-    color: "text-violet-400",
-    border: "border-violet-400/25",
-    bg: "bg-violet-400/10",
+    color: "text-gold",
+    border: "border-gold/30 group-hover:border-gold/60",
+    bg: "bg-gold/10",
   },
 ];
 
 export default function HowItWorks() {
   return (
     <section className="relative overflow-hidden bg-bg py-24">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(201,162,39,0.04)_0%,_transparent_70%)]" />
+      {/* Ambient background glow optimized for dark navy base */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(33,87,115,0.08)_0%,_transparent_70%)]" />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
         <SectionHeading
@@ -58,32 +59,37 @@ export default function HowItWorks() {
         />
 
         <div className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Connector line desktop */}
-          <div className="absolute left-0 right-0 top-16 hidden h-[1px] bg-gradient-to-r from-transparent via-border to-transparent lg:block" />
+          {/* Enhanced Connector line desktop using theme border color variable */}
+          <div className="absolute left-0 right-0 top-8 hidden h-[1px] bg-gradient-to-r from-transparent via-border/60 to-transparent lg:block" />
 
+          {/* Vertical layout alignment fixing the line crossover view */}
           {steps.map((step, index) => (
             <motion.div
               key={step.number}
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="group relative flex flex-col items-center text-center"
             >
-              {/* Step number */}
+              {/* Step box wrapper */}
               <div className="relative mb-6">
-                <div className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl border ${step.border} ${step.bg} transition-all duration-300 group-hover:scale-110`}>
-                  <step.icon size={26} className={step.color} strokeWidth={1.5} />
+                <div className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl border bg-bg/90 backdrop-blur-sm transition-all duration-300 group-hover:scale-110 ${step.border} ${step.bg}`}>
+                  <step.icon size={24} className={step.color} strokeWidth={1.5} />
                 </div>
-                <span className={`absolute -right-2 -top-2 font-display text-[11px] font-semibold ${step.color}`}>
+                {/* Clean counter badge */}
+                <span className={`absolute -right-2 -top-2 font-display text-[11px] font-bold tracking-wider ${step.color === "text-gold" ? "text-gold-light" : "text-text-secondary"}`}>
                   {step.number}
                 </span>
               </div>
 
-              <h3 className="mb-3 font-display text-[16px] font-semibold text-text">
+              {/* Step Title - High contrast styling */}
+              <h3 className="mb-2 font-display text-[16px] font-semibold text-text transition-colors duration-300 group-hover:text-gold">
                 {step.title}
               </h3>
-              <p className="text-sm leading-relaxed text-text-secondary">
+
+              {/* Step Description */}
+              <p className="text-sm leading-relaxed text-text-secondary max-w-[240px]">
                 {step.description}
               </p>
             </motion.div>

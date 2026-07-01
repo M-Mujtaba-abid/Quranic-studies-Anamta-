@@ -10,8 +10,7 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 const slides = [
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=1800&q=85&fit=crop",
+    image: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=1800&q=85&fit=crop",
     badge: "Trusted by 10,000+ students worldwide",
     title: "Learn the Quran with certified teachers, from anywhere.",
     highlight: "certified teachers",
@@ -24,8 +23,7 @@ const slides = [
   },
   {
     id: 2,
-    image:
-      "https://images.unsplash.com/photo-1585036156171-384164a8c675?w=1800&q=85&fit=crop",
+    image: "https://images.unsplash.com/photo-1585036156171-384164a8c675?w=1800&q=85&fit=crop",
     badge: "Live, one-on-one online classes",
     title: "A personal teacher, a curriculum built around you.",
     highlight: "built around you",
@@ -38,8 +36,7 @@ const slides = [
   },
   {
     id: 3,
-    image:
-      "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=1800&q=85&fit=crop",
+    image: "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=1800&q=85&fit=crop",
     badge: "Join students from 30+ countries",
     title: "From your first letter to a lifelong connection with the Quran.",
     highlight: "lifelong connection",
@@ -83,9 +80,10 @@ export default function HeroCarousel() {
   const active = slides[selectedIndex];
 
   return (
-    <section className="relative w-full overflow-hidden bg-bg
-      h-[100svh] min-h-[560px]
-      sm:h-[92vh] sm:min-h-[620px]"
+    <section
+      className="relative w-full overflow-hidden bg-bg
+        h-[100svh] min-h-[560px]
+        sm:h-[92vh] sm:min-h-[620px]"
     >
       {/* ── Slider track ── */}
       <div className="absolute inset-0" ref={emblaRef}>
@@ -99,6 +97,7 @@ export default function HeroCarousel() {
                 src={slide.image}
                 alt={slide.badge}
                 className="h-full w-full object-cover object-center"
+                style={{ filter: "brightness(0.55) saturate(0.85)" }}
                 initial={{ scale: 1 }}
                 animate={{ scale: index === selectedIndex ? 1.1 : 1 }}
                 transition={{
@@ -106,22 +105,48 @@ export default function HeroCarousel() {
                   ease: "linear",
                 }}
               />
-              {/* Mobile: stronger gradient from bottom */}
-              <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/80 to-bg/40 sm:bg-none" />
-              {/* Desktop: side gradient */}
-              <div className="absolute inset-0 hidden bg-gradient-to-r from-bg via-bg/80 to-bg/10 sm:block" />
-              <div className="absolute inset-0 hidden bg-gradient-to-t from-bg via-bg/30 to-transparent sm:block" />
-              {/* gold vignette */}
-              <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-gold/10 blur-[100px]" />
+
+              {/* Mobile gradient — bottom to top */}
+              <div
+                className="absolute inset-0 sm:hidden"
+                style={{
+                  background:
+                    "linear-gradient(to top, #0a0f14 0%, #0a0f14cc 45%, #0a0f1466 75%, transparent 100%)",
+                }}
+              />
+
+              {/* Desktop gradient — left to right */}
+              <div
+                className="absolute inset-0 hidden sm:block"
+                style={{
+                  background:
+                    "linear-gradient(to right, #0a0f14 0%, #0a0f14cc 45%, #0a0f1444 75%, transparent 100%)",
+                }}
+              />
+              {/* Desktop bottom fade */}
+              <div
+                className="absolute inset-0 hidden sm:block"
+                style={{
+                  background:
+                    "linear-gradient(to top, #0a0f14 0%, transparent 40%)",
+                }}
+              />
+
+              {/* Regatta blue vignette top-left */}
+              <div
+                className="absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full blur-[120px]"
+                style={{ background: "rgba(33,87,115,0.25)" }}
+              />
             </div>
           ))}
         </div>
       </div>
 
       {/* ── Overlay content ── */}
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-5 sm:px-6 lg:px-12
-        justify-end pb-24
-        sm:justify-center sm:pb-0"
+      <div
+        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-5 sm:px-6 lg:px-12
+          justify-end pb-24
+          sm:justify-center sm:pb-0"
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -139,18 +164,22 @@ export default function HeroCarousel() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mb-4 sm:mb-6"
             >
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-surface/50 px-3 py-1 text-[11px] font-medium tracking-wide text-sand backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs">
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide text-sand backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs"
+                style={{
+                  borderColor: "rgba(201,162,39,0.35)",
+                  background: "rgba(33,87,115,0.35)",
+                }}
+              >
                 <Star size={10} className="fill-gold text-gold" />
                 {active.badge}
               </span>
             </motion.div>
 
             {/* Heading */}
-            <h1 className="font-display font-semibold leading-[1.18] text-text
-              text-[1.75rem]
-              sm:text-4xl
-              md:text-5xl
-              lg:text-[3.4rem]"
+            <h1
+              className="font-display font-semibold leading-[1.18] text-text
+                text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.4rem]"
             >
               {active.title.split(active.highlight)[0]}
               <span className="relative inline-block text-gold">
@@ -185,13 +214,23 @@ export default function HeroCarousel() {
             >
               <Link
                 href="/courses"
-                className="rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.5)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.7)] sm:px-8 sm:py-3.5"
+                className="rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:px-8 sm:py-3.5"
               >
                 Explore Courses
               </Link>
               <Link
                 href="/contact"
-                className="rounded-full border border-white/25 bg-white/5 px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold/60 hover:text-gold sm:px-8 sm:py-3.5"
+                className="rounded-full border px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:text-gold sm:px-8 sm:py-3.5"
+                style={{
+                  borderColor: "rgba(33,87,115,0.6)",
+                  background: "rgba(33,87,115,0.2)",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.borderColor = "rgba(201,162,39,0.5)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.borderColor = "rgba(33,87,115,0.6)")
+                }
               >
                 Book a Free Trial
               </Link>
@@ -214,9 +253,13 @@ export default function HeroCarousel() {
                   </span>
                 </div>
               ))}
-              <div className="ml-1 h-7 w-[1px] bg-border sm:ml-2 sm:h-8" />
+              <div
+                className="ml-1 h-7 w-[1px] sm:ml-2 sm:h-8"
+                style={{ background: "rgba(33,87,115,0.6)" }}
+              />
               <p className="text-[10px] text-text-secondary sm:text-xs">
-                Join a growing <br className="hidden sm:block" />
+                Join a growing{" "}
+                <br className="hidden sm:block" />
                 community of learners
               </p>
             </motion.div>
@@ -228,14 +271,16 @@ export default function HeroCarousel() {
       <button
         onClick={scrollPrev}
         aria-label="Previous"
-        className="absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/30 p-2.5 text-white backdrop-blur-md transition-all duration-300 hover:border-gold/60 hover:text-gold md:flex lg:left-6 lg:p-3"
+        className="absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full p-2.5 text-white backdrop-blur-md transition-all duration-300 hover:text-gold md:flex lg:left-6 lg:p-3"
+        style={{ border: "1px solid rgba(33,87,115,0.5)", background: "rgba(33,87,115,0.25)" }}
       >
         <ChevronLeft size={18} />
       </button>
       <button
         onClick={scrollNext}
         aria-label="Next"
-        className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/30 p-2.5 text-white backdrop-blur-md transition-all duration-300 hover:border-gold/60 hover:text-gold md:flex lg:right-6 lg:p-3"
+        className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full p-2.5 text-white backdrop-blur-md transition-all duration-300 hover:text-gold md:flex lg:right-6 lg:p-3"
+        style={{ border: "1px solid rgba(33,87,115,0.5)", background: "rgba(33,87,115,0.25)" }}
       >
         <ChevronRight size={18} />
       </button>
@@ -249,8 +294,8 @@ export default function HeroCarousel() {
               key={slide.id}
               onClick={() => scrollTo(index)}
               aria-label={`Slide ${index + 1}`}
-              className="relative h-[3px] overflow-hidden rounded-full bg-white/20 transition-all duration-300
-                w-8 sm:w-12"
+              className="relative h-[3px] overflow-hidden rounded-full transition-all duration-300 w-8 sm:w-12"
+              style={{ background: "rgba(33,87,115,0.4)" }}
             >
               {index === selectedIndex && (
                 <motion.span

@@ -3,40 +3,19 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --color-bg: #fafaf8;
-  --color-surface: #ffffff;
-  --color-surface-light: #f4ebd0;
-  --color-text: #1a1a1a;
-  --color-text-secondary: #5b5f66;
-  --color-border: #e5e7eb;
-  --color-primary: #0f5132;
-  --color-primary-dark: #0a2e1c;
+  /* --color-bg: #0a0f14; */
+  --color-bg: #1B445A;
+  --color-surface: #0f1a23;
+  --color-surface-light: #162330;
+  --color-text: #f0eeea;
+  --color-text-secondary: #8fa3b0;
+  --color-border: #1e3040;
+
+  --color-primary: #215773;
+  --color-primary-dark: #163a4f;
   --color-gold: #c9a227;
   --color-gold-light: #e0bc4a;
   --color-sand: #f4ebd0;
-}
-
-.dark {
-  --color-bg: #0e0b0a;
-  --color-surface: #1a1513;
-  --color-surface-light: #241d1a;
-  --color-text: #f5f1ea;
-  --color-text-secondary: #b9b0a6;
-  --color-border: #2e2622;
-}
-
-@theme inline {
-  --color-bg: var(--color-bg);
-  --color-surface: var(--color-surface);
-  --color-surface-light: var(--color-surface-light);
-  --color-text: var(--color-text);
-  --color-text-secondary: var(--color-text-secondary);
-  --color-border: var(--color-border);
-  --color-primary: var(--color-primary);
-  --color-primary-dark: var(--color-primary-dark);
-  --color-gold: var(--color-gold);
-  --color-gold-light: var(--color-gold-light);
-  --color-sand: var(--color-sand);
 
   --font-display: var(--font-cinzel);
   --font-body: var(--font-poppins);
@@ -45,5 +24,4 @@
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }

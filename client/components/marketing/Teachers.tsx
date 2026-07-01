@@ -51,7 +51,9 @@ const teachers: TeacherCardProps[] = [
 export default function Teachers() {
   return (
     <section className="relative overflow-hidden bg-surface py-24">
-      <div className="absolute -right-32 top-0 h-80 w-80 rounded-full bg-gold/5 blur-[100px]" />
+      {/* Regatta Blue & Gold ambient deep system glows */}
+      <div className="absolute -right-32 top-0 h-80 w-80 rounded-full bg-primary/10 blur-[100px]" />
+      <div className="absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-gold/5 blur-[100px]" />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between">
@@ -64,7 +66,7 @@ export default function Teachers() {
           />
           <Link
             href="/teachers"
-            className="mb-12 hidden rounded-full border border-gold/40 px-6 py-2.5 text-sm font-medium text-gold transition-all duration-200 hover:bg-gold hover:text-primary-dark sm:flex"
+            className="mb-12 hidden rounded-full border border-primary/60 bg-primary/5 px-6 py-2.5 text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold sm:flex"
           >
             Meet All Teachers
           </Link>
@@ -84,8 +86,11 @@ export default function Teachers() {
           ))}
         </div>
 
-        <div className="mt-10 flex justify-center sm:hidden">
-          <Link href="/teachers" className="rounded-full border border-gold/40 px-8 py-3 text-sm font-medium text-gold">
+        <div className="mt-12 flex justify-center sm:hidden">
+          <Link 
+            href="/teachers" 
+            className="w-full text-center rounded-full border border-primary/60 bg-primary/5 px-8 py-3 text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 active:scale-[0.98] active:border-gold active:text-gold"
+          >
             Meet All Teachers
           </Link>
         </div>
