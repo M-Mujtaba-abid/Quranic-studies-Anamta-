@@ -11,6 +11,7 @@ import { CoursesModule } from './courses/courses.module';
 import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { EnrollmentsModule } from './enrollments/enrollments.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UsersModule } from './users/users.module';
     UploadModule,
     AuthModule,
     UsersModule,
+    EnrollmentsModule,
   ],
   controllers: [],
   providers: [DatabaseService, AppResolver],

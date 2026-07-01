@@ -9,5 +9,6 @@ import { AuthModule } from '../auth/auth.module';
   imports: [DatabaseModule, AuthModule],
 
   providers: [StudentsService, StudentsResolver, StudentRepository],
+  exports: [StudentsService],
 })
 export class StudentsModule {}

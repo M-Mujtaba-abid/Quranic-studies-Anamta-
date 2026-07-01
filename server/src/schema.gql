@@ -66,6 +66,28 @@ type UploadSignature {
   folder: String!
 }
 
+type Enrollment {
+  id: ID!
+  studentId: String!
+  courseId: String!
+  preferredHour: Int!
+  preferredMinute: Int!
+  preferredPeriod: String!
+  status: EnrollmentStatus!
+  student: Student
+  course: Course
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""The status of a student enrollment in a course"""
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
 type Query {
   healthCheck: String!
   students: [Student!]!
@@ -74,6 +96,8 @@ type Query {
   user(id: ID!): User!
   courses: [Course!]!
   course(id: ID!): Course!
+  enrollments: [Enrollment!]!
+  enrollment(id: ID!): Enrollment!
 }
 
 type Mutation {
@@ -89,6 +113,9 @@ type Mutation {
   updateCourse(updateCourseInput: UpdateCourseInput!): Course!
   deleteCourse(id: ID!): Course!
   generateUploadSignature(input: GenerateUploadSignatureInput!): UploadSignature!
+  createEnrollment(createEnrollmentInput: CreateEnrollmentInput!): Enrollment!
+  updateEnrollment(updateEnrollmentInput: UpdateEnrollmentInput!): Enrollment!
+  deleteEnrollment(id: ID!): Enrollment!
 }
 
 input CreateStudentInput {
@@ -158,4 +185,23 @@ input UpdateCourseInput {
 
 input GenerateUploadSignatureInput {
   folder: String!
+}
+
+input CreateEnrollmentInput {
+  studentId: String!
+  courseId: String!
+  preferredHour: Int!
+  preferredMinute: Int!
+  preferredPeriod: String!
+  status: EnrollmentStatus
+}
+
+input UpdateEnrollmentInput {
+  studentId: String
+  courseId: String
+  preferredHour: Int
+  preferredMinute: Int
+  preferredPeriod: String
+  status: EnrollmentStatus
+  id: ID!
 }

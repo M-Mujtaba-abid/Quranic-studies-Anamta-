@@ -8,5 +8,6 @@ import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [DatabaseModule, AuthModule],
   providers: [CoursesService, CoursesResolver, CourseRepository],
+  exports: [CoursesService],
 })
 export class CoursesModule {}
