@@ -83,11 +83,85 @@ model Enrollment {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  payment Payment?
 
   @@unique([studentId, courseId])
   @@map("enrollments")
+}
+
+model Payment {
+  id                 String        @id @default(cuid())
+  enrollmentId       String        @unique
+  amount             Decimal
+  paymentMethod      PaymentMethod
+  transactionId      String?
+  screenshotUrl      String
+  screenshotPublicId String
+  status             PaymentStatus @default(UNDER_REVIEW)
+  adminNote          String?
+  paidAt             DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  enrollment         Enrollment    @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model PaymentSetting {
+  id              String   @id @default(cuid())
+  bankName        String
+  accountTitle    String
+  accountNumber   String
+  iban            String
+  jazzCashNumber  String
+  easyPaisaNumber String
+  instructions    String
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("payment_settings")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact_messages")
+}
+
+model Testimonial {
+  id          String            @id @default(cuid())
+  name        String
+  gender      Gender
+  country     String
+  rating      Int
+  description String
+  status      TestimonialStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@map("testimonials")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum TestimonialStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum Role {
@@ -100,4 +174,16 @@ enum EnrollmentStatus {
   APPROVED
   REJECTED
   COMPLETED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  JAZZCASH
+  EASYPAISA
+}
+
+enum PaymentStatus {
+  UNDER_REVIEW
+  PAID
+  REJECTED
 }

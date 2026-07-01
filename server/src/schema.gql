@@ -89,6 +89,61 @@ enum EnrollmentStatus {
   COMPLETED
 }
 
+type Payment {
+  id: ID!
+  enrollmentId: String!
+  amount: Float!
+  paymentMethod: PaymentMethod!
+  transactionId: String
+  screenshotUrl: String!
+  screenshotPublicId: String!
+  status: PaymentStatus!
+  adminNote: String
+  paidAt: DateTime
+  enrollment: Enrollment
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Available payment methods"""
+enum PaymentMethod {
+  BANK_TRANSFER
+  JAZZCASH
+  EASYPAISA
+}
+
+"""The status of a submitted payment"""
+enum PaymentStatus {
+  UNDER_REVIEW
+  PAID
+  REJECTED
+}
+
+type PaymentSetting {
+  id: ID!
+  bankName: String!
+  accountTitle: String!
+  accountNumber: String!
+  iban: String!
+  jazzCashNumber: String!
+  easyPaisaNumber: String!
+  instructions: String!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ContactMessage {
+  id: ID!
+  name: String!
+  email: String!
+  subject: String!
+  message: String!
+  isRead: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   healthCheck: String!
   students: [Student!]!
@@ -99,6 +154,13 @@ type Query {
   course(id: ID!): Course!
   enrollments: [Enrollment!]!
   enrollment(id: ID!): Enrollment!
+  myPayments: [Payment!]!
+  payments: [Payment!]!
+  payment(id: ID!): Payment!
+  activePaymentSetting: PaymentSetting!
+  paymentSettings: [PaymentSetting!]!
+  contactMessages: [ContactMessage!]!
+  contactMessage(id: ID!): ContactMessage!
 }
 
 type Mutation {
@@ -114,9 +176,22 @@ type Mutation {
   updateCourse(updateCourseInput: UpdateCourseInput!): Course!
   deleteCourse(id: ID!): Course!
   generateUploadSignature(input: GenerateUploadSignatureInput!): UploadSignature!
+  enrollStudent(enrollStudentInput: EnrollStudentInput!): Enrollment!
   createEnrollment(createEnrollmentInput: CreateEnrollmentInput!): Enrollment!
   updateEnrollment(updateEnrollmentInput: UpdateEnrollmentInput!): Enrollment!
   deleteEnrollment(id: ID!): Enrollment!
+  createPayment(createPaymentInput: CreatePaymentInput!): Payment!
+  approvePayment(id: ID!, adminNote: String): Payment!
+  rejectPayment(id: ID!, adminNote: String): Payment!
+  updatePayment(updatePaymentInput: UpdatePaymentInput!): Payment!
+  deletePayment(id: ID!): Payment!
+  createPaymentSetting(createPaymentSettingInput: CreatePaymentSettingInput!): PaymentSetting!
+  updatePaymentSetting(updatePaymentSettingInput: UpdatePaymentSettingInput!): PaymentSetting!
+  deletePaymentSetting(id: ID!): PaymentSetting!
+  submitContactMessage(createContactMessageInput: CreateContactMessageInput!): ContactMessage!
+  markContactMessageAsRead(id: ID!): ContactMessage!
+  replyToContactMessage(id: ID!, replyContent: String!): ContactMessage!
+  deleteContactMessage(id: ID!): ContactMessage!
 }
 
 input CreateStudentInput {
@@ -188,6 +263,21 @@ input GenerateUploadSignatureInput {
   folder: String!
 }
 
+input EnrollStudentInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String!
+  address: String
+  city: String
+  country: String
+  courseId: String!
+  preferredHour: Int!
+  preferredMinute: Int!
+  preferredPeriod: String!
+  preferredDays: String!
+}
+
 input CreateEnrollmentInput {
   studentId: String!
   courseId: String!
@@ -207,4 +297,55 @@ input UpdateEnrollmentInput {
   preferredDays: String
   status: EnrollmentStatus
   id: ID!
+}
+
+input CreatePaymentInput {
+  enrollmentId: String!
+  amount: Float!
+  paymentMethod: PaymentMethod!
+  transactionId: String
+  screenshotUrl: String!
+  screenshotPublicId: String!
+}
+
+input UpdatePaymentInput {
+  enrollmentId: String
+  amount: Float
+  paymentMethod: PaymentMethod
+  transactionId: String
+  screenshotUrl: String
+  screenshotPublicId: String
+  id: ID!
+  status: PaymentStatus
+  adminNote: String
+}
+
+input CreatePaymentSettingInput {
+  bankName: String!
+  accountTitle: String!
+  accountNumber: String!
+  iban: String!
+  jazzCashNumber: String!
+  easyPaisaNumber: String!
+  instructions: String!
+  isActive: Boolean
+}
+
+input UpdatePaymentSettingInput {
+  bankName: String
+  accountTitle: String
+  accountNumber: String
+  iban: String
+  jazzCashNumber: String
+  easyPaisaNumber: String
+  instructions: String
+  isActive: Boolean
+  id: ID!
+}
+
+input CreateContactMessageInput {
+  name: String!
+  email: String!
+  subject: String!
+  message: String!
 }

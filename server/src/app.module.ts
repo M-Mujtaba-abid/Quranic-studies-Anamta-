@@ -12,6 +12,10 @@ import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { EnrollmentsModule } from './enrollments/enrollments.module';
+import { PaymentModule } from './payments/payment.module';
+import { PaymentSettingModule } from './payment-settings/payment-setting.module';
+import { ContactUsModule } from './contact-us/contact-us.module';
+import { TestimonialsModule } from './testimonials/testimonials.module';
 
 @Module({
   imports: [
@@ -30,6 +34,10 @@ import { EnrollmentsModule } from './enrollments/enrollments.module';
     AuthModule,
     UsersModule,
     EnrollmentsModule,
+    PaymentModule,
+    PaymentSettingModule,
+    ContactUsModule,
+    TestimonialsModule,
   ],
   controllers: [],
   providers: [DatabaseService, AppResolver],
