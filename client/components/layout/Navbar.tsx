@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, Search } from "lucide-react";
-import ThemeToggle from "../ui/ThemeToggle";
 
 const navLinks = [
   { label: "Courses", href: "/courses" },
@@ -27,116 +26,115 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? "border-b border-gold/15 bg-surface/95 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)] backdrop-blur-xl"
-          : "border-b border-transparent bg-surface/70 backdrop-blur-md"
+          ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent"
       }`}
     >
-      {/* thin gold gradient hairline */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+      {/* Premium subtle Regatta border accent line over the header frame */}
+      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 lg:px-10">
-        {/* Logo */}
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+        {/* Logo Section branding */}
         <Link href="/" className="group flex items-center gap-3">
-          <div className="relative overflow-hidden rounded-xl ring-1 ring-gold/40 transition-all duration-300 group-hover:ring-gold/80 group-hover:shadow-[0_0_18px_-2px_rgba(201,162,39,0.55)]">
+          <div className="relative overflow-hidden rounded-xl border border-primary/30 bg-surface/40 p-0.5 transition-all duration-300 group-hover:border-gold/60 group-hover:shadow-[0_0_20px_rgba(33,87,115,0.4)]">
             <Image
               src="/logo/logo.jpeg"
               alt="Anamta Institute"
-              width={50}
-              height={50}
-              className="h-12 w-12 object-cover transition-transform duration-300 group-hover:scale-105"
+              width={44}
+              height={44}
+              className="h-10 w-10 rounded-lg object-cover transition-transform duration-300 group-hover:scale-102"
               priority
             />
           </div>
           <div className="hidden flex-col leading-none sm:flex">
-            <span className="font-display text-[17px] font-semibold tracking-[0.14em] text-text">
+            <span className="font-display text-base font-bold tracking-[0.16em] text-text">
               ANAMTA
             </span>
-            <span className="font-display mt-1 text-[10px] font-medium tracking-[0.32em] text-gold">
+            <span className="font-display mt-1 text-[9px] font-bold tracking-[0.35em] text-gold">
               INSTITUTE
             </span>
           </div>
         </Link>
 
-        {/* Nav links */}
-        <ul className="hidden items-center gap-10 md:flex">
+        {/* Navigation Core Center Links */}
+        <ul className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="group relative text-[13.5px] font-medium uppercase tracking-wide text-text-secondary transition-colors duration-200 hover:text-text"
+                className="group relative font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors duration-200 hover:text-text"
               >
                 {link.label}
-                <span className="absolute -bottom-1.5 left-0 h-[1.5px] w-0 bg-gradient-to-r from-gold to-gold-light transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-gold transition-all duration-300 group-hover:w-full" />
               </Link>
             </li>
           ))}
         </ul>
 
-        {/* Right side */}
-        <div className="hidden items-center gap-5 md:flex">
-             <ThemeToggle />
+        {/* Right Structural Profile Controls */}
+        <div className="hidden items-center gap-4 md:flex">
           <button
             aria-label="Search"
-            className="text-text-secondary transition-colors duration-200 hover:text-gold"
+            className="p-2 text-text-secondary transition-colors duration-200 hover:text-gold"
           >
-            <Search size={18} strokeWidth={2} />
+            <Search size={16} strokeWidth={2.5} />
           </button>
 
           <Link
             href="/login"
-            className="rounded-full border border-text-secondary/30 px-5 py-2.5 text-[13px] font-medium text-text transition-all duration-200 hover:border-gold hover:text-gold"
+            className="rounded-xl border border-primary/60 bg-primary/5 px-5 py-2.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold hover:text-gold"
           >
             Sign In
           </Link>
 
           <Link
             href="/courses"
-            className="relative overflow-hidden rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-2.5 text-[13px] font-semibold text-primary-dark shadow-[0_4px_14px_-2px_rgba(201,162,39,0.5)] transition-all duration-300 hover:scale-[1.04] hover:shadow-[0_6px_20px_-2px_rgba(201,162,39,0.7)]"
+            className="block rounded-xl bg-primary border border-primary-light/30 px-5 py-2.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold"
           >
             Start Learning
           </Link>
         </div>
 
-        {/* Mobile toggle */}
+        {/* Mobile menu toggle action */}
         <button
-          className="text-text md:hidden"
+          className="rounded-xl border border-border/40 p-2 text-text transition-colors duration-200 hover:border-primary/50 md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
-          {open ? <X size={24} /> : <Menu size={24} />}
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile Responsive Navigation overlay tray */}
       <div
-        className={`overflow-hidden border-t border-gold/10 bg-surface transition-all duration-300 md:hidden ${
-          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        className={`overflow-hidden bg-bg/95 backdrop-blur-xl border-b border-primary/10 transition-all duration-300 md:hidden ${
+          open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <ul className="flex flex-col gap-1 px-6 py-5">
+        <ul className="flex flex-col gap-1 px-6 py-6 border-t border-primary/10">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="block py-2.5 text-sm font-medium uppercase tracking-wide text-text-secondary transition-colors hover:text-gold"
+                className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
               >
                 {link.label}
               </Link>
             </li>
           ))}
-          <li className="mt-3 flex flex-col gap-3">
+          <li className="mt-4 flex flex-col gap-3 pt-4 border-t border-primary/10">
             <Link
               href="/login"
               onClick={() => setOpen(false)}
-              className="rounded-full border border-text-secondary/30 px-5 py-3 text-center text-sm font-medium text-text"
+              className="rounded-xl border border-primary/50 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text"
             >
               Sign In
             </Link>
             <Link
               href="/courses"
               onClick={() => setOpen(false)}
-              className="rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark"
+              className="rounded-xl bg-primary border border-primary-light/20 py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
             >
               Start Learning
             </Link>

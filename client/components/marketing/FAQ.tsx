@@ -41,20 +41,24 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.07 }}
-      className={`overflow-hidden rounded-xl border transition-all duration-300 ${
-        open ? "border-gold/40 bg-surface" : "border-border bg-surface/50"
+      transition={{ duration: 0.45, delay: index * 0.05 }}
+      className={`overflow-hidden rounded-xl border backdrop-blur-sm transition-all duration-300 ${
+        open ? "border-primary/50 bg-surface/80 shadow-[0_12px_30px_-10px_rgba(33,87,115,0.2)]" : "border-border/60 bg-surface/30 hover:border-primary/30"
       }`}
     >
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left group"
       >
-        <span className={`text-sm font-semibold transition-colors duration-200 sm:text-base ${open ? "text-gold" : "text-text"}`}>
+        <span className={`font-display text-sm font-semibold transition-colors duration-200 sm:text-base ${open ? "text-gold" : "text-text group-hover:text-gold/80"}`}>
           {q}
         </span>
-        <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all duration-200 ${open ? "border-gold bg-gold text-primary-dark" : "border-border text-text-secondary"}`}>
-          {open ? <Minus size={14} /> : <Plus size={14} />}
+        <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
+          open 
+            ? "border-gold bg-gold/10 text-gold" 
+            : "border-border/80 text-text-secondary group-hover:border-primary/50 group-hover:text-text"
+        }`}>
+          {open ? <Minus size={13} strokeWidth={2.5} /> : <Plus size={13} strokeWidth={2.5} />}
         </span>
       </button>
 
@@ -64,9 +68,9 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="border-t border-border/50 px-6 pb-5 pt-4 text-sm leading-relaxed text-text-secondary">
+            <p className="border-t border-border/30 px-6 pb-5 pt-4 text-sm leading-relaxed text-text-secondary">
               {a}
             </p>
           </motion.div>
@@ -79,9 +83,10 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 export default function FAQ() {
   return (
     <section className="relative overflow-hidden bg-bg py-24">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_100%,rgba(15,81,50,0.08),transparent)]" />
+      {/* Syncing global light aura matrix to Regatta Blue profiles */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_100%,rgba(33,87,115,0.12)_0%,transparent_80%)]" />
 
-      <div className="relative mx-auto max-w-4xl px-5 sm:px-6 lg:px-10">
+      <div className="relative mx-auto max-w-3xl px-5 sm:px-6 lg:px-10">
         <SectionHeading
           badge="FAQ"
           title="Questions we get "
@@ -90,17 +95,18 @@ export default function FAQ() {
           center
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3.5">
           {faqs.map((faq, index) => (
             <FAQItem key={faq.q} q={faq.q} a={faq.a} index={index} />
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="mb-4 text-sm text-text-secondary">Still have questions?</p>
+        {/* Re-designed structural footer actions */}
+        <div className="mt-14 text-center">
+          <p className="mb-4 font-display text-sm font-medium text-text-secondary">Still have questions?</p>
           <Link
             href="/contact"
-            className="inline-block rounded-full border border-gold/40 px-8 py-3 text-sm font-medium text-gold transition-all duration-200 hover:bg-gold hover:text-primary-dark"
+            className="inline-block rounded-xl border border-primary/60 bg-primary/5 px-8 py-3 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:bg-gold/10 hover:text-gold"
           >
             Contact Us
           </Link>

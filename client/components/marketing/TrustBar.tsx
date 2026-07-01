@@ -14,34 +14,38 @@ const stats = [
 
 export default function TrustBar() {
   return (
-    <section className="relative overflow-hidden border-y border-gold/15 bg-surface">
-      {/* gold glow top */}
-      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+    <section className="relative overflow-hidden border-y border-border/60 bg-surface/80 backdrop-blur-sm">
+      {/* Top and Bottom ambient subtle lines aligning with our navy theme */}
+      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
+        <div className="grid grid-cols-2 gap-y-8 gap-x-4 sm:grid-cols-3 lg:grid-cols-6 divide-x-0 divide-y-0 lg:divide-x lg:divide-border/40">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
-              className="group flex flex-col items-center gap-2 text-center"
+              transition={{ duration: 0.4, delay: index * 0.06 }}
+              className="group flex flex-col items-center gap-2 text-center lg:px-2 first:border-none"
             >
-              {/* icon */}
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/20 bg-gold/5 transition-all duration-300 group-hover:border-gold/50 group-hover:bg-gold/10">
-                <stat.icon size={18} className="text-gold" strokeWidth={1.5} />
+              {/* Icon container with Regatta Blue base and subtle Gold hover shift */}
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-primary/30 bg-primary/10 transition-all duration-300 group-hover:scale-105 group-hover:border-gold/50 group-hover:bg-primary/20">
+                <stat.icon 
+                  size={18} 
+                  className="text-text-secondary transition-colors duration-300 group-hover:text-gold" 
+                  strokeWidth={1.75} 
+                />
               </div>
 
-              {/* value */}
-              <span className="font-display text-xl font-semibold text-text sm:text-2xl">
+              {/* Value - bold and high contrast */}
+              <span className="font-display text-xl font-bold text-text sm:text-2xl tracking-wide group-hover:text-gold transition-colors duration-300">
                 {stat.value}
               </span>
 
-              {/* label */}
-              <span className="text-[11px] font-medium uppercase tracking-wider text-text-secondary">
+              {/* Label - clean readability */}
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-text-secondary/80 group-hover:text-text-secondary transition-colors duration-300">
                 {stat.label}
               </span>
             </motion.div>

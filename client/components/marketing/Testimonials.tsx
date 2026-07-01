@@ -58,7 +58,8 @@ const testimonials = [
 export default function Testimonials() {
   return (
     <section className="relative overflow-hidden bg-bg py-24">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(201,162,39,0.05),transparent)]" />
+      {/* High-end ambient background glow synced with Regatta profile */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(33,87,115,0.12)_0%,transparent_80%)]" />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
         <SectionHeading
@@ -77,42 +78,49 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/25 hover:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.4)]"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.5)]"
             >
-              {/* Quote icon */}
-              <Quote size={32} className="mb-4 text-gold/20" />
+              <div>
+                {/* Header layout for Quote and Stars alignment */}
+                <div className="flex items-center justify-between mb-4">
+                  <Quote size={28} className="text-primary-light/20 transform -scale-x-100" />
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star key={i} size={12} className="fill-gold text-gold" />
+                    ))}
+                  </div>
+                </div>
 
-              {/* Stars */}
-              <div className="mb-3 flex gap-0.5">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} size={13} className="fill-gold text-gold" />
-                ))}
+                {/* Review Paragraph */}
+                <p className="mb-6 text-sm leading-relaxed text-text-secondary italic">
+                  "{t.review}"
+                </p>
               </div>
 
-              {/* Review */}
-              <p className="mb-6 text-sm leading-relaxed text-text-secondary">
-                "{t.review}"
-              </p>
+              {/* Bottom Fixed Meta Info Area */}
+              <div>
+                {/* Course badge with Regatta Blue base backdrop and gold text highlights */}
+                <span className="mb-4 inline-block rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1 font-display text-[10px] font-semibold text-text group-hover:border-gold/40 group-hover:text-gold transition-colors duration-300">
+                  {t.course}
+                </span>
 
-              {/* Course badge */}
-              <span className="mb-4 inline-block rounded-full border border-gold/20 bg-gold/5 px-3 py-1 text-[10px] font-medium text-gold">
-                {t.course}
-              </span>
-
-              {/* Author */}
-              <div className="flex items-center gap-3">
-                <img
-                  src={t.avatar}
-                  alt={t.name}
-                  className="h-10 w-10 rounded-full object-cover ring-2 ring-gold/20"
-                />
-                <div>
-                  <p className="text-sm font-semibold text-text">{t.name}</p>
-                  <p className="text-xs text-text-secondary">{t.country}</p>
+                {/* Author Details */}
+                <div className="flex items-center gap-3 border-t border-border/30 pt-4">
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/40 group-hover:ring-gold/50 transition-all duration-300"
+                    loading="lazy"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-text group-hover:text-gold transition-colors duration-200">{t.name}</p>
+                    <p className="font-display text-[11px] font-medium text-text-secondary">{t.country}</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-gold to-gold-light transition-all duration-500 group-hover:w-full" />
+              {/* Micro bottom layout strip using the core colors */}
+              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-gold transition-all duration-500 ease-[0.22,1,0.36,1] group-hover:w-full" />
             </motion.div>
           ))}
         </div>

@@ -20,8 +20,8 @@ const plans = [
     ],
     cta: "Get Started",
     popular: false,
-    gradient: "from-surface to-surface",
-    border: "border-border",
+    gradient: "from-surface/80 to-surface/40",
+    border: "border-border/60 hover:border-primary/40",
   },
   {
     name: "Standard",
@@ -39,8 +39,8 @@ const plans = [
     ],
     cta: "Start Learning",
     popular: true,
-    gradient: "from-primary/20 to-gold/5",
-    border: "border-gold/40",
+    gradient: "from-primary/20 via-surface/90 to-gold/5",
+    border: "border-gold/50 shadow-[0_20px_50px_-12px_rgba(33,87,115,0.3)]",
   },
   {
     name: "Premium",
@@ -58,16 +58,17 @@ const plans = [
     ],
     cta: "Go Premium",
     popular: false,
-    gradient: "from-surface to-surface",
-    border: "border-border",
+    gradient: "from-surface/80 to-surface/40",
+    border: "border-border/60 hover:border-primary/40",
   },
 ];
 
 export default function PricingPreview() {
   return (
-    <section className="relative overflow-hidden bg-surface py-24">
+    <section className="relative overflow-hidden bg-bg py-24">
+      {/* Dynamic ambient backgrounds configured for premium dark UI layout */}
       <div className="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
-      <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-gold/5 blur-[120px]" />
+      <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-gold/10 blur-[120px]" />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
         <SectionHeading
@@ -78,46 +79,56 @@ export default function PricingPreview() {
           center
         />
 
-        <div className="grid gap-6 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-3 items-stretch">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className={`relative flex flex-col overflow-hidden rounded-2xl border bg-gradient-to-b p-7 transition-all duration-300 hover:-translate-y-1 ${plan.gradient} ${plan.border} ${plan.popular ? "shadow-[0_0_60px_-12px_rgba(201,162,39,0.3)]" : ""}`}
+              transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className={`relative flex flex-col justify-between overflow-hidden rounded-2xl border bg-gradient-to-b p-7 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 ${plan.gradient} ${plan.border}`}
             >
-              {plan.popular && (
-                <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-gold px-3 py-1 text-[11px] font-semibold text-primary-dark">
-                  <Sparkles size={11} />
-                  Most Popular
+              <div>
+                {/* Header Layout Info */}
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-display text-lg font-semibold text-text">{plan.name}</h3>
+                  {plan.popular && (
+                    <div className="flex items-center gap-1 rounded-md bg-gold/10 border border-gold/30 px-2.5 py-0.5 font-display text-[10px] font-bold tracking-wide text-gold">
+                      <Sparkles size={10} className="fill-gold/20" />
+                      MOST POPULAR
+                    </div>
+                  )}
                 </div>
-              )}
+                
+                <p className="text-xs text-text-secondary min-h-[32px]">{plan.description}</p>
 
-              <h3 className="font-display text-lg font-semibold text-text">{plan.name}</h3>
-              <p className="mt-1 text-xs text-text-secondary">{plan.description}</p>
+                {/* Price block layout tag */}
+                <div className="my-6 flex items-baseline gap-1 border-b border-border/30 pb-5">
+                  <span className="font-display text-4xl font-bold tracking-tight text-text">${plan.price}</span>
+                  <span className="font-display text-xs font-medium text-text-secondary">{plan.period}</span>
+                </div>
 
-              <div className="my-6 flex items-baseline gap-1">
-                <span className="font-display text-4xl font-semibold text-text">${plan.price}</span>
-                <span className="text-sm text-text-secondary">{plan.period}</span>
+                {/* Features Tracking List */}
+                <ul className="mb-8 flex flex-col gap-3">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5 text-sm text-text-secondary">
+                      <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-md bg-primary/10 border border-primary/30">
+                        <Check size={11} className="text-gold" strokeWidth={3} />
+                      </div>
+                      <span className="leading-tight">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <ul className="mb-8 flex flex-col gap-3">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2.5 text-sm text-text-secondary">
-                    <Check size={15} className="mt-0.5 shrink-0 text-gold" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
+              {/* Dynamic Call-to-Actions matching the naye buttons profile */}
               <Link
                 href="/pricing"
-                className={`mt-auto block rounded-full py-3 text-center text-sm font-semibold transition-all duration-300 ${
+                className={`w-full block rounded-xl py-3 text-center font-display text-xs font-semibold backdrop-blur-sm transition-all duration-300 ${
                   plan.popular
-                    ? "bg-gradient-to-r from-gold to-gold-light text-primary-dark shadow-[0_4px_20px_-4px_rgba(201,162,39,0.5)] hover:scale-[1.03]"
-                    : "border border-gold/40 text-gold hover:bg-gold hover:text-primary-dark"
+                    ? "bg-primary border border-primary-light/40 text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] hover:border-gold hover:text-gold hover:scale-[1.02]"
+                    : "border border-primary/60 bg-primary/5 text-text hover:border-gold hover:bg-gold/10 hover:text-gold"
                 }`}
               >
                 {plan.cta}
@@ -126,9 +137,10 @@ export default function PricingPreview() {
           ))}
         </div>
 
-        <p className="mt-10 text-center text-sm text-text-secondary">
+        {/* Footnote Link */}
+        <p className="mt-12 text-center text-sm text-text-secondary">
           Not sure which plan?{" "}
-          <Link href="/contact" className="text-gold underline underline-offset-2">
+          <Link href="/contact" className="font-semibold text-gold underline underline-offset-4 transition-colors hover:text-gold-light">
             Book a free consultation
           </Link>
         </p>
