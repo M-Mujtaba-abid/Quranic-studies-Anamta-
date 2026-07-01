@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { ChangePasswordInput } from './dto/change-password.input';
@@ -26,8 +26,38 @@ export class AuthResolver {
   async login(
     @Args('loginInput')
     loginInput: LoginInput,
+    @Context() context: any,
   ) {
-    return await this.authService.login(loginInput);
+    const loginResponse = await this.authService.login(loginInput);
+    const res = context.res || context.req?.res;
+
+    if (res) {
+      const isProd = process.env.NODE_ENV === 'production';
+      res.cookie('token', loginResponse.token, {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+    }
+
+    return loginResponse;
+  }
+
+  @Mutation(() => Boolean)
+  async logout(@Context() context: any) {
+    const res = context.res || context.req?.res;
+
+    if (res) {
+      const isProd = process.env.NODE_ENV === 'production';
+      res.clearCookie('token', {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+      });
+    }
+
+    return true;
   }
 
   @Mutation(() => Boolean)

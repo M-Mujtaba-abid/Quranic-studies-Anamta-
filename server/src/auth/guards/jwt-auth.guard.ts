@@ -9,14 +9,30 @@ export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const req = ctx.getContext().req;
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      throw new UnauthorizedException('Authorization header is missing.');
+
+    let token: string | undefined;
+
+    // 1. Extract from Cookie
+    const cookieHeader = req.headers.cookie;
+    if (cookieHeader) {
+      const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+        const [key, val] = cookie.trim().split('=');
+        if (key) acc[key] = val;
+        return acc;
+      }, {} as Record<string, string>);
+      token = cookies['token'];
     }
 
-    const [type, token] = authHeader.split(' ');
-    if (type !== 'Bearer' || !token) {
-      throw new UnauthorizedException('Invalid authorization header format.');
+    // 2. Fallback to Authorization header
+    if (!token && req.headers.authorization) {
+      const [type, authHeaderToken] = req.headers.authorization.split(' ');
+      if (type === 'Bearer' && authHeaderToken) {
+        token = authHeaderToken;
+      }
+    }
+
+    if (!token) {
+      throw new UnauthorizedException('Authentication token is missing.');
     }
 
     try {

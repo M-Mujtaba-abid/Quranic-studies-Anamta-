@@ -2,49 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Student {
-  id: ID!
-  firstName: String!
-  lastName: String!
-  email: String!
-  phone: String!
-  gender: String
-  city: String
-  country: String
-  address: String
-  isActive: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type User {
-  id: ID!
-  email: String!
-  firstName: String!
-  lastName: String!
-  role: Role!
-  resetToken: String
-  resetTokenExpiry: DateTime
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""User roles for authentication and authorization"""
-enum Role {
-  ADMIN
-  USER
-}
-
-type LoginResponse {
-  token: String!
-  user: User!
-}
-
 type Course {
   id: ID!
   imageUrl: String!
@@ -58,36 +15,10 @@ type Course {
   updatedAt: DateTime!
 }
 
-type UploadSignature {
-  timestamp: Float!
-  signature: String!
-  apiKey: String!
-  cloudName: String!
-  folder: String!
-}
-
-type Enrollment {
-  id: ID!
-  studentId: String!
-  courseId: String!
-  preferredHour: Int!
-  preferredMinute: Int!
-  preferredPeriod: String!
-  preferredDays: String!
-  status: EnrollmentStatus!
-  student: Student
-  course: Course
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""The status of a student enrollment in a course"""
-enum EnrollmentStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  COMPLETED
-}
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Payment {
   id: ID!
@@ -119,6 +50,77 @@ enum PaymentStatus {
   REJECTED
 }
 
+type Enrollment {
+  id: ID!
+  studentId: String!
+  courseId: String!
+  preferredHour: Int!
+  preferredMinute: Int!
+  preferredPeriod: String!
+  preferredDays: String!
+  status: EnrollmentStatus!
+  student: Student
+  course: Course
+  payment: Payment
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""The status of a student enrollment in a course"""
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+type Student {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String!
+  gender: String
+  city: String
+  country: String
+  address: String
+  isActive: Boolean!
+  enrollments: [Enrollment!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type User {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  role: Role!
+  resetToken: String
+  resetTokenExpiry: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""User roles for authentication and authorization"""
+enum Role {
+  ADMIN
+  USER
+}
+
+type LoginResponse {
+  token: String!
+  user: User!
+}
+
+type UploadSignature {
+  timestamp: Float!
+  signature: String!
+  apiKey: String!
+  cloudName: String!
+  folder: String!
+}
+
 type PaymentSetting {
   id: ID!
   bankName: String!
@@ -144,8 +146,71 @@ type ContactMessage {
   updatedAt: DateTime!
 }
 
+type Testimonial {
+  id: ID!
+  name: String!
+  gender: Gender!
+  country: String!
+  rating: Float!
+  description: String!
+  status: TestimonialStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Gender options"""
+enum Gender {
+  MALE
+  FEMALE
+}
+
+"""Testimonial review status"""
+enum TestimonialStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+type SubmitTestimonialResponse {
+  message: String!
+  testimonial: Testimonial!
+}
+
+type DashboardStats {
+  totalStudents: Int!
+  totalCourses: Int!
+  totalEnrollments: Int!
+  pendingPayments: Int!
+  paidPayments: Int!
+  totalRevenue: Float!
+  pendingTestimonials: Int!
+  unreadContacts: Int!
+}
+
+type PopularCourse {
+  courseId: String!
+  courseTitle: String!
+  totalEnrollments: Int!
+}
+
+type MonthlyRevenue {
+  month: String!
+  totalRevenue: Float!
+}
+
+type MonthlyEnrollment {
+  month: String!
+  totalEnrollments: Int!
+}
+
+type StudentsByCountry {
+  country: String!
+  totalStudents: Int!
+}
+
 type Query {
   healthCheck: String!
+  myStudentProfile: Student!
   students: [Student!]!
   student(id: ID!): Student!
   users: [User!]!
@@ -161,6 +226,16 @@ type Query {
   paymentSettings: [PaymentSetting!]!
   contactMessages: [ContactMessage!]!
   contactMessage(id: ID!): ContactMessage!
+  approvedTestimonials: [Testimonial!]!
+  testimonials: [Testimonial!]!
+  testimonial(id: ID!): Testimonial!
+  dashboardStats: DashboardStats!
+  latestEnrollments(limit: Int! = 5): [Enrollment!]!
+  latestPayments(limit: Int! = 5): [Payment!]!
+  popularCourses: [PopularCourse!]!
+  monthlyRevenue(year: Int!): [MonthlyRevenue!]!
+  monthlyEnrollments(year: Int!): [MonthlyEnrollment!]!
+  studentsByCountry: [StudentsByCountry!]!
 }
 
 type Mutation {
@@ -169,6 +244,7 @@ type Mutation {
   deleteStudent(id: ID!): Student!
   register(createUserInput: CreateUserInput!): User!
   login(loginInput: LoginInput!): LoginResponse!
+  logout: Boolean!
   forgotPassword(email: String!): Boolean!
   resetPassword(resetPasswordInput: ResetPasswordInput!): Boolean!
   changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
@@ -192,6 +268,11 @@ type Mutation {
   markContactMessageAsRead(id: ID!): ContactMessage!
   replyToContactMessage(id: ID!, replyContent: String!): ContactMessage!
   deleteContactMessage(id: ID!): ContactMessage!
+  submitTestimonial(createTestimonialInput: CreateTestimonialInput!): SubmitTestimonialResponse!
+  approveTestimonial(id: ID!): Testimonial!
+  rejectTestimonial(id: ID!): Testimonial!
+  updateTestimonial(updateTestimonialInput: UpdateTestimonialInput!): Testimonial!
+  deleteTestimonial(id: ID!): Testimonial!
 }
 
 input CreateStudentInput {
@@ -348,4 +429,22 @@ input CreateContactMessageInput {
   email: String!
   subject: String!
   message: String!
+}
+
+input CreateTestimonialInput {
+  name: String!
+  gender: Gender!
+  country: String!
+  rating: Int!
+  description: String!
+}
+
+input UpdateTestimonialInput {
+  name: String
+  gender: Gender
+  country: String
+  rating: Int
+  description: String
+  id: ID!
+  status: TestimonialStatus
 }

@@ -28,6 +28,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       // Browser mein testing UI (Playground) enable karne ke liye
       playground: true,
+      context: ({ req, res }) => ({ req, res }),
     }),
     StudentsModule,
     CoursesModule,
