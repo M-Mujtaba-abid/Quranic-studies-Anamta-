@@ -34,6 +34,16 @@ export class EnrollmentResolver {
     return await this.enrollmentService.enrollStudent(enrollStudentInput);
   }
 
+  // --- Public Query (To retrieve enrollment details on payment page) ---
+  @Query(() => Enrollment, { name: 'publicEnrollment' })
+  async findPublicOne(
+    @Args('id', { type: () => ID })
+    id: string,
+  ) {
+    return await this.enrollmentService.findOne(id);
+  }
+
+
   // --- Admin-only Operations ---
   @Mutation(() => Enrollment)
   @UseGuards(JwtAuthGuard, RolesGuard)

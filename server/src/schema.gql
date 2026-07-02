@@ -10,6 +10,7 @@ type Course {
   description: String!
   duration: String!
   days: String!
+  price: Float!
   isActive: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -217,6 +218,7 @@ type Query {
   user(id: ID!): User!
   courses: [Course!]!
   course(id: ID!): Course!
+  publicEnrollment(id: ID!): Enrollment!
   enrollments: [Enrollment!]!
   enrollment(id: ID!): Enrollment!
   myPayments: [Payment!]!
@@ -328,6 +330,7 @@ input CreateCourseInput {
   description: String!
   duration: String!
   days: String!
+  price: Float!
 }
 
 input UpdateCourseInput {
@@ -337,7 +340,9 @@ input UpdateCourseInput {
   description: String
   duration: String
   days: String
+  price: Float
   id: ID!
+  isActive: Boolean
 }
 
 input GenerateUploadSignatureInput {

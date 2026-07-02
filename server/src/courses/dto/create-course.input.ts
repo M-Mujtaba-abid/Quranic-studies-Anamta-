@@ -1,5 +1,5 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, Length, IsString } from 'class-validator';
+import { Field, Float, InputType } from '@nestjs/graphql';
+import { IsNotEmpty, Length, IsString, IsNumber, Min } from 'class-validator';
 
 @InputType()
 export class CreateCourseInput {
@@ -29,4 +29,9 @@ export class CreateCourseInput {
   @Field()
   @IsNotEmpty({ message: 'Days are required.' })
   days!: string;
+
+  @Field(() => Float)
+  @IsNumber({}, { message: 'Price must be a valid number.' })
+  @Min(0, { message: 'Price cannot be negative.' })
+  price!: number;
 }

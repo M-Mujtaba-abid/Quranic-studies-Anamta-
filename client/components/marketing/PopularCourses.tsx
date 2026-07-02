@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import CourseCard, { CourseCardProps } from "../course/CourseCard";
+import CourseCard, { CourseCardProps } from "./CourseCard";
 import SectionHeading from "../ui/SectionHeading";
 
 const courses: CourseCardProps[] = [
@@ -97,7 +97,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 export default function PopularCourses() {

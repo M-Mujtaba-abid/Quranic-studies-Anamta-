@@ -46,6 +46,8 @@ model Course {
   imageUrl    String
   imageId     String
 
+  price       Decimal  @default(0.00)
+
   isActive    Boolean  @default(true)
 
   createdAt   DateTime @default(now())

@@ -87,8 +87,8 @@ export default function Teachers() {
         </div>
 
         <div className="mt-12 flex justify-center sm:hidden">
-          <Link 
-            href="/teachers" 
+          <Link
+            href="/teachers"
             className="w-full text-center rounded-full border border-primary/60 bg-primary/5 px-8 py-3 text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 active:scale-[0.98] active:border-gold active:text-gold"
           >
             Meet All Teachers

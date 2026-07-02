@@ -81,7 +81,7 @@ export default function Navbar() {
           </button>
 
           <Link
-            href="/login"
+            href="/admin/login"
             className="rounded-xl border border-primary/60 bg-primary/5 px-5 py-2.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold hover:text-gold"
           >
             Sign In
@@ -125,7 +125,7 @@ export default function Navbar() {
           ))}
           <li className="mt-4 flex flex-col gap-3 pt-4 border-t border-primary/10">
             <Link
-              href="/login"
+              href="/admin/login"
               onClick={() => setOpen(false)}
               className="rounded-xl border border-primary/50 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text"
             >

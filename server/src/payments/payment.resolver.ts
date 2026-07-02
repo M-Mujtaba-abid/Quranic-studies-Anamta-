@@ -1,4 +1,4 @@
-import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver, ResolveField, Parent, Float } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Payment } from './models/payment.model';
 import { PaymentService } from './payment.service';
@@ -98,5 +98,14 @@ export class PaymentResolver {
   @ResolveField(() => Enrollment, { nullable: true })
   async enrollment(@Parent() payment: Payment) {
     return await this.service.findEnrollment(payment.enrollmentId);
+  }
+
+  @ResolveField(() => Float)
+  amount(@Parent() payment: any) {
+    if (payment.amount === null || payment.amount === undefined) {
+      return 0;
+    }
+    const parsed = Number(payment.amount);
+    return isNaN(parsed) ? 0 : parsed;
   }
 }

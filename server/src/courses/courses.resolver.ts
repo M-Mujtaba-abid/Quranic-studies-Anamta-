@@ -1,4 +1,4 @@
-import { Args, ID, Query, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Query, Mutation, Resolver, ResolveField, Parent, Float } from '@nestjs/graphql';
 import { Course } from './models/course.model';
 import { CoursesService } from './courses.service';
 import { CreateCourseInput } from './dto/create-course.input';
@@ -59,4 +59,14 @@ export class CoursesResolver {
   ) {
     return await this.coursesService.remove(id);
   }
+
+  @ResolveField(() => Float)
+  price(@Parent() course: any) {
+    if (course.price === null || course.price === undefined) {
+      return 0;
+    }
+    const parsed = Number(course.price);
+    return isNaN(parsed) ? 0 : parsed;
+  }
 }
+// Trigger NestJS dev watch compile after prisma generate
