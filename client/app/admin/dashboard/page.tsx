@@ -318,7 +318,7 @@ export default function AdminDashboard() {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Monthly Revenue Chart */}
-        <div className="bg-surface border border-border p-6 rounded-2xl shadow-sm">
+        <div className="bg-surface border border-border p-6 rounded-2xl shadow-sm min-w-0">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-display font-semibold text-lg text-text">Monthly Revenue ({selectedYear})</h3>
             <span className="text-xs font-medium px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-500">Earnings</span>
@@ -329,10 +329,10 @@ export default function AdminDashboard() {
               No revenue data available for {selectedYear}
             </div>
           ) : (
-            <div className="relative w-full overflow-x-auto pt-2">
+            <div className="relative w-full overflow-x-auto pt-2 min-w-0">
               <svg 
                 viewBox={`0 0 ${revenueChartWidth} ${revenueChartHeight}`} 
-                className="w-full h-auto min-w-[450px]"
+                className="w-full h-auto max-w-full min-w-0"
               >
                 {/* Horizontal gridlines */}
                 {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
@@ -429,10 +429,10 @@ export default function AdminDashboard() {
               No enrollment data available for {selectedYear}
             </div>
           ) : (
-            <div className="relative w-full overflow-x-auto pt-2">
+            <div className="relative w-full overflow-x-auto pt-2 min-w-0">
               <svg 
                 viewBox={`0 0 ${enrollmentChartWidth} ${enrollmentChartHeight}`} 
-                className="w-full h-auto min-w-[450px]"
+                className="w-full h-auto max-w-full min-w-0"
               >
                 <defs>
                   <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
@@ -641,7 +641,7 @@ export default function AdminDashboard() {
       {/* Tables Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {/* Latest Enrollments Table */}
-        <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden min-w-0">
           <div className="p-6 border-b border-border flex items-center justify-between">
             <h3 className="font-display font-semibold text-lg text-text">Latest Enrollments</h3>
             <span className="text-xs font-semibold text-text-secondary px-2 py-0.5 rounded bg-bg border border-border">
@@ -649,13 +649,13 @@ export default function AdminDashboard() {
             </span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-w-0">
             {latestEnrollments.length === 0 ? (
               <div className="py-12 text-center text-text-secondary text-sm">
                 No enrollments registered yet
               </div>
             ) : (
-              <table className="w-full text-left text-sm border-collapse">
+              <table className="min-w-full w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="bg-surface-dark/40 text-text-secondary font-medium border-b border-border">
                     <th className="p-4">Student</th>
@@ -709,7 +709,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Latest Payments Table */}
-        <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden min-w-0">
           <div className="p-6 border-b border-border flex items-center justify-between">
             <h3 className="font-display font-semibold text-lg text-text">Latest Payments</h3>
             <span className="text-xs font-semibold text-text-secondary px-2 py-0.5 rounded bg-bg border border-border">
@@ -717,13 +717,13 @@ export default function AdminDashboard() {
             </span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-w-0">
             {latestPayments.length === 0 ? (
               <div className="py-12 text-center text-text-secondary text-sm">
                 No payments submitted yet
               </div>
             ) : (
-              <table className="w-full text-left text-sm border-collapse">
+              <table className="min-w-full w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="bg-surface-dark/40 text-text-secondary font-medium border-b border-border">
                     <th className="p-4">Student & Course</th>

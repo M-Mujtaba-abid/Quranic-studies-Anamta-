@@ -49,10 +49,21 @@
   --font-body: var(--font-poppins);
 }
 
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Custom Tailwind v4 Utilities for a luxury glass feel */
