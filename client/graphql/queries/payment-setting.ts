@@ -15,3 +15,19 @@ export const GET_ACTIVE_PAYMENT_SETTING = gql`
     }
   }
 `;
+
+export const GET_ALL_PAYMENT_SETTINGS = gql`
+  query GetAllPaymentSettings {
+    paymentSettings {
+      id
+      bankName
+      accountTitle
+      accountNumber
+      iban
+      jazzCashNumber
+      easyPaisaNumber
+      instructions
+      isActive
+    }
+  }
+`;

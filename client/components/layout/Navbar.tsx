@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Courses", href: "/courses" },
   { label: "Teachers", href: "/teachers" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -24,11 +25,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled
           ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
           : "border-b border-transparent bg-transparent"
-      }`}
+        }`}
     >
       {/* Premium subtle Regatta border accent line over the header frame */}
       <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
@@ -73,12 +73,12 @@ export default function Navbar() {
 
         {/* Right Structural Profile Controls */}
         <div className="hidden items-center gap-4 md:flex">
-          <button
+          {/* <button
             aria-label="Search"
             className="p-2 text-text-secondary transition-colors duration-200 hover:text-gold"
           >
             <Search size={16} strokeWidth={2.5} />
-          </button>
+          </button> */}
 
           <Link
             href="/admin/login"
@@ -107,9 +107,8 @@ export default function Navbar() {
 
       {/* Mobile Responsive Navigation overlay tray */}
       <div
-        className={`overflow-hidden bg-bg/95 backdrop-blur-xl border-b border-primary/10 transition-all duration-300 md:hidden ${
-          open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`overflow-hidden bg-bg/95 backdrop-blur-xl border-b border-primary/10 transition-all duration-300 md:hidden ${open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <ul className="flex flex-col gap-1 px-6 py-6 border-t border-primary/10">
           {navLinks.map((link) => (
