@@ -1,3 +1,4 @@
+import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import CTABanner from "@/components/marketing/CTABanner";
 import FAQ from "@/components/marketing/FAQ";
@@ -25,6 +26,7 @@ export default function Home() {
       <PricingPreview />
       <FAQ />
       <CTABanner />
+       <Footer />
     </main>
   );
 }
