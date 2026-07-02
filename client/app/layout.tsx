@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel, Poppins } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { ApolloProvider } from "../providers/ApolloProvider";
 import { ThemeProvider } from "../providers/ThemeProvider";
@@ -47,7 +48,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script
+          id="theme-initializer"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+        />
       </head>
       <body suppressHydrationWarning className={`${cinzel.variable} ${poppins.variable} font-body antialiased`}>
         <ApolloProvider>
