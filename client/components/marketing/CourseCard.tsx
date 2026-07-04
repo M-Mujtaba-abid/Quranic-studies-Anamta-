@@ -41,7 +41,8 @@ export default function CourseCard({
 }: CourseCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -6, scale: 1.01, boxShadow: "0 20px 48px -12px rgba(0,0,0,0.42)" }}
+      whileTap={{ scale: 0.99 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-shadow duration-300 hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.5)]"
     >

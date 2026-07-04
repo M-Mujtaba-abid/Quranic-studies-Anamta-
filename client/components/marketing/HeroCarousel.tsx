@@ -6,6 +6,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { AyatRotator } from "../common/AyatRotator";
 
 const slides = [
   {
@@ -98,12 +99,9 @@ export default function HeroCarousel() {
                 alt={slide.badge}
                 className="h-full w-full object-cover object-center"
                 style={{ filter: "brightness(0.55) saturate(0.85)" }}
-                initial={{ scale: 1 }}
-                animate={{ scale: index === selectedIndex ? 1.1 : 1 }}
-                transition={{
-                  duration: AUTOPLAY_DELAY / 1000 + 1,
-                  ease: "linear",
-                }}
+                initial={{ scale: 1.04, opacity: 0.92 }}
+                animate={{ scale: index === selectedIndex ? 1.08 : 1.02, opacity: index === selectedIndex ? 1 : 0.95 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               />
 
               {/* Mobile gradient — bottom to top */}
@@ -141,6 +139,8 @@ export default function HeroCarousel() {
           ))}
         </div>
       </div>
+
+      <AyatRotator />
 
       {/* ── Overlay content ── */}
       <div

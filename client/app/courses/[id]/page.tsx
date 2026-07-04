@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const availableDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -142,10 +143,23 @@ export default function CourseDetailsPage() {
     return (
       <div className="min-h-screen bg-bg text-text">
         <Navbar />
-        <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
-          <RefreshCw className="h-10 w-10 text-gold animate-spin" />
-          <p className="text-text-secondary font-medium animate-pulse">Loading course info...</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="h-[70vh] flex flex-col items-center justify-center gap-4"
+        >
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}>
+            <RefreshCw className="h-10 w-10 text-gold" />
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="text-text-secondary font-medium"
+          >
+            Loading course info...
+          </motion.p>
+        </motion.div>
       </div>
     );
   }
@@ -270,62 +284,75 @@ export default function CourseDetailsPage() {
 
           {/* Form / Right Column */}
           <div className="lg:col-span-5 relative">
-            {enrollmentSuccess ? (
-              <div className="bg-surface border border-border p-8 rounded-2xl shadow-md space-y-6 animate-fade-in relative z-10 text-left">
-                <div className="h-16 w-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-2">
-                  <CheckCircle size={36} />
-                </div>
-                <div className="space-y-2 text-center">
-                  <h3 className="text-xl font-bold font-display text-text">Enrollment Submitted!</h3>
-                  <p className="text-xs text-text-secondary leading-relaxed">
-                    Alhamdulillah, your registration has been successfully received.
-                  </p>
-                </div>
-
-                <div className="bg-bg/50 border border-border/40 p-4 rounded-xl space-y-3 text-xs">
-                  <h4 className="font-semibold text-text uppercase tracking-wider text-[10px]">Enrollment Details</h4>
-                  <div className="space-y-1.5 text-text-secondary">
-                    <p><span className="text-text font-medium">Student:</span> {formData.firstName} {formData.lastName}</p>
-                    <p><span className="text-text font-medium">Schedule:</span> {formData.preferredHour.toString().padStart(2, '0')}:{formData.preferredMinute.toString().padStart(2, '0')} {formData.preferredPeriod} on {selectedDays.join(', ')}</p>
-                    {enrolledId && (
-                      <div className="pt-2 flex flex-col gap-1 border-t border-border/30 mt-2">
-                        <span className="text-text font-medium">Enrollment ID:</span>
-                        <div className="flex items-center gap-2 bg-surface/60 p-2 rounded border border-border mt-1">
-                          <code className="text-gold font-mono text-[11px] select-all break-all">{enrolledId}</code>
-                          <button
-                            type="button"
-                            onClick={handleCopyId}
-                            className="p-1 hover:text-gold transition-colors ml-auto cursor-pointer"
-                            title="Copy ID"
-                          >
-                            {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
-                          </button>
-                        </div>
-                      </div>
-                    )}
+            <AnimatePresence mode="wait">
+              {enrollmentSuccess ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-surface border border-border p-8 rounded-2xl shadow-md space-y-6 relative z-10 text-left"
+                >
+                  <div className="h-16 w-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-2">
+                    <CheckCircle size={36} />
                   </div>
-                </div>
+                  <div className="space-y-2 text-center">
+                    <h3 className="text-xl font-bold font-display text-text">Enrollment Submitted!</h3>
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      Alhamdulillah, your registration has been successfully received.
+                    </p>
+                  </div>
 
-                <div className="space-y-3">
-                  {enrolledId && (
-                    <Link href={`/payment?enrollmentId=${enrolledId}`} className="w-full block">
-                      <Button variant="gold" size="md" className="w-full text-sm font-semibold tracking-wide py-2.5">
-                        Proceed to Payment
+                  <div className="bg-bg/50 border border-border/40 p-4 rounded-xl space-y-3 text-xs">
+                    <h4 className="font-semibold text-text uppercase tracking-wider text-[10px]">Enrollment Details</h4>
+                    <div className="space-y-1.5 text-text-secondary">
+                      <p><span className="text-text font-medium">Student:</span> {formData.firstName} {formData.lastName}</p>
+                      <p><span className="text-text font-medium">Schedule:</span> {formData.preferredHour.toString().padStart(2, '0')}:{formData.preferredMinute.toString().padStart(2, '0')} {formData.preferredPeriod} on {selectedDays.join(', ')}</p>
+                      {enrolledId && (
+                        <div className="pt-2 flex flex-col gap-1 border-t border-border/30 mt-2">
+                          <span className="text-text font-medium">Enrollment ID:</span>
+                          <div className="flex items-center gap-2 bg-surface/60 p-2 rounded border border-border mt-1">
+                            <code className="text-gold font-mono text-[11px] select-all break-all">{enrolledId}</code>
+                            <button
+                              type="button"
+                              onClick={handleCopyId}
+                              className="p-1 hover:text-gold transition-colors ml-auto cursor-pointer"
+                              title="Copy ID"
+                            >
+                              {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {enrolledId && (
+                      <Link href={`/payment?enrollmentId=${enrolledId}`} className="w-full block">
+                        <Button variant="gold" size="md" className="w-full text-sm font-semibold tracking-wide py-2.5">
+                          Proceed to Payment
+                        </Button>
+                      </Link>
+                    )}
+                    <Link href="/courses" className="w-full block">
+                      <Button variant="outline" size="sm" className="w-full text-xs">
+                        Browse More Courses
                       </Button>
                     </Link>
-                  )}
-                  <Link href="/courses" className="w-full block">
-                    <Button variant="outline" size="sm" className="w-full text-xs">
-                      Browse More Courses
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <form 
-                onSubmit={handleSubmit}
-                className="bg-surface border border-border p-6 md:p-8 rounded-2xl shadow-md space-y-6 relative z-10"
-              >
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  onSubmit={handleSubmit}
+                  className="bg-surface border border-border p-6 md:p-8 rounded-2xl shadow-md space-y-6 relative z-10"
+                >
                 <div className="space-y-1">
                   <h3 className="text-lg font-bold font-display text-text">Register for this Course</h3>
                   <p className="text-xs text-text-secondary">
@@ -518,8 +545,9 @@ export default function CourseDetailsPage() {
                 >
                   Submit Registration
                 </Button>
-              </form>
-            )}
+                </motion.form>
+              )}
+            </AnimatePresence>
           </div>
 
         </div>
