@@ -23,6 +23,13 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 import Link from 'next/link';
 
@@ -77,11 +84,20 @@ export default function CourseDetailsPage() {
     }
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name.startsWith('preferredHour') || name.startsWith('preferredMinute') ? parseInt(value) : value
+      [name]: value
+    }));
+  };
+
+  // Generic handler for the custom (Radix) selects: hour, minute, period.
+  // Mirrors the old handleInputChange logic (numeric parsing for hour/minute).
+  const handleSelectChange = (name: 'preferredHour' | 'preferredMinute' | 'preferredPeriod', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'preferredHour' || name === 'preferredMinute' ? parseInt(value) : value,
     }));
   };
 
@@ -396,36 +412,73 @@ export default function CourseDetailsPage() {
                       Preferred Timing
                     </label>
                     <div className="flex items-center gap-2 bg-bg border border-border p-2 rounded-xl">
-                      <select
-                        name="preferredHour"
-                        value={formData.preferredHour}
-                        onChange={handleInputChange}
-                        className="bg-transparent border-0 text-text font-semibold text-sm focus:outline-none cursor-pointer p-1"
+                      {/* Hour */}
+                      <Select
+                        value={formData.preferredHour.toString()}
+                        onValueChange={(value) => handleSelectChange('preferredHour', value)}
                       >
-                        {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
-                          <option key={h} value={h}>{h.toString().padStart(2, '0')}</option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="w-[72px] bg-transparent border-0 text-text font-semibold text-sm focus:ring-0 focus:ring-offset-0 shadow-none px-2 h-auto py-1 cursor-pointer">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-surface border border-border text-text rounded-xl">
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
+                            <SelectItem
+                              key={h}
+                              value={h.toString()}
+                              className="text-text focus:bg-gold/10 focus:text-gold data-[state=checked]:bg-gold/15 data-[state=checked]:text-gold rounded-lg cursor-pointer"
+                            >
+                              {h.toString().padStart(2, '0')}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
                       <span className="text-text-secondary">:</span>
-                      <select
-                        name="preferredMinute"
-                        value={formData.preferredMinute}
-                        onChange={handleInputChange}
-                        className="bg-transparent border-0 text-text font-semibold text-sm focus:outline-none cursor-pointer p-1"
+
+                      {/* Minute */}
+                      <Select
+                        value={formData.preferredMinute.toString()}
+                        onValueChange={(value) => handleSelectChange('preferredMinute', value)}
                       >
-                        {[0, 15, 30, 45].map(m => (
-                          <option key={m} value={m}>{m.toString().padStart(2, '0')}</option>
-                        ))}
-                      </select>
-                      <select
-                        name="preferredPeriod"
+                        <SelectTrigger className="w-[72px] bg-transparent border-0 text-text font-semibold text-sm focus:ring-0 focus:ring-offset-0 shadow-none px-2 h-auto py-1 cursor-pointer">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-surface border border-border text-text rounded-xl">
+                          {[0, 15, 30, 45].map(m => (
+                            <SelectItem
+                              key={m}
+                              value={m.toString()}
+                              className="text-text focus:bg-gold/10 focus:text-gold data-[state=checked]:bg-gold/15 data-[state=checked]:text-gold rounded-lg cursor-pointer"
+                            >
+                              {m.toString().padStart(2, '0')}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {/* AM/PM */}
+                      <Select
                         value={formData.preferredPeriod}
-                        onChange={handleInputChange}
-                        className="bg-transparent border-0 text-text font-semibold text-sm focus:outline-none cursor-pointer p-1 ml-auto"
+                        onValueChange={(value) => handleSelectChange('preferredPeriod', value)}
                       >
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
-                      </select>
+                        <SelectTrigger className="w-[80px] ml-auto bg-transparent border-0 text-text font-semibold text-sm focus:ring-0 focus:ring-offset-0 shadow-none px-2 h-auto py-1 cursor-pointer">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-surface border border-border text-text rounded-xl">
+                          <SelectItem
+                            value="AM"
+                            className="text-text focus:bg-gold/10 focus:text-gold data-[state=checked]:bg-gold/15 data-[state=checked]:text-gold rounded-lg cursor-pointer"
+                          >
+                            AM
+                          </SelectItem>
+                          <SelectItem
+                            value="PM"
+                            className="text-text focus:bg-gold/10 focus:text-gold data-[state=checked]:bg-gold/15 data-[state=checked]:text-gold rounded-lg cursor-pointer"
+                          >
+                            PM
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 

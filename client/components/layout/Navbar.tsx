@@ -7,8 +7,8 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Courses", href: "/courses" },
-  { label: "Teachers", href: "/teachers" },
-  { label: "Pricing", href: "/pricing" },
+  // { label: "Teachers", href: "/teachers" },
+  // { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
@@ -38,7 +38,7 @@ export default function Navbar() {
         <Link href="/" className="group flex items-center gap-3">
           <div className="relative overflow-hidden rounded-xl border border-primary/30 bg-surface/40 p-0.5 transition-all duration-300 group-hover:border-gold/60 group-hover:shadow-[0_0_20px_rgba(33,87,115,0.4)]">
             <Image
-              src="/logo/logo.jpeg"
+              src="/logo.jpeg"
               alt="Anamta Institute"
               width={44}
               height={44}

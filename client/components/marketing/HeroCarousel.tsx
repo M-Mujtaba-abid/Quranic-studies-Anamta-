@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 const slides = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=1800&q=85&fit=crop",
+    image: "/Web banner 1.jpg.jpeg",
     badge: "Trusted by 10,000+ students worldwide",
     title: "Learn the Quran with certified teachers, from anywhere.",
     highlight: "certified teachers",
@@ -23,7 +23,7 @@ const slides = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1585036156171-384164a8c675?w=1800&q=85&fit=crop",
+    image: "/Web banner 2.jpg.jpeg",
     badge: "Live, one-on-one online classes",
     title: "A personal teacher, a curriculum built around you.",
     highlight: "built around you",
@@ -36,7 +36,7 @@ const slides = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1519817650390-64a93db51149?w=1800&q=85&fit=crop",
+    image: "/Web banner 3.jpg.jpeg",
     badge: "Join students from 30+ countries",
     title: "From your first letter to a lifelong connection with the Quran.",
     highlight: "lifelong connection",
