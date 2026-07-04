@@ -144,9 +144,7 @@ export default function HeroCarousel() {
 
       {/* ── Overlay content ── */}
       <div
-        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-5 sm:px-6 lg:px-12
-          justify-end pb-24
-          sm:justify-center sm:pb-0"
+        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-20 pt-24 sm:px-6 sm:pb-0 sm:pt-0 sm:justify-center lg:px-12"
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -165,7 +163,7 @@ export default function HeroCarousel() {
               className="mb-4 sm:mb-6"
             >
               <span
-                className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide text-sand backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs"
+                className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-medium tracking-wide text-sand backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs"
                 style={{
                   borderColor: "rgba(201,162,39,0.35)",
                   background: "rgba(33,87,115,0.35)",
@@ -178,8 +176,7 @@ export default function HeroCarousel() {
 
             {/* Heading */}
             <h1
-              className="font-display font-semibold leading-[1.18] text-text
-                text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.4rem]"
+              className="max-w-[15ch] font-display text-[1.55rem] font-semibold leading-[1.08] text-text sm:max-w-none sm:text-4xl sm:leading-[1.18] md:text-5xl lg:text-[3.4rem]"
             >
               {active.title.split(active.highlight)[0]}
               <span className="relative inline-block text-gold">
@@ -200,7 +197,7 @@ export default function HeroCarousel() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="mt-3 text-sm leading-relaxed text-text-secondary sm:mt-5 sm:text-base lg:text-lg"
+              className="mt-3 max-w-xl text-sm leading-relaxed text-text-secondary sm:mt-5 sm:text-base lg:text-lg"
             >
               {active.text}
             </motion.p>
@@ -214,13 +211,13 @@ export default function HeroCarousel() {
             >
               <Link
                 href="/courses"
-                className="rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:px-8 sm:py-3.5"
+                className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5"
               >
                 Explore Courses
               </Link>
               <Link
                 href="/contact"
-                className="rounded-full border px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:text-gold sm:px-8 sm:py-3.5"
+                className="w-full rounded-full border px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:text-gold sm:w-auto sm:px-8 sm:py-3.5"
                 style={{
                   borderColor: "rgba(33,87,115,0.6)",
                   background: "rgba(33,87,115,0.2)",
@@ -241,10 +238,10 @@ export default function HeroCarousel() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.55 }}
-              className="mt-6 flex items-center gap-4 sm:mt-10 sm:gap-6"
+              className="mt-6 flex flex-wrap items-start gap-3 sm:mt-10 sm:gap-6"
             >
               {active.stats.map((stat, i) => (
-                <div key={i} className="flex flex-col">
+                <div key={i} className="flex min-w-[72px] flex-col">
                   <span className="font-display text-lg font-semibold text-gold sm:text-2xl">
                     {stat.value}
                   </span>
@@ -254,10 +251,10 @@ export default function HeroCarousel() {
                 </div>
               ))}
               <div
-                className="ml-1 h-7 w-[1px] sm:ml-2 sm:h-8"
+                className="hidden h-7 w-[1px] self-center sm:ml-2 sm:block sm:h-8"
                 style={{ background: "rgba(33,87,115,0.6)" }}
               />
-              <p className="text-[10px] text-text-secondary sm:text-xs">
+              <p className="max-w-[9rem] text-[10px] text-text-secondary sm:max-w-none sm:text-xs">
                 Join a growing{" "}
                 <br className="hidden sm:block" />
                 community of learners
@@ -286,7 +283,7 @@ export default function HeroCarousel() {
       </button>
 
       {/* ── Bottom bar: dots + counter ── */}
-      <div className="absolute bottom-5 z-10 flex w-full items-center justify-between px-5 sm:bottom-8 sm:px-8">
+      <div className="absolute bottom-3 z-10 flex w-full items-center justify-between px-3 sm:bottom-8 sm:px-8">
         {/* Progress dots */}
         <div className="flex items-center gap-2">
           {slides.map((slide, index) => (
@@ -294,7 +291,7 @@ export default function HeroCarousel() {
               key={slide.id}
               onClick={() => scrollTo(index)}
               aria-label={`Slide ${index + 1}`}
-              className="relative h-[3px] overflow-hidden rounded-full transition-all duration-300 w-8 sm:w-12"
+              className="relative h-[3px] w-6 overflow-hidden rounded-full transition-all duration-300 sm:w-12"
               style={{ background: "rgba(33,87,115,0.4)" }}
             >
               {index === selectedIndex && (
