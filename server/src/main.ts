@@ -38,6 +38,9 @@ import express from 'express';
 // 1. Ek Express instance banayein
 const server = express();
 
+let isAppInitialized = false;
+let initPromise: Promise<any> | null = null;
+
 // 2. Core setup function taake configurations ek hi jagah rahin
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
@@ -67,17 +70,23 @@ async function bootstrap() {
   );
 
   await app.init();
+  isAppInitialized = true;
   return app;
 }
 
-// 3. Environment check (Local vs Production)
-if (process.env.VERCEL) {
-  // Agar code Vercel par hai, toh sirf initialize karein (app.listen nahi chahiye)
-  bootstrap()
-    .then(() => console.log('NestJS Server Ready for Vercel'))
-    .catch((err) => console.error('NestJS Initialization Error', err));
-} else {
-  // Agar locally chal raha hai, toh standard app.listen() trigger karein
+// 3. Vercel Serverless Handler Wrapper to avoid cold start / async race condition
+const handler = async (req: any, res: any) => {
+  if (!isAppInitialized) {
+    if (!initPromise) {
+      initPromise = bootstrap();
+    }
+    await initPromise;
+  }
+  return server(req, res);
+};
+
+// Local startup check
+if (!process.env.VERCEL) {
   bootstrap()
     .then(async (app) => {
       const port = process.env.PORT ?? 3001;
@@ -87,5 +96,5 @@ if (process.env.VERCEL) {
     .catch((err) => console.error('NestJS Local Startup Error', err));
 }
 
-// 4. Vercel serverless function ke liye server export lazmi hai
-export default server;
+// Export default handler
+export default handler;
