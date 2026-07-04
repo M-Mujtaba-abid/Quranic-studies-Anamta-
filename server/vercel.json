@@ -22,10 +22,6 @@
   ],
   "routes": [
     {
-      "method": "OPTIONS",
-      "status": 204
-    },
-    {
       "src": "/(.*)",
       "dest": "dist/main.js"
     }
