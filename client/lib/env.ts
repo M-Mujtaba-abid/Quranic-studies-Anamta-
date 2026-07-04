@@ -1,7 +1,15 @@
 import { z } from 'zod';
 
+function normalizeApiUrl(url: string): string {
+  return url.trim().replace(/\/+$/, '').replace(/\/graphql\/?$/, '') + '/graphql';
+}
+
 const envSchema = z.object({
-  NEXT_PUBLIC_API_URL: z.string().url().default('http://localhost:3001/graphql'),
+  NEXT_PUBLIC_API_URL: z
+    .string()
+    .transform(normalizeApiUrl)
+    .pipe(z.string().url())
+    .default('http://localhost:3001/graphql'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 });
 

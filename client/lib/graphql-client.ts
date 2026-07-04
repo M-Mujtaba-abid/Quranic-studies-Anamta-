@@ -28,7 +28,8 @@ export async function fetchGraphQL<T = any>(
     }
   }
 
-  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/graphql';
+  const rawUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/graphql';
+  const url = rawUrl.trim().replace(/\/+$/, '').replace(/\/graphql\/?$/, '') + '/graphql';
 
   try {
     const { headers: customHeaders, ...restOptions } = options;
