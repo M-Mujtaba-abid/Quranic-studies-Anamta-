@@ -108,14 +108,32 @@ async function bootstrap() {
   return app;
 }
 
+function ensureBootstrapStarted(): Promise<any> {
+  if (!initPromise) {
+    initPromise = bootstrap().catch((err) => {
+      initPromise = null;
+      isAppInitialized = false;
+      console.error('NestJS bootstrap failed', err);
+      throw err;
+    });
+  }
+
+  return initPromise;
+}
+
 // 3. Vercel Serverless Handler Wrapper to avoid cold start / async race condition
 const handler = async (req: any, res: any) => {
+  ensureBootstrapStarted();
+
+  // Preflight must not wait for NestJS cold start — CORS middleware is already on `server`
+  if (req.method === 'OPTIONS') {
+    return server(req, res);
+  }
+
   if (!isAppInitialized) {
-    if (!initPromise) {
-      initPromise = bootstrap();
-    }
     await initPromise;
   }
+
   return server(req, res);
 };
 
