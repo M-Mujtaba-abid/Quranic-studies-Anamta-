@@ -34,11 +34,58 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
-// import * as express from 'express';
 import express from 'express';
+import cors from 'cors';
+
+function normalizeOrigin(origin: string): string {
+  return origin.trim().replace(/\/$/, '');
+}
+
+function getAllowedOrigins(): string[] {
+  const defaults = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3003',
+    'https://anamtainstitute1.vercel.app',
+  ];
+
+  const fromEnv = process.env.CLIENT_URL
+    ? process.env.CLIENT_URL.split(',').map(normalizeOrigin).filter(Boolean)
+    : [];
+
+  return [...new Set([...defaults, ...fromEnv])];
+}
+
+function isOriginAllowed(origin: string | undefined, allowedOrigins: string[]): boolean {
+  if (!origin) {
+    return true;
+  }
+
+  return allowedOrigins.includes(normalizeOrigin(origin));
+}
 
 // 1. Ek Express instance banayein
 const server = express();
+const allowedOrigins = getAllowedOrigins();
+
+// Apply CORS on Express before Nest so preflight/OPTIONS work on Vercel too
+server.use(
+  cors({
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin, allowedOrigins)) {
+        callback(null, true);
+        return;
+      }
+
+      console.warn(`Blocked CORS origin: ${origin}`);
+      callback(null, false);
+    },
+    credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  }),
+);
 
 let isAppInitialized = false;
 let initPromise: Promise<any> | null = null;
@@ -46,21 +93,6 @@ let initPromise: Promise<any> | null = null;
 // 2. Core setup function taake configurations ek hi jagah rahin
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
-
-  // Aapki CORS Setting
-  const allowedOrigins = process.env.CLIENT_URL
-    ? process.env.CLIENT_URL.split(',').map(url => url.trim().replace(/\/$/, ''))
-    : [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://localhost:3002',
-        'http://localhost:3003',
-      ];
-
-  app.enableCors({
-    origin: allowedOrigins,
-    credentials: true,
-  });
 
   // Aapki Global Pipes Setting
   app.useGlobalPipes(
