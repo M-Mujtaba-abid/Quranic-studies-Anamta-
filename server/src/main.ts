@@ -22,8 +22,7 @@ function getAllowedOrigins(): string[] {
     'http://localhost:3000',
     'http://localhost:3001',
     'https://quranic-studies-anamta-1eaq.vercel.app',
-  ];
-
+  ]
   const fromEnv = process.env.CLIENT_URL
     ? process.env.CLIENT_URL.split(',').map(normalizeOrigin).filter(Boolean)
     : [];
