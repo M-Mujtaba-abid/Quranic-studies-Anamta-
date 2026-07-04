@@ -17,9 +17,14 @@ import { PaymentSettingModule } from './payment-settings/payment-setting.module'
 import { ContactUsModule } from './contact-us/contact-us.module';
 import { TestimonialsModule } from './testimonials/testimonials.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     DatabaseModule,
     // --- GraphQL Initialization ---
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -45,4 +50,4 @@ import { DashboardModule } from './dashboard/dashboard.module';
   controllers: [],
   providers: [DatabaseService, AppResolver],
 })
-export class AppModule {}
+export class AppModule { }

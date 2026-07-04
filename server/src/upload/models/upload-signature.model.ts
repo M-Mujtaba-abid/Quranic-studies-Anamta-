@@ -1,19 +1,19 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class UploadSignature {
-    @Field()
+    @Field(() => Int)
     timestamp!: number;
 
-    @Field()
+    @Field(() => String)
     signature!: string;
 
-    @Field()
+    @Field(() => String)
     apiKey!: string;
 
-    @Field()
+    @Field(() => String)
     cloudName!: string;
 
-    @Field()
+    @Field(() => String)
     folder!: string;
 }

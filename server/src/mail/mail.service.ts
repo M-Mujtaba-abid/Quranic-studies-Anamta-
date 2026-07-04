@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
-export class MailService {
+export class MailService implements OnModuleInit {
   private transporter: nodemailer.Transporter;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    @Inject(ConfigService) private readonly configService: ConfigService,
+  ) {}
+
+  onModuleInit() {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

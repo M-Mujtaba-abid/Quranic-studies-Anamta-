@@ -115,7 +115,7 @@ type LoginResponse {
 }
 
 type UploadSignature {
-  timestamp: Float!
+  timestamp: Int!
   signature: String!
   apiKey: String!
   cloudName: String!

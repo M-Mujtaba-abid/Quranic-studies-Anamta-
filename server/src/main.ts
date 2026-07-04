@@ -28,6 +28,7 @@
 
 
 
+import 'reflect-metadata';
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -44,10 +45,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
   // Aapki CORS Setting
+  const allowedOrigins = process.env.CLIENT_URL
+    ? process.env.CLIENT_URL.split(',').map(url => url.trim().replace(/\/$/, ''))
+    : [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:3002',
+        'http://localhost:3003',
+      ];
+
   app.enableCors({
-    origin: process.env.CLIENT_URL
-      ? process.env.CLIENT_URL.split(',')
-      : ['http://localhost:3000'],
+    origin: allowedOrigins,
     credentials: true,
   });
 
