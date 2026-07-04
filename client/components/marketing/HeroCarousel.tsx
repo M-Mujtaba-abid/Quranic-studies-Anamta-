@@ -6,6 +6,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { AyatRotator } from "../common/AyatRotator";
 
 const slides = [
   {
@@ -138,6 +139,8 @@ export default function HeroCarousel() {
           ))}
         </div>
       </div>
+
+      <AyatRotator />
 
       {/* ── Overlay content ── */}
       <div
