@@ -5,6 +5,7 @@ import "./globals.css";
 import { ApolloProvider } from "../providers/ApolloProvider";
 import { ThemeProvider } from "../providers/ThemeProvider";
 import { ToastProvider } from "../providers/ToastProvider";
+import { WhatsAppButton } from "../components/common/WhatsAppButton";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -58,6 +59,7 @@ export default function RootLayout({
         <ApolloProvider>
           <ThemeProvider>
             {children}
+            <WhatsAppButton />
             <ToastProvider />
           </ThemeProvider>
         </ApolloProvider>
