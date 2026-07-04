@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class GenerateUploadSignatureInput {
-    @Field()
-    @IsNotEmpty()
-    folder!: string;
+  @Field(() => String)
+  @IsNotEmpty()
+  folder!: string;
 }

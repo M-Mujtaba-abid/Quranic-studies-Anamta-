@@ -28,13 +28,13 @@
 
 
 
+import 'reflect-metadata';
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
-
+import express from 'express';
 // 1. Ek Express instance banayein
 const server = express();
 
