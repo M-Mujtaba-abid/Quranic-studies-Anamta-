@@ -22,7 +22,13 @@ export const metadata: Metadata = {
   title: "Anamta Institute | Online Quran Learning",
   description:
     "Learn Quran with certified teachers — Tajweed, Hifz, Tafsir and Arabic.",
+    icons: {
+    icon: "/logo.jpeg",       // Aapki file jpeg hai, toh yahan .jpeg likhein
+    shortcut: "/logo.jpeg",   
+    apple: "/logo.jpeg",      
+  },
 };
+
 
 const themeScript = `
   (function() {
