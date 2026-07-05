@@ -81,6 +81,15 @@ export default function CoursesPage() {
 
       {/* Header Banner */}
       <div className="relative py-20 border-b border-gold/10 bg-surface/35 backdrop-blur-sm overflow-hidden">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <Image
+            src="/images/about/contact_bg.png"
+            alt=""
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center relative z-10 space-y-4">
           <span className="text-xs font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/25">
             Course Directory

@@ -96,12 +96,21 @@ export default function AboutUs() {
       <div className="absolute -right-40 bottom-[20%] h-[500px] w-[500px] rounded-full bg-gold/5 blur-[150px] pointer-events-none" />
 
       {/* Hero Banner Section */}
-      <section className="relative pt-20 pb-16 px-5 sm:px-6 lg:px-10 text-center max-w-4xl mx-auto">
+      <section className="relative pt-20 pb-16 px-5 sm:px-6 lg:px-10 overflow-hidden">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <Image
+            src="/images/about/contact_bg.png"
+            alt=""
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="space-y-6"
+          className="relative z-10 max-w-4xl mx-auto text-center space-y-6"
         >
           <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[10px] font-bold uppercase tracking-wider">
             Our Noble Mission
