@@ -9,6 +9,10 @@ export const ENROLLMENT_FIELDS = gql`
     preferredMinute
     preferredPeriod
     preferredDays
+    enrollmentType
+    packageTier
+    appliedCurrency
+    appliedPrice
     status
     createdAt
     updatedAt

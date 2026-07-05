@@ -62,10 +62,10 @@ function PaymentContent() {
   const [generateUploadSignature] = useMutation<any, any>(GENERATE_UPLOAD_SIGNATURE);
   const [createPayment, { loading: submittingPayment }] = useMutation<any, any>(CREATE_PAYMENT_MUTATION);
 
-  // Auto-prefill amount from course price
+  // Auto-prefill amount from the enrollment's applied (region-based) price
   useEffect(() => {
-    if (enrollmentData?.publicEnrollment?.course?.price) {
-      setAmount(enrollmentData.publicEnrollment.course.price.toString());
+    if (enrollmentData?.publicEnrollment?.appliedPrice) {
+      setAmount(enrollmentData.publicEnrollment.appliedPrice.toString());
     }
   }, [enrollmentData]);
 
@@ -312,27 +312,42 @@ function PaymentContent() {
                     <span className="text-text block">{enrollment.student?.email}</span>
                     <span className="text-text">{enrollment.student?.phone}</span>
                   </div>
-                  <div>
-                    <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Preferred Class Timing</span>
-                    <div className="flex items-center gap-1.5 mt-0.5 text-text">
-                      <Clock size={13} className="text-gold" />
-                      <span>
-                        {enrollment.preferredHour.toString().padStart(2, '0')}:
-                        {enrollment.preferredMinute.toString().padStart(2, '0')} {enrollment.preferredPeriod}
+                  {enrollment.preferredHour != null && (
+                    <div>
+                      <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Preferred Class Timing</span>
+                      <div className="flex items-center gap-1.5 mt-0.5 text-text">
+                        <Clock size={13} className="text-gold" />
+                        <span>
+                          {enrollment.preferredHour.toString().padStart(2, '0')}:
+                          {enrollment.preferredMinute.toString().padStart(2, '0')} {enrollment.preferredPeriod}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {enrollment.preferredDays && (
+                    <div>
+                      <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Preferred Days</span>
+                      <div className="flex items-center gap-1.5 mt-0.5 text-text">
+                        <Calendar size={13} className="text-gold" />
+                        <span>{enrollment.preferredDays}</span>
+                      </div>
+                    </div>
+                  )}
+                  {enrollment.packageTier && enrollment.packageTier !== 'NONE' && (
+                    <div>
+                      <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Package</span>
+                      <span className="text-text font-medium">
+                        {enrollment.packageTier}
+                        {enrollment.enrollmentType === 'FREE_TRIAL' ? ' (Free Trial)' : ''}
                       </span>
                     </div>
-                  </div>
-                  <div>
-                    <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Preferred Days</span>
-                    <div className="flex items-center gap-1.5 mt-0.5 text-text">
-                      <Calendar size={13} className="text-gold" />
-                      <span>{enrollment.preferredDays}</span>
-                    </div>
-                  </div>
-                  {enrollment.course?.price !== undefined && (
+                  )}
+                  {enrollment.appliedPrice !== undefined && enrollment.appliedPrice !== null && (
                     <div>
                       <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Tuition Fee</span>
-                      <span className="text-gold font-bold text-sm">PKR {enrollment.course?.price}</span>
+                      <span className="text-gold font-bold text-sm">
+                        {enrollment.enrollmentType === 'FREE_TRIAL' ? 'Free Trial' : `${enrollment.appliedCurrency} ${enrollment.appliedPrice}`}
+                      </span>
                     </div>
                   )}
                   <div className="pt-2 border-t border-border/40">

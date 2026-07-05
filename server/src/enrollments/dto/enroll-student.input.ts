@@ -1,5 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, IsInt, Min, Max, IsIn } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsInt, Min, Max, IsIn, IsEnum } from 'class-validator';
+import { PackageTier, EnrollmentType } from '@prisma/client';
 
 @InputType()
 export class EnrollStudentInput {
@@ -45,28 +46,42 @@ export class EnrollStudentInput {
   @IsString()
   courseId!: string;
 
-  @Field(() => Int)
-  @IsNotEmpty({ message: 'Preferred hour is required.' })
+  // Defaults to REGULAR in the service if omitted. Only meaningful for international
+  // enrollments — local (Pakistan) enrollments never get a free trial.
+  @Field(() => EnrollmentType, { nullable: true })
+  @IsOptional()
+  @IsEnum(EnrollmentType, { message: 'Enrollment type must be REGULAR or FREE_TRIAL.' })
+  enrollmentType?: EnrollmentType;
+
+  // Required for international students to select a package; ignored for local (Pakistan)
+  // enrollments, which are priced directly from the region's CoursePackage record.
+  @Field(() => PackageTier, { nullable: true })
+  @IsOptional()
+  @IsEnum(PackageTier, { message: 'A valid package tier is required.' })
+  packageTier?: PackageTier;
+
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
   @IsInt()
   @Min(1, { message: 'Hour must be at least 1.' })
   @Max(12, { message: 'Hour cannot be greater than 12.' })
-  preferredHour!: number;
+  preferredHour?: number;
 
-  @Field(() => Int)
-  @IsNotEmpty({ message: 'Preferred minute is required.' })
+  @Field(() => Int, { nullable: true })
+  @IsOptional()
   @IsInt()
   @Min(0, { message: 'Minute must be at least 0.' })
   @Max(59, { message: 'Minute cannot be greater than 59.' })
-  preferredMinute!: number;
+  preferredMinute?: number;
 
-  @Field()
-  @IsNotEmpty({ message: 'Preferred period (AM/PM) is required.' })
+  @Field({ nullable: true })
+  @IsOptional()
   @IsString()
   @IsIn(['AM', 'PM'], { message: 'Period must be either AM or PM.' })
-  preferredPeriod!: string;
+  preferredPeriod?: string;
 
-  @Field()
-  @IsNotEmpty({ message: 'Preferred days are required.' })
+  @Field({ nullable: true })
+  @IsOptional()
   @IsString()
-  preferredDays!: string;
+  preferredDays?: string;
 }

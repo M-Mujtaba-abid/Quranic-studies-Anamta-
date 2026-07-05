@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
-import { CreateEnrollmentInput } from '../dto/create-enrollment.input';
 import { UpdateEnrollmentInput } from '../dto/update-enrollment.input';
-import { Enrollment } from '@prisma/client';
+import { Enrollment, Prisma } from '@prisma/client';
 
 @Injectable()
 export class EnrollmentRepository {
   constructor(private readonly database: DatabaseService) {}
 
-  async create(createEnrollmentInput: CreateEnrollmentInput): Promise<Enrollment> {
+  async create(data: Prisma.EnrollmentUncheckedCreateInput): Promise<Enrollment> {
     return await this.database.enrollment.create({
-      data: createEnrollmentInput,
+      data,
     });
   }
 

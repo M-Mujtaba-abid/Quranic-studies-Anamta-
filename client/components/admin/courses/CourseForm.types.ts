@@ -1,0 +1,29 @@
+import type { Region, PackageTier } from '@/constants/regions';
+
+export interface PackageFormValues {
+  region: Region;
+  packageTier: PackageTier;
+  currency: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+}
+
+export interface CourseFormValues {
+  title: string;
+  description: string;
+  imageUrl: string;
+  imageId: string;
+  isActive: boolean;
+  packages: PackageFormValues[];
+}
+
+export interface CourseSubmitInput {
+  title: string;
+  description: string;
+  imageUrl: string;
+  imageId: string;
+  isActive?: boolean;
+  packages: PackageFormValues[];
+}

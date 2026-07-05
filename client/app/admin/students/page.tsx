@@ -243,14 +243,22 @@ export default function AdminStudentsPage() {
                         <div className="space-y-1.5">
                           <span className="font-semibold text-text text-sm block">{enrollment.course?.title}</span>
                           <div className="flex flex-wrap gap-x-4 gap-y-1 text-text-secondary">
-                            <span className="flex items-center gap-1">
-                              <RefreshCw size={11} className="text-gold" />
-                              <span>{enrollment.preferredHour.toString().padStart(2, '0')}:{enrollment.preferredMinute.toString().padStart(2, '0')} {enrollment.preferredPeriod}</span>
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Calendar size={11} className="text-gold" />
-                              <span>{enrollment.preferredDays}</span>
-                            </span>
+                            {enrollment.preferredHour != null ? (
+                              <>
+                                <span className="flex items-center gap-1">
+                                  <RefreshCw size={11} className="text-gold" />
+                                  <span>{enrollment.preferredHour.toString().padStart(2, '0')}:{enrollment.preferredMinute.toString().padStart(2, '0')} {enrollment.preferredPeriod}</span>
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Calendar size={11} className="text-gold" />
+                                  <span>{enrollment.preferredDays}</span>
+                                </span>
+                              </>
+                            ) : (
+                              <span className="flex items-center gap-1">
+                                {enrollment.packageTier && enrollment.packageTier !== 'NONE' ? `${enrollment.packageTier} package` : 'International enrollment'}
+                              </span>
+                            )}
                           </div>
                         </div>
 

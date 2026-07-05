@@ -40,13 +40,8 @@ model Course {
   title       String
   description String
 
-  duration    String
-  days        String
-
   imageUrl    String
   imageId     String
-
-  price       Decimal  @default(0.00)
 
   isActive    Boolean  @default(true)
 
@@ -54,8 +49,36 @@ model Course {
   updatedAt   DateTime @updatedAt
 
   enrollments Enrollment[]
+  packages    CoursePackage[]
 
   @@map("courses")
+}
+
+// One row per (course, region, packageTier). Local (Pakistan) pricing is stored as a
+// single row with packageTier = NONE since Pakistani students never choose between tiers.
+model CoursePackage {
+  id          String      @id @default(cuid())
+
+  courseId    String
+
+  region      Region
+  currency    String
+
+  packageTier PackageTier @default(NONE)
+
+  title       String
+  description String
+  imageUrl    String
+
+  price       Decimal
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, region, packageTier])
+  @@map("course_packages")
 }
 
 model User {
@@ -77,10 +100,17 @@ model Enrollment {
   id              String           @id @default(cuid())
   studentId       String
   courseId        String
-  preferredHour   Int
-  preferredMinute Int
-  preferredPeriod String           // e.g. "AM" or "PM"
-  preferredDays   String           // e.g. "Monday, Wednesday, Friday"
+
+  preferredHour   Int?
+  preferredMinute Int?
+  preferredPeriod String?          // e.g. "AM" or "PM"
+  preferredDays   String?          // e.g. "Monday, Wednesday, Friday"
+
+  enrollmentType  EnrollmentType   @default(REGULAR)
+  packageTier     PackageTier?
+  appliedCurrency String?
+  appliedPrice    Decimal?
+
   status          EnrollmentStatus @default(PENDING)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -176,6 +206,33 @@ enum EnrollmentStatus {
   APPROVED
   REJECTED
   COMPLETED
+}
+
+enum Region {
+  PAKISTAN
+  AUSTRALIA
+  CANADA
+  EUROPE
+  KSA
+  KUWAIT
+  QATAR
+  UAE
+  UK
+  US
+  OTHERS
+}
+
+enum PackageTier {
+  BASIC
+  INTENSIVE
+  PREMIUM
+  CUSTOM
+  NONE
+}
+
+enum EnrollmentType {
+  REGULAR
+  FREE_TRIAL
 }
 
 enum PaymentMethod {

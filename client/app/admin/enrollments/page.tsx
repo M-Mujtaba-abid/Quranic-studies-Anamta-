@@ -81,27 +81,33 @@ export default function AdminEnrollmentsPage() {
   const handleEditClick = (enrollment: any) => {
     setEditingEnrollment(enrollment);
     setEditForm({
-      preferredHour: enrollment.preferredHour,
-      preferredMinute: enrollment.preferredMinute,
-      preferredPeriod: enrollment.preferredPeriod,
-      preferredDays: enrollment.preferredDays,
+      preferredHour: enrollment.preferredHour ?? 5,
+      preferredMinute: enrollment.preferredMinute ?? 0,
+      preferredPeriod: enrollment.preferredPeriod ?? 'PM',
+      preferredDays: enrollment.preferredDays ?? '',
       status: enrollment.status
     });
   };
 
+  // Preferred schedule fields only apply to local (Pakistan) enrollments —
+  // international enrollments have no schedule, so they're left untouched here.
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingEnrollment) return;
+
+    const isLocalEnrollment = editingEnrollment.preferredHour != null;
 
     await updateEnrollment({
       variables: {
         updateEnrollmentInput: {
           id: editingEnrollment.id,
-          preferredHour: parseInt(editForm.preferredHour as any),
-          preferredMinute: parseInt(editForm.preferredMinute as any),
-          preferredPeriod: editForm.preferredPeriod,
-          preferredDays: editForm.preferredDays,
-          status: editForm.status as any
+          status: editForm.status as any,
+          ...(isLocalEnrollment && {
+            preferredHour: parseInt(editForm.preferredHour as any),
+            preferredMinute: parseInt(editForm.preferredMinute as any),
+            preferredPeriod: editForm.preferredPeriod,
+            preferredDays: editForm.preferredDays,
+          }),
         }
       }
     });
@@ -250,17 +256,29 @@ export default function AdminEnrollmentsPage() {
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-text-secondary space-y-0.5">
-                        <div className="flex items-center gap-1">
-                          <Clock size={11} className="text-gold shrink-0" />
-                          <span>
-                            {enrollment.preferredHour.toString().padStart(2, '0')}:
-                            {enrollment.preferredMinute.toString().padStart(2, '0')} {enrollment.preferredPeriod}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar size={11} className="text-gold shrink-0" />
-                          <span className="truncate max-w-[140px]" title={enrollment.preferredDays}>{enrollment.preferredDays}</span>
-                        </div>
+                        {enrollment.preferredHour != null ? (
+                          <>
+                            <div className="flex items-center gap-1">
+                              <Clock size={11} className="text-gold shrink-0" />
+                              <span>
+                                {enrollment.preferredHour.toString().padStart(2, '0')}:
+                                {enrollment.preferredMinute.toString().padStart(2, '0')} {enrollment.preferredPeriod}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Calendar size={11} className="text-gold shrink-0" />
+                              <span className="truncate max-w-[140px]" title={enrollment.preferredDays}>{enrollment.preferredDays}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex items-center gap-1">
+                            <DollarSign size={11} className="text-gold shrink-0" />
+                            <span>
+                              {enrollment.packageTier && enrollment.packageTier !== 'NONE' ? `${enrollment.packageTier}` : 'International'}
+                              {enrollment.enrollmentType === 'FREE_TRIAL' ? ' (Free Trial)' : ''}
+                            </span>
+                          </div>
+                        )}
                       </td>
                       <td className="py-3.5 px-4">
                         {enrollment.payment ? (
@@ -352,47 +370,56 @@ export default function AdminEnrollmentsPage() {
                 </select>
               </div>
 
-              {/* Timing */}
-              <div className="space-y-1.5">
-                <label className="block text-text-secondary font-medium">Preferred Time</label>
-                <div className="flex gap-2 bg-surface border border-border p-2 rounded-lg items-center">
-                  <select
-                    value={editForm.preferredHour}
-                    onChange={(e) => setEditForm({ ...editForm, preferredHour: parseInt(e.target.value) })}
-                    className="bg-transparent border-0 text-text font-semibold focus:outline-none cursor-pointer flex-1"
-                  >
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
-                      <option key={h} value={h}>{h.toString().padStart(2, '0')}</option>
-                    ))}
-                  </select>
-                  <span>:</span>
-                  <select
-                    value={editForm.preferredMinute}
-                    onChange={(e) => setEditForm({ ...editForm, preferredMinute: parseInt(e.target.value) })}
-                    className="bg-transparent border-0 text-text font-semibold focus:outline-none cursor-pointer flex-1"
-                  >
-                    {[0, 15, 30, 45].map(m => (
-                      <option key={m} value={m}>{m.toString().padStart(2, '0')}</option>
-                    ))}
-                  </select>
-                  <select
-                    value={editForm.preferredPeriod}
-                    onChange={(e) => setEditForm({ ...editForm, preferredPeriod: e.target.value })}
-                    className="bg-transparent border-0 text-text font-semibold focus:outline-none cursor-pointer flex-1"
-                  >
-                    <option value="AM">AM</option>
-                    <option value="PM">PM</option>
-                  </select>
-                </div>
-              </div>
+              {/* Timing (local/Pakistan enrollments only) */}
+              {editingEnrollment.preferredHour != null ? (
+                <>
+                  <div className="space-y-1.5">
+                    <label className="block text-text-secondary font-medium">Preferred Time</label>
+                    <div className="flex gap-2 bg-surface border border-border p-2 rounded-lg items-center">
+                      <select
+                        value={editForm.preferredHour}
+                        onChange={(e) => setEditForm({ ...editForm, preferredHour: parseInt(e.target.value) })}
+                        className="bg-transparent border-0 text-text font-semibold focus:outline-none cursor-pointer flex-1"
+                      >
+                        {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
+                          <option key={h} value={h}>{h.toString().padStart(2, '0')}</option>
+                        ))}
+                      </select>
+                      <span>:</span>
+                      <select
+                        value={editForm.preferredMinute}
+                        onChange={(e) => setEditForm({ ...editForm, preferredMinute: parseInt(e.target.value) })}
+                        className="bg-transparent border-0 text-text font-semibold focus:outline-none cursor-pointer flex-1"
+                      >
+                        {[0, 15, 30, 45].map(m => (
+                          <option key={m} value={m}>{m.toString().padStart(2, '0')}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={editForm.preferredPeriod}
+                        onChange={(e) => setEditForm({ ...editForm, preferredPeriod: e.target.value })}
+                        className="bg-transparent border-0 text-text font-semibold focus:outline-none cursor-pointer flex-1"
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </select>
+                    </div>
+                  </div>
 
-              {/* Days */}
-              <Input
-                label="Preferred Days (comma separated)"
-                value={editForm.preferredDays}
-                onChange={(e) => setEditForm({ ...editForm, preferredDays: e.target.value })}
-                required
-              />
+                  {/* Days */}
+                  <Input
+                    label="Preferred Days (comma separated)"
+                    value={editForm.preferredDays}
+                    onChange={(e) => setEditForm({ ...editForm, preferredDays: e.target.value })}
+                    required
+                  />
+                </>
+              ) : (
+                <p className="text-text-secondary italic bg-bg/40 border border-border/40 p-3 rounded-lg">
+                  This is an international enrollment ({editingEnrollment.packageTier}
+                  {editingEnrollment.enrollmentType === 'FREE_TRIAL' ? ', Free Trial' : ''}) — no schedule to edit, only status.
+                </p>
+              )}
 
               <div className="flex justify-end gap-2 pt-4 border-t border-border mt-6">
                 <Button 
