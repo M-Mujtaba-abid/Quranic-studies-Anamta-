@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avatar Redesign Preview</title>
+  <style>
+    body {
+      background: #0a0f15;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 40px;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #c5a880;
+      margin-bottom: 50px;
+      font-size: 28px;
+    }
+    
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 80px;
+    }
+    
+    .avatar-section h2 {
+      text-align: center;
+      color: #c5a880;
+      margin-bottom: 30px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .size-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    
+    .size-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .size-label {
+      font-size: 12px;
+      color: #9a7f5c;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .avatars-row {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .avatar-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .avatar-container label {
+      font-size: 11px;
+      color: #7a6e5f;
+    }
+    
+    /* Size presets */
+    .size-40 {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .size-64 {
+      width: 64px;
+      height: 64px;
+    }
+    
+    .size-100 {
+      width: 100px;
+      height: 100px;
+    }
+    
+    svg {
+      border-radius: 50%;
+      background: #141d27;
+      border: 1px solid rgba(197, 168, 128, 0.3);
+      padding: 4px;
+      box-sizing: border-box;
+    }
+    
+    .notes {
+      background: rgba(197, 168, 128, 0.08);
+      border: 1px solid rgba(197, 168, 128, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #b8b0a0;
+    }
+    
+    .notes strong {
+      color: #c5a880;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Avatar Redesign Preview</h1>
+    
+    <div class="comparison">
+      <div class="avatar-section">
+        <h2>👨 MaleAvatar (Brother)</h2>
+        
+        <div class="size-demo">
+          <div class="size-group">
+            <div class="size-label">40px (actual use size)</div>
+            <div class="avatars-row">
+              <div class="avatar-container">
+                <label>NEW</label>
+                <svg viewBox="0 0 100 100" class="size-40">
+                  <defs>
+                    <linearGradient id="maleGradNew" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#c5a880" />
+                      <stop offset="100%" stopColor="#9a7f5c" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
+                  
+                  <!-- Body/Shoulder area -->
+                  <path d="M 20 75 Q 20 60 30 55 L 70 55 Q 80 60 80 75 Z" fill="url(#maleGradNew)" />
+                  
+                  <!-- Neck -->
+                  <rect x="45" y="50" width="10" height="6" fill="url(#maleGradNew)" />
+                  
+                  <!-- Head -->
+                  <circle cx="50" cy="38" r="15" fill="url(#maleGradNew)" />
+                  
+                  <!-- Kufi/Cap (prominent filled shape on top) -->
+                  <path d="M 38 20 Q 50 12 62 20 Q 62 28 50 32 Q 38 28 38 20 Z" fill="url(#maleGradNew)" />
+                  
+                  <!-- Beard/Mustache area (dark definition) -->
+                  <path d="M 42 42 Q 50 46 58 42" fill="none" stroke="#0d131a" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M 40 45 Q 50 48 60 45" fill="none" stroke="#0d131a" strokeWidth="1.8" strokeLinecap="round" opacity="0.7" />
+                  
+                  <!-- Facial features minimal -->
+                  <circle cx="46" cy="36" r="1.5" fill="#0d131a" opacity="0.6" />
+                  <circle cx="54" cy="36" r="1.5" fill="#0d131a" opacity="0.6" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <div class="size-group">
+            <div class="size-label">64px (larger preview)</div>
+            <div class="avatars-row">
+              <svg viewBox="0 0 100 100" class="size-64">
+                <defs>
+                  <linearGradient id="maleGradNew2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#c5a880" />
+                    <stop offset="100%" stopColor="#9a7f5c" />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
+                <path d="M 20 75 Q 20 60 30 55 L 70 55 Q 80 60 80 75 Z" fill="url(#maleGradNew2)" />
+                <rect x="45" y="50" width="10" height="6" fill="url(#maleGradNew2)" />
+                <circle cx="50" cy="38" r="15" fill="url(#maleGradNew2)" />
+                <path d="M 38 20 Q 50 12 62 20 Q 62 28 50 32 Q 38 28 38 20 Z" fill="url(#maleGradNew2)" />
+                <path d="M 42 42 Q 50 46 58 42" fill="none" stroke="#0d131a" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M 40 45 Q 50 48 60 45" fill="none" stroke="#0d131a" strokeWidth="1.8" strokeLinecap="round" opacity="0.7" />
+                <circle cx="46" cy="36" r="1.5" fill="#0d131a" opacity="0.6" />
+                <circle cx="54" cy="36" r="1.5" fill="#0d131a" opacity="0.6" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="notes">
+          <strong>Key improvements:</strong><br>
+          • <strong>Kufi cap:</strong> Filled dome shape on top of head (clearly visible even at 40px)<br>
+          • <strong>Beard:</strong> Two layered curved lines below chin for short beard/stubble effect<br>
+          • <strong>Overall:</strong> Reads instantly as "male" with strong, simple line work
+        </div>
+      </div>
+      
+      <div class="avatar-section">
+        <h2>👩 FemaleAvatar (Sister)</h2>
+        
+        <div class="size-demo">
+          <div class="size-group">
+            <div class="size-label">40px (actual use size)</div>
+            <div class="avatars-row">
+              <div class="avatar-container">
+                <label>NEW</label>
+                <svg viewBox="0 0 100 100" class="size-40">
+                  <defs>
+                    <linearGradient id="femaleGradNew" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#c5a880" />
+                      <stop offset="100%" stopColor="#9a7f5c" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
+                  
+                  <!-- Body/Shoulder area -->
+                  <path d="M 15 78 Q 15 60 25 52 L 75 52 Q 85 60 85 78 Z" fill="url(#femaleGradNew)" />
+                  
+                  <!-- Hijab outer drape (main wrap) -->
+                  <path d="M 25 25 Q 25 15 50 12 Q 75 15 75 25 Q 75 45 70 60 Q 65 70 50 75 Q 35 70 30 60 Q 25 45 25 25 Z" fill="url(#femaleGradNew)" />
+                  
+                  <!-- Hijab left drape fold line -->
+                  <path d="M 30 28 Q 32 42 35 62" fill="none" stroke="#0d131a" strokeWidth="1.5" opacity="0.5" />
+                  
+                  <!-- Hijab right drape fold line -->
+                  <path d="M 70 28 Q 68 42 65 62" fill="none" stroke="#0d131a" strokeWidth="1.5" opacity="0.5" />
+                  
+                  <!-- Center front face area (visible between hijab) -->
+                  <ellipse cx="50" cy="40" rx="8" ry="10" fill="#141d27" />
+                  
+                  <!-- Facial features minimal -->
+                  <circle cx="47" cy="38" r="1.2" fill="#0d131a" opacity="0.5" />
+                  <circle cx="53" cy="38" r="1.2" fill="#0d131a" opacity="0.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <div class="size-group">
+            <div class="size-label">64px (larger preview)</div>
+            <div class="avatars-row">
+              <svg viewBox="0 0 100 100" class="size-64">
+                <defs>
+                  <linearGradient id="femaleGradNew2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#c5a880" />
+                    <stop offset="100%" stopColor="#9a7f5c" />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
+                <path d="M 15 78 Q 15 60 25 52 L 75 52 Q 85 60 85 78 Z" fill="url(#femaleGradNew2)" />
+                <path d="M 25 25 Q 25 15 50 12 Q 75 15 75 25 Q 75 45 70 60 Q 65 70 50 75 Q 35 70 30 60 Q 25 45 25 25 Z" fill="url(#femaleGradNew2)" />
+                <path d="M 30 28 Q 32 42 35 62" fill="none" stroke="#0d131a" strokeWidth="1.5" opacity="0.5" />
+                <path d="M 70 28 Q 68 42 65 62" fill="none" stroke="#0d131a" strokeWidth="1.5" opacity="0.5" />
+                <ellipse cx="50" cy="40" rx="8" ry="10" fill="#141d27" />
+                <circle cx="47" cy="38" r="1.2" fill="#0d131a" opacity="0.5" />
+                <circle cx="53" cy="38" r="1.2" fill="#0d131a" opacity="0.5" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="notes">
+          <strong>Key improvements:</strong><br>
+          • <strong>Hijab shape:</strong> Clear headscarf silhouette, wider/rounder at top than male avatar<br>
+          • <strong>Drape lines:</strong> Two visible fold lines flowing down to shoulders for dimension<br>
+          • <strong>Face area:</strong> Small visible face opening between hijab wraps<br>
+          • <strong>Overall:</strong> Distinctly different silhouette, reads instantly as "sister"
+        </div>
+      </div>
+    </div>
+    
+    <div style="background: rgba(197, 168, 128, 0.08); border: 1px solid rgba(197, 168, 128, 0.2); border-radius: 8px; padding: 20px; margin-top: 40px; font-size: 13px; line-height: 1.7; color: #b8b0a0;">
+      <strong style="color: #c5a880; display: block; margin-bottom: 12px;">✅ Design Quality Checklist:</strong>
+      ✓ Both easily distinguishable at 40px (actual use size)<br>
+      ✓ Premium/minimal vector-art style maintained<br>
+      ✓ Gold/tan gradient color palette preserved (#c5a880 → #9a7f5c)<br>
+      ✓ Dark navy background (#141d27) consistent<br>
+      ✓ Abstract/iconic (not photorealistic, not cartoonish)<br>
+      ✓ Culturally respectful, not stereotyped<br>
+      ✓ Clean line work, bold distinguishing features<br>
+    </div>
+  </div>
+</body>
+</html>
