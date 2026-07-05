@@ -133,6 +133,11 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
   };
 
   const submit = (values: CourseFormValues) => {
+    if (!values.imageUrl || !values.imageId) {
+      toast.error('Please upload a course thumbnail image before submitting.');
+      return;
+    }
+
     // The local package mirrors the course's own title/description/imageUrl —
     // the admin only ever sets its price.
     const packages = values.packages.map((pkg) =>
@@ -212,7 +217,7 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
                 </div>
 
                 <ImageUploadField
-                  label="Course Thumbnail Image"
+                  label="Course Thumbnail Image *"
                   value={imageUrl}
                   onChange={(url, publicId) => {
                     setValue('imageUrl', url, { shouldDirty: true });

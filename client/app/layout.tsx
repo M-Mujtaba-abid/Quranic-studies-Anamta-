@@ -5,6 +5,7 @@ import "./globals.css";
 import { ApolloProvider } from "../providers/ApolloProvider";
 import { ThemeProvider } from "../providers/ThemeProvider";
 import { ToastProvider } from "../providers/ToastProvider";
+import { CountryProvider } from "../providers/CountryProvider";
 import { WhatsAppButton } from "../components/common/WhatsAppButton";
 
 const cinzel = Cinzel({
@@ -58,9 +59,11 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${cinzel.variable} ${poppins.variable} font-body antialiased`}>
         <ApolloProvider>
           <ThemeProvider>
-            {children}
-            <WhatsAppButton />
-            <ToastProvider />
+            <CountryProvider>
+              {children}
+              <WhatsAppButton />
+              <ToastProvider />
+            </CountryProvider>
           </ThemeProvider>
         </ApolloProvider>
       </body>

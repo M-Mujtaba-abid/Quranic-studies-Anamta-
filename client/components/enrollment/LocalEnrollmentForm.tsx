@@ -34,7 +34,7 @@ export function LocalEnrollmentForm({ isSubmitting, onSubmit }: LocalEnrollmentF
       />
 
       <Button type="submit" variant="gold" className="w-full py-3.5 rounded-xl text-sm shadow-md" isLoading={isSubmitting}>
-        Pay Now
+        Enroll now
       </Button>
     </form>
   );

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Check } from 'lucide-react';
+import { Check, Info } from 'lucide-react';
 import { PACKAGE_TIER_META } from '@/constants/regions';
 
 export interface CoursePackageOption {
@@ -20,20 +20,27 @@ interface PackageCardProps {
   pkg: CoursePackageOption;
   isSelected: boolean;
   onSelect: () => void;
+  onViewDetails: () => void;
 }
 
-export function PackageCard({ pkg, isSelected, onSelect }: PackageCardProps) {
+export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: PackageCardProps) {
   const tierMeta = PACKAGE_TIER_META[pkg.packageTier as keyof typeof PACKAGE_TIER_META];
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onSelect}
-      className={`relative flex flex-col text-left rounded-2xl border p-4 gap-3 transition-all cursor-pointer ${
-        isSelected
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      className={`relative flex flex-col text-left rounded-2xl border p-4 gap-3 transition-all cursor-pointer ${isSelected
           ? 'border-gold bg-gold/5 shadow-md shadow-gold/10'
           : 'border-border bg-bg hover:border-gold/40'
-      }`}
+        }`}
     >
       {isSelected && (
         <span className="absolute top-3 right-3 h-5 w-5 rounded-full bg-gold text-primary-dark flex items-center justify-center">
@@ -59,9 +66,23 @@ export function PackageCard({ pkg, isSelected, onSelect }: PackageCardProps) {
         <p className="text-xs text-text-secondary line-clamp-2">{pkg.description}</p>
       </div>
 
+
       <div className="mt-auto pt-2 border-t border-border/60">
         <span className="text-lg font-bold text-text">{pkg.currency} {pkg.price}</span>
       </div>
-    </button>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onViewDetails();
+        }}
+        className="self-start flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-gold transition-colors cursor-pointer"
+      >
+        <Info size={12} />
+        View Details
+      </button>
+
+
+    </div>
   );
 }
