@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { BookOpen } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CourseOption {
   id: string;
@@ -24,23 +25,20 @@ export function CourseSelectField({ courses, value, onChange, loading }: CourseS
         Select a Course *
       </label>
       <div className="relative">
-        <BookOpen size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
-        <select
-          required
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          disabled={loading}
-          className="w-full appearance-none bg-bg border border-border pl-9 pr-4 py-2.5 rounded-xl text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold transition-colors disabled:opacity-50"
-        >
-          <option value="" disabled>
-            {loading ? 'Loading courses...' : 'Choose a course...'}
-          </option>
-          {courses.map((course) => (
-            <option key={course.id} value={course.id}>
-              {course.title}
-            </option>
-          ))}
-        </select>
+        <BookOpen size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none z-10" />
+        <Select value={value} onValueChange={onChange} disabled={loading}>
+          <SelectTrigger className="pl-9">
+            <SelectValue placeholder={loading ? 'Loading courses...' : 'Choose a course...'} />
+          </SelectTrigger>
+          {/* <SelectContent> */}
+      <SelectContent side="bottom" align="start" avoidCollisions={false}>
+            {courses.map((course) => (
+              <SelectItem key={course.id} value={course.id}>
+                {course.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
