@@ -96,7 +96,7 @@ export default function Footer() {
 
       <div className="relative mx-auto max-w-7xl px-5 pb-10 pt-16 sm:px-6 lg:px-10">
         {/* ── Main grid ── */}
-        <div className="grid gap-12 lg:grid-cols-[1.8fr_1fr_1fr_1fr]">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-[1.8fr_1fr_1fr_1fr] lg:gap-12">
           {/* Brand column */}
           <div>
             <Link href="/" className="group mb-6 flex items-center gap-3">
@@ -129,22 +129,22 @@ export default function Footer() {
 
             {/* Contact */}
             <ul className="mb-8 flex flex-col gap-3">
-              <li className="flex items-center gap-2.5 text-xs text-text-secondary">
-                <Mail size={13} className="shrink-0 text-gold" />
-                support@anamtainstitute.com
+              <li className="flex items-start gap-2.5 text-[11px] leading-relaxed text-text-secondary sm:text-xs">
+                <Mail size={13} className="mt-0.5 shrink-0 text-gold" />
+                <span className="break-all">support@anamtainstitute.com</span>
               </li>
-              <li className="flex items-center gap-2.5 text-xs text-text-secondary">
-                <Phone size={13} className="shrink-0 text-gold" />
-                +1 (800) 123-4567
+              <li className="flex items-start gap-2.5 text-[11px] leading-relaxed text-text-secondary sm:text-xs">
+                <Phone size={13} className="mt-0.5 shrink-0 text-gold" />
+                <span>+1 (800) 123-4567</span>
               </li>
-              <li className="flex items-center gap-2.5 text-xs text-text-secondary">
-                <MapPin size={13} className="shrink-0 text-gold" />
-                Online · Serving 30+ Countries
+              <li className="flex items-start gap-2.5 text-[11px] leading-relaxed text-text-secondary sm:text-xs">
+                <MapPin size={13} className="mt-0.5 shrink-0 text-gold" />
+                <span>Online · Serving 30+ Countries</span>
               </li>
             </ul>
 
             {/* Socials */}
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               {socials.map((s) => (
                 <Link
                   key={s.label}
@@ -200,7 +200,7 @@ export default function Footer() {
                 to your inbox.
               </p>
             </div>
-            <div className="flex w-full max-w-sm gap-2">
+            <div className="flex w-full max-w-sm flex-col gap-2 sm:flex-row">
               <input
                 type="email"
                 placeholder="Your email address"
@@ -215,7 +215,7 @@ export default function Footer() {
 
         {/* ── Bottom bar ── */}
         <div
-          className="flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row"
+          className="flex flex-col items-center justify-between gap-5 border-t pt-8 sm:flex-row sm:gap-4"
           style={{ borderColor: "rgba(33,87,115,0.2)" }}
         >
           <p className="text-center text-[11px] text-text-secondary sm:text-left">
@@ -228,7 +228,7 @@ export default function Footer() {
             <span>for Quran learners worldwide</span>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
             <Link
               href="/privacy-policy"
               className="text-[11px] text-text-secondary transition-colors hover:text-gold"

@@ -49,15 +49,15 @@ export default function CTABanner() {
               href="/courses"
               className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-primary border border-primary-light/30 px-8 py-3.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold"
             >
-              Explore Courses 
+              Explore Courses
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-            
+
             <Link
-              href="/contact"
+              href="/sponsor-a-student"
               className="w-full sm:w-auto block rounded-xl border border-primary/60 bg-primary/5 px-8 py-3.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:bg-gold/10 hover:text-gold"
             >
-              Book Free Trial
+              Sponsor a Student
             </Link>
           </div>
 

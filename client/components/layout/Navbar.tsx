@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -11,6 +12,7 @@ const navLinks = [
   // { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Enrollement", href: "/enrollement" },
 ];
 
 export default function Navbar() {
@@ -24,10 +26,17 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header
+    <motion.header
+      initial={false}
+      animate={{
+        backgroundColor: scrolled ? "rgba(10, 15, 20, 0.84)" : "rgba(10, 15, 20, 0)",
+        backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+        boxShadow: scrolled ? "0 8px 30px rgba(0,0,0,0.3)" : "0 0 0 rgba(0,0,0,0)",
+      }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled
-          ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+        ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
+        : "border-b border-transparent bg-transparent"
         }`}
     >
       {/* Premium subtle Regatta border accent line over the header frame */}
@@ -81,10 +90,10 @@ export default function Navbar() {
           </button> */}
 
           <Link
-            href="/admin/login"
+            href="/sponsor-a-student"
             className="rounded-xl border border-primary/60 bg-primary/5 px-5 py-2.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold hover:text-gold"
           >
-            Sign In
+            Sponsor a Student
           </Link>
 
           <Link
@@ -106,40 +115,62 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Responsive Navigation overlay tray */}
-      <div
-        className={`overflow-hidden bg-bg/95 backdrop-blur-xl border-b border-primary/10 transition-all duration-300 md:hidden ${open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
-          }`}
-      >
-        <ul className="flex flex-col gap-1 px-6 py-6 border-t border-primary/10">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ maxHeight: 0, opacity: 0 }}
+            animate={{ maxHeight: 420, opacity: 1 }}
+            exit={{ maxHeight: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-b border-primary/10 bg-bg/95 backdrop-blur-xl md:hidden"
+          >
+            <motion.ul
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+              className="flex flex-col gap-1 border-t border-primary/10 px-6 py-6"
+            >
+              {navLinks.map((link, index) => (
+                <motion.li
+                  key={link.href}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: 0.06 + index * 0.04 }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.li>
+              ))}
+              <motion.li
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: 0.18 }}
+                className="mt-4 flex flex-col gap-3 border-t border-primary/10 pt-4"
               >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-          <li className="mt-4 flex flex-col gap-3 pt-4 border-t border-primary/10">
-            <Link
-              href="/admin/login"
-              onClick={() => setOpen(false)}
-              className="rounded-xl border border-primary/50 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/courses"
-              onClick={() => setOpen(false)}
-              className="rounded-xl bg-primary border border-primary-light/20 py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
-            >
-              Start Learning
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </header>
+                <Link
+                  href="/sponsor-a-student"
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl border border-primary/60 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text backdrop-blur-sm"
+                >
+                  Sponsor a Student
+                </Link>
+                <Link
+                  href="/courses"
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl border border-primary-light/20 bg-primary py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
+                >
+                  Start Learning
+                </Link>
+              </motion.li>
+            </motion.ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
