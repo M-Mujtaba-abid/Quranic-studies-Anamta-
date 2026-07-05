@@ -93,3 +93,58 @@ body {
     display: none;
   }
 }
+
+/* ── react-phone-input-2 dark theme overrides ──
+   The library's dropdownStyle prop only themes the outer container;
+   these internal classes need direct CSS overrides to match the dark theme. */
+
+.react-tel-input .country-list {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+.react-tel-input .country-list .search {
+  background-color: var(--color-surface) !important;
+}
+
+.react-tel-input .country-list .search-box {
+  background-color: var(--color-bg) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text) !important;
+}
+
+.react-tel-input .country-list .country {
+  background-color: transparent !important;
+  color: var(--color-text) !important;
+}
+
+.react-tel-input .country-list .country .dial-code {
+  color: var(--color-text-secondary) !important;
+}
+
+.react-tel-input .country-list .country:hover,
+.react-tel-input .country-list .country.highlight {
+  background-color: rgba(197, 168, 128, 0.15) !important;
+  color: var(--color-gold) !important;
+}
+
+.react-tel-input .country-list .country:hover .dial-code,
+.react-tel-input .country-list .country.highlight .dial-code {
+  color: var(--color-gold) !important;
+}
+
+.react-tel-input .country-list .divider {
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+/* Scrollbar inside the dropdown */
+.react-tel-input .country-list::-webkit-scrollbar {
+  width: 6px;
+}
+.react-tel-input .country-list::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 4px;
+}
+.react-tel-input .country-list::-webkit-scrollbar-track {
+  background-color: var(--color-surface);
+}
