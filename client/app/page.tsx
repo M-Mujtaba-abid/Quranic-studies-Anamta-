@@ -24,7 +24,7 @@ export default function Home() {
       <Teachers />
       <Testimonials />
       {/* <PricingPreview /> */}
-      <FAQ />
+      {/* <FAQ /> */}
       <CTABanner />
       <Footer />
     </main>
