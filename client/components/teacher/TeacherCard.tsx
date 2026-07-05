@@ -60,8 +60,8 @@ export default function TeacherCard({
           </div>
           <div className="flex gap-1.5">
             {languages.map((lang) => (
-              <span 
-                key={lang} 
+              <span
+                key={lang}
                 className="rounded-md border border-border/60 bg-border/20 px-2 py-0.5 font-display text-[10px] font-medium text-text-secondary transition-colors group-hover:border-primary/30"
               >
                 {lang}
@@ -72,7 +72,7 @@ export default function TeacherCard({
 
         {/* View Profile Action - Changed from solid gold break back to modern system action */}
         <Link
-          href={`/teachers/${slug}`}
+          href="/"
           className="mt-4 block w-full rounded-xl border border-primary/60 bg-primary/5 py-2.5 text-center font-display text-xs font-semibold text-text transition-all duration-300 hover:border-gold hover:bg-gold/10 hover:text-gold"
         >
           View Profile

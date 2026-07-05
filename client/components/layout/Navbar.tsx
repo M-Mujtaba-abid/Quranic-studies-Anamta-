@@ -12,6 +12,7 @@ const navLinks = [
   // { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Enrollement", href: "/enrollement" },
 ];
 
 export default function Navbar() {
@@ -34,8 +35,8 @@ export default function Navbar() {
       }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled
-          ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+        ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
+        : "border-b border-transparent bg-transparent"
         }`}
     >
       {/* Premium subtle Regatta border accent line over the header frame */}
@@ -81,6 +82,20 @@ export default function Navbar() {
 
         {/* Right Structural Profile Controls */}
         <div className="hidden items-center gap-4 md:flex">
+          {/* <button
+            aria-label="Search"
+            className="p-2 text-text-secondary transition-colors duration-200 hover:text-gold"
+          >
+            <Search size={16} strokeWidth={2.5} />
+          </button> */}
+
+          <Link
+            href="/Sponser-a-Student"
+            className="rounded-xl border border-primary/60 bg-primary/5 px-5 py-2.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold hover:text-gold"
+          >
+            Sponser a Student
+          </Link>
+
           <Link
             href="/courses"
             className="block rounded-xl bg-primary border border-primary-light/30 px-5 py-2.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold"
@@ -100,6 +115,34 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Responsive Navigation overlay tray */}
+      <div
+        className={`overflow-hidden bg-bg/95 backdrop-blur-xl border-b border-primary/10 transition-all duration-300 md:hidden ${open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+      >
+        <ul className="flex flex-col gap-1 px-6 py-6 border-t border-primary/10">
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+          <li className="mt-4 flex flex-col gap-3 pt-4 border-t border-primary/10">
+            <Link
+              href="/admin/login"
+              onClick={() => setOpen(false)}
+              className="rounded-xl border border-primary/50 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text"
+            >
+
+            </Link>
+            <Link
+              href="/courses"
+              onClick={() => setOpen(false)}
+              className="rounded-xl bg-primary border border-primary-light/20 py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
       <AnimatePresence initial={false}>
         {open && (
           <motion.div

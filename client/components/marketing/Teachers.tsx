@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import TeacherCard, { TeacherCardProps } from "../teacher/TeacherCard";
 import SectionHeading from "../ui/SectionHeading";
 
@@ -49,9 +50,33 @@ const teachers: TeacherCardProps[] = [
 ];
 
 export default function Teachers() {
+  // Har card ko ek unique ID assign kar rahe hain taake animation track ho sake
+  const [items, setItems] = useState(() =>
+    teachers.map((teacher, index) => ({ ...teacher, id: index }))
+  );
+
+  useEffect(() => {
+    // Har 2.5 seconds baad swipe hoga
+    const interval = setInterval(() => {
+      setItems((prevItems) => {
+        const newItems = [...prevItems];
+        const firstItem = newItems.shift(); // Pehla card nikalna
+
+        if (firstItem) {
+          // Same card ko array ke end mein nayi ID ke sath add kar rahe hain 
+          // taake Framer Motion usko naya element samajh kar smooth entry de
+          newItems.push({ ...firstItem, id: Date.now() });
+        }
+        return newItems;
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative overflow-hidden bg-surface py-24">
-      {/* Regatta Blue & Gold ambient deep system glows */}
+      {/* Ambient Glows */}
       <div className="absolute -right-32 top-0 h-80 w-80 rounded-full bg-primary/10 blur-[100px]" />
       <div className="absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-gold/5 blur-[100px]" />
 
@@ -65,30 +90,37 @@ export default function Teachers() {
             center={false}
           />
           <Link
-            href="/teachers"
+            href="/"
             className="mb-12 hidden rounded-full border border-primary/60 bg-primary/5 px-6 py-2.5 text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold sm:flex"
           >
             Meet All Teachers
           </Link>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {teachers.map((teacher, index) => (
-            <motion.div
-              key={teacher.slug}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <TeacherCard {...teacher} />
-            </motion.div>
-          ))}
+        {/* Step-by-Step Carousel Container */}
+        <div className="mt-12 overflow-hidden py-4">
+          <div className="flex gap-6 w-full">
+            <AnimatePresence mode="popLayout">
+              {items.map((teacher) => (
+                <motion.div
+                  layout // Ye prop baki cards ko left shift hone ka smooth effect deta he
+                  key={teacher.id}
+                  initial={{ opacity: 0, x: 50, scale: 0.95 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -50, scale: 0.95 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="w-[280px] sm:w-[320px] shrink-0"
+                >
+                  <TeacherCard {...teacher} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
 
         <div className="mt-12 flex justify-center sm:hidden">
           <Link
-            href="/teachers"
+            href="/"
             className="w-full text-center rounded-full border border-primary/60 bg-primary/5 px-8 py-3 text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 active:scale-[0.98] active:border-gold active:text-gold"
           >
             Meet All Teachers

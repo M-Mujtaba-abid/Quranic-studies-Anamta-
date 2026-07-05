@@ -215,7 +215,7 @@ export default function HeroCarousel() {
               >
                 Explore Courses
               </Link>
-              <Link
+              {/* <Link
                 href="/contact"
                 className="w-full rounded-full border px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:text-gold sm:w-auto sm:px-8 sm:py-3.5"
                 style={{
@@ -230,7 +230,7 @@ export default function HeroCarousel() {
                 }
               >
                 Book a Free Trial
-              </Link>
+              </Link> */}
             </motion.div>
 
             {/* Stats row */}
