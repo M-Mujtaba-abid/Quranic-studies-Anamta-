@@ -21,7 +21,7 @@ const features = [
   { icon: PiggyBank, title: "Affordable Group Pricing" },
   { icon: CalendarDays, title: "Weekly Structured Curriculum" },
   { icon: BookOpenCheck, title: "Qualified Group Mentors" },
-  { icon: Sparkles, title: "Flexible Batch Timings" },
+
 ];
 
 const listVariants = {
@@ -111,7 +111,7 @@ export default function GroupClassFeatures() {
                 src="/Web banner 1.jpg.jpeg"
                 alt="Students attending a live group Quran class online"
                 fill
-                className="object-cover"
+                // className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 600px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bg/50 via-transparent to-transparent" />
