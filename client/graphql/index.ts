@@ -15,6 +15,7 @@ export * from './mutations/enrollment';
 export * from './mutations/testimonial';
 export * from './mutations/contact';
 export * from './mutations/payment-setting';
+export * from './mutations/newsletter';
 
 // Queries
 export * from './queries/dashboard';

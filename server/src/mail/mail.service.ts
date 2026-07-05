@@ -451,4 +451,40 @@ export class MailService implements OnModuleInit {
 
     await this.transporter.sendMail(mailOptions);
   }
+
+  async sendNewCourseAnnouncement(
+    subscriberEmails: string[],
+    course: { id: string; title: string; description: string; imageUrl?: string | null },
+  ) {
+    if (subscriberEmails.length === 0) return;
+
+    const sender = this.configService.get<string>('GMAIL_USER');
+    const courseUrl = `http://localhost:3000/courses/${course.id}`;
+
+    const mailOptions = {
+      from: `"Anamta Institute" <${sender}>`,
+      to: sender,
+      bcc: subscriberEmails,
+      subject: `📖 New Course Added: ${course.title}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+          <h2 style="color: #2c3e50; text-align: center; border-bottom: 2px solid #c9a227; padding-bottom: 10px;">A New Course Just Launched!</h2>
+          <p>Assalamu Alaikum,</p>
+          <p>We've just added a new course to Anamta Institute:</p>
+          ${course.imageUrl ? `<div style="text-align: center; margin: 20px 0;"><img src="${course.imageUrl}" alt="${course.title}" style="max-width: 100%; border-radius: 8px;" /></div>` : ''}
+          <h3 style="color: #c9a227; margin-top: 20px;">${course.title}</h3>
+          <p style="color: #555; line-height: 1.6;">${course.description}</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${courseUrl}" style="background-color: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">View Course &amp; Enroll</a>
+          </div>
+          <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px;">
+            JazakAllahu Khairan,<br/>
+            <strong>Anamta Institute Team</strong>
+          </p>
+        </div>
+      `,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  }
 }

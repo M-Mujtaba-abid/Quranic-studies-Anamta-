@@ -364,6 +364,7 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
                               <PackageTierCard
                                 key={fields[index].id}
                                 index={index}
+                                region={activeRegion}
                                 tier={tier}
                                 tierLabel={PACKAGE_TIER_META[tier].label}
                                 tierBlurb={PACKAGE_TIER_META[tier].blurb}

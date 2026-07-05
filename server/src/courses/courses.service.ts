@@ -3,12 +3,18 @@ import { CreateCourseInput } from './dto/create-course.input';
 import { UpdateCourseInput } from './dto/update.course.input';
 import { CourseRepository } from './repositories/course.repository';
 import { mapCountryToRegion } from '../common/utils/region.util';
-import { Region } from '@prisma/client';
+import { Region, Course } from '@prisma/client';
 import cloudinary from '../upload/cloudinary.config';
+import { SubscriberService } from '../newsletter/subscriber.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class CoursesService {
-  constructor(private readonly courseRepository: CourseRepository) {}
+  constructor(
+    private readonly courseRepository: CourseRepository,
+    private readonly subscriberService: SubscriberService,
+    private readonly mailService: MailService,
+  ) {}
 
   async create(createCourseInput: CreateCourseInput) {
     let createdCourse;
@@ -28,7 +34,23 @@ export class CoursesService {
       }
       throw error;
     }
+
+    // Notify newsletter subscribers asynchronously — must not slow down or fail course creation
+    this.notifySubscribersOfNewCourse(createdCourse).catch((err) =>
+      console.error('Failed to notify subscribers of new course:', err),
+    );
+
     return createdCourse;
+  }
+
+  private async notifySubscribersOfNewCourse(course: Course) {
+    const subscribers = await this.subscriberService.findAllActive();
+    if (subscribers.length === 0) return;
+
+    await this.mailService.sendNewCourseAnnouncement(
+      subscribers.map((subscriber) => subscriber.email),
+      course,
+    );
   }
 
   async findAll() {
