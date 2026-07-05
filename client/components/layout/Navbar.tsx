@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -25,7 +26,14 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header
+    <motion.header
+      initial={false}
+      animate={{
+        backgroundColor: scrolled ? "rgba(10, 15, 20, 0.84)" : "rgba(10, 15, 20, 0)",
+        backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+        boxShadow: scrolled ? "0 8px 30px rgba(0,0,0,0.3)" : "0 0 0 rgba(0,0,0,0)",
+      }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled
         ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
         : "border-b border-transparent bg-transparent"
@@ -135,12 +143,55 @@ export default function Navbar() {
               href="/courses"
               onClick={() => setOpen(false)}
               className="rounded-xl bg-primary border border-primary-light/20 py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ maxHeight: 0, opacity: 0 }}
+            animate={{ maxHeight: 420, opacity: 1 }}
+            exit={{ maxHeight: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-b border-primary/10 bg-bg/95 backdrop-blur-xl md:hidden"
+          >
+            <motion.ul
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+              className="flex flex-col gap-1 border-t border-primary/10 px-6 py-6"
             >
-              Start Learning
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </header>
+              {navLinks.map((link, index) => (
+                <motion.li
+                  key={link.href}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: 0.06 + index * 0.04 }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.li>
+              ))}
+              <motion.li
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: 0.18 }}
+                className="mt-4 flex flex-col gap-3 border-t border-primary/10 pt-4"
+              >
+                <Link
+                  href="/courses"
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl border border-primary-light/20 bg-primary py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
+                >
+                  Start Learning
+                </Link>
+              </motion.li>
+            </motion.ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
