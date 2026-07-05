@@ -10,58 +10,100 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { GET_APPROVED_TESTIMONIALS, SUBMIT_TESTIMONIAL } from "@/graphql";
-
-// Elegant stylized vector avatar components for Male and Female students
+// Flat-illustration style avatars — Sister (hijab/abaya) and Brother (molvi-style: cap, beard, kurta)
 const MaleAvatar = () => (
   <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
     <defs>
-      <linearGradient id="maleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#c5a880" />
-        <stop offset="100%" stopColor="#9a7f5c" />
+      <linearGradient id="maleSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#e8c9a0" />
+        <stop offset="100%" stopColor="#d4ac7a" />
       </linearGradient>
     </defs>
     {/* Background circle */}
     <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
-    {/* Body/Shoulder area */}
-    <path d="M 20 75 Q 20 60 30 55 L 70 55 Q 80 60 80 75 Z" fill="url(#maleGrad)" />
+
+    {/* Kurta/Thobe body — brand primary blue tone */}
+    <path d="M 18 88 Q 18 62 34 54 L 66 54 Q 82 62 82 88 Z" fill="#21576f" />
+    {/* Kurta collar/placket line */}
+    <line x1="50" y1="54" x2="50" y2="80" stroke="#153a4a" strokeWidth="2" />
+    {/* Kurta buttons */}
+    <circle cx="50" cy="62" r="1.3" fill="#c9a227" />
+    <circle cx="50" cy="70" r="1.3" fill="#c9a227" />
+    <circle cx="50" cy="78" r="1.3" fill="#c9a227" />
+
     {/* Neck */}
-    <rect x="45" y="50" width="10" height="6" fill="url(#maleGrad)" />
-    {/* Head */}
-    <circle cx="50" cy="38" r="15" fill="url(#maleGrad)" />
-    {/* Kufi/Cap (prominent filled shape on top) */}
-    <path d="M 38 20 Q 50 12 62 20 Q 62 28 50 32 Q 38 28 38 20 Z" fill="url(#maleGrad)" />
-    {/* Beard/Mustache area (dark definition) */}
-    <path d="M 42 42 Q 50 46 58 42" fill="none" stroke="#0d131a" strokeWidth="2.5" strokeLinecap="round" />
-    <path d="M 40 45 Q 50 48 60 45" fill="none" stroke="#0d131a" strokeWidth="1.8" strokeLinecap="round" opacity="0.7" />
-    {/* Facial features minimal */}
-    <circle cx="46" cy="36" r="1.5" fill="#0d131a" opacity="0.6" />
-    <circle cx="54" cy="36" r="1.5" fill="#0d131a" opacity="0.6" />
+    <rect x="44" y="47" width="12" height="10" fill="url(#maleSkin)" />
+
+    {/* Full round face — big and clearly visible like a friendly illustration */}
+    <circle cx="50" cy="38" r="17" fill="url(#maleSkin)" />
+
+    {/* Beard — solid, wraps jaw and chin, distinctly dark */}
+    <path
+      d="M 33 36 C 33 50 40 60 50 60 C 60 60 67 50 67 36
+         C 67 42 63 47 58 49 C 58 44 56 41 50 41
+         C 44 41 42 44 42 49 C 37 47 33 42 33 36 Z"
+      fill="#1c1c1c"
+    />
+
+    {/* Mustache */}
+    <path d="M 43 40 Q 50 44 57 40" fill="none" stroke="#1c1c1c" strokeWidth="2.4" strokeLinecap="round" />
+
+    {/* Kufi cap — gold, sits clearly on top, rounded dome */}
+    <path
+      d="M 33 26 Q 50 6 67 26 Q 68 30 63 30 Q 50 24 37 30 Q 32 30 33 26 Z"
+      fill="#c9a227"
+      stroke="#8a6d15"
+      strokeWidth="1"
+    />
+
+    {/* Eyes */}
+    <circle cx="44" cy="35" r="1.6" fill="#26221c" />
+    <circle cx="56" cy="35" r="1.6" fill="#26221c" />
   </svg>
 );
 
 const FemaleAvatar = () => (
   <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
     <defs>
-      <linearGradient id="femaleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#c5a880" />
-        <stop offset="100%" stopColor="#9a7f5c" />
+      <linearGradient id="femaleSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#f0d4ac" />
+        <stop offset="100%" stopColor="#dcb98a" />
+      </linearGradient>
+      <linearGradient id="hijabGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#d4a72c" />
+        <stop offset="100%" stopColor="#a8801a" />
       </linearGradient>
     </defs>
     {/* Background circle */}
     <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
-    {/* Body/Shoulder area */}
-    <path d="M 15 78 Q 15 60 25 52 L 75 52 Q 85 60 85 78 Z" fill="url(#femaleGrad)" />
-    {/* Hijab outer drape (main wrap) */}
-    <path d="M 25 25 Q 25 15 50 12 Q 75 15 75 25 Q 75 45 70 60 Q 65 70 50 75 Q 35 70 30 60 Q 25 45 25 25 Z" fill="url(#femaleGrad)" />
-    {/* Hijab left drape fold line */}
-    <path d="M 30 28 Q 32 42 35 62" fill="none" stroke="#0d131a" strokeWidth="1.5" opacity="0.5" />
-    {/* Hijab right drape fold line */}
-    <path d="M 70 28 Q 68 42 65 62" fill="none" stroke="#0d131a" strokeWidth="1.5" opacity="0.5" />
-    {/* Center front face area (visible between hijab) */}
-    <ellipse cx="50" cy="40" rx="8" ry="10" fill="#141d27" />
-    {/* Facial features minimal */}
-    <circle cx="47" cy="38" r="1.2" fill="#0d131a" opacity="0.5" />
-    <circle cx="53" cy="38" r="1.2" fill="#0d131a" opacity="0.5" />
+
+    {/* Abaya/robe body — gold tone, matches hijab for a cohesive full outfit look */}
+    <path d="M 16 90 Q 16 60 30 50 L 70 50 Q 84 60 84 90 Z" fill="url(#hijabGrad)" />
+
+    {/* Hijab drape — large, rounded, covers head fully down to shoulders */}
+    <path
+      d="M 50 8
+         Q 70 8 74 30
+         Q 76 42 70 54
+         L 30 54
+         Q 24 42 26 30
+         Q 30 8 50 8 Z"
+      fill="url(#hijabGrad)"
+    />
+
+    {/* Hijab fold/drape lines for dimension */}
+    <path d="M 33 30 Q 34 42 37 53" fill="none" stroke="#7a5c14" strokeWidth="1.3" opacity="0.6" />
+    <path d="M 67 30 Q 66 42 63 53" fill="none" stroke="#7a5c14" strokeWidth="1.3" opacity="0.6" />
+
+    {/* Full round face — big and clearly visible, matches male proportions */}
+    <ellipse cx="50" cy="35" rx="14" ry="16" fill="url(#femaleSkin)" />
+
+    {/* Eyes */}
+    <circle cx="45" cy="34" r="1.6" fill="#3a2a1c" />
+    <circle cx="55" cy="34" r="1.6" fill="#3a2a1c" />
+
+    {/* Soft smile */}
+    <path d="M 45 41 Q 50 44 55 41" fill="none" stroke="#8a5a3c" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
