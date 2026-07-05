@@ -140,13 +140,12 @@ export default function HeroCarousel() {
         </div>
       </div>
 
-      <AyatRotator />
+      {/* ── Foreground: ticker + content stacked so they never overlap ── */}
+      <div className="relative z-10 flex h-full flex-col">
+        <AyatRotator />
 
-      {/* ── Overlay content ── */}
-      <div
-        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-20 pt-24 sm:px-6 sm:pb-0 sm:pt-0 sm:justify-center lg:px-12"
-      >
-        <AnimatePresence mode="wait">
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-20 pt-6 sm:px-6 sm:pb-0 sm:justify-center lg:px-12">
+          <AnimatePresence mode="wait">
           <motion.div
             key={active.id}
             initial={{ opacity: 0, y: 24 }}
@@ -262,6 +261,7 @@ export default function HeroCarousel() {
             </motion.div>
           </motion.div>
         </AnimatePresence>
+        </div>
       </div>
 
       {/* ── Prev / Next — desktop only ── */}

@@ -1,5 +1,5 @@
 const defaultWhatsAppConfig = {
-  phoneNumber: "+971500000000",
+  phoneNumber: "+923330493239",
   defaultMessage: "Hello! I would like to know more about your services.",
 };
 
