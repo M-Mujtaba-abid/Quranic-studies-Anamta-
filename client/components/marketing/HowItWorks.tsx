@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Search, CalendarCheck, BookOpen, Award } from "lucide-react";
 import SectionHeading from "../ui/SectionHeading";
 
@@ -46,6 +47,16 @@ const steps = [
 export default function HowItWorks() {
   return (
     <section className="relative overflow-hidden bg-bg py-24">
+      {/* Background image, matching the /courses and /about treatment */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <Image
+          src="/images/about/contact_bg.png"
+          alt=""
+          fill
+          className="object-cover opacity-20"
+        />
+      </div>
+
       {/* Ambient background glow optimized for dark navy base */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(33,87,115,0.08)_0%,_transparent_70%)]" />
 
@@ -54,7 +65,7 @@ export default function HowItWorks() {
           badge="How It Works"
           title="Your journey to the Quran in "
           highlight="4 simple steps"
-          subtitle="From choosing a course to earning your certificate — we've made every step simple and supported."
+          subtitle="we've made every step simple and supported."
           center
         />
 
