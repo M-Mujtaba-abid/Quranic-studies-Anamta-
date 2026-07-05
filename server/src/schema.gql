@@ -162,6 +162,14 @@ type LoginResponse {
   user: User!
 }
 
+type Subscriber {
+  id: ID!
+  email: String!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type UploadSignature {
   timestamp: Int!
   signature: String!
@@ -267,6 +275,7 @@ type Query {
   courses: [Course!]!
   course(id: ID!): Course!
   coursePricesForRegion(courseId: ID!, country: String): [CoursePackage!]!
+  subscribers: [Subscriber!]!
   publicEnrollment(id: ID!): Enrollment!
   enrollments: [Enrollment!]!
   enrollment(id: ID!): Enrollment!
@@ -302,6 +311,7 @@ type Mutation {
   createCourse(createCourseInput: CreateCourseInput!): Course!
   updateCourse(updateCourseInput: UpdateCourseInput!): Course!
   deleteCourse(id: ID!): Course!
+  subscribeToNewsletter(subscribeNewsletterInput: SubscribeNewsletterInput!): Subscriber!
   generateUploadSignature(input: GenerateUploadSignatureInput!): UploadSignature!
   enrollStudent(enrollStudentInput: EnrollStudentInput!): Enrollment!
   createEnrollment(createEnrollmentInput: CreateEnrollmentInput!): Enrollment!
@@ -398,6 +408,10 @@ input UpdateCourseInput {
   packages: [CreateCoursePackageInput!]
   id: ID!
   isActive: Boolean
+}
+
+input SubscribeNewsletterInput {
+  email: String!
 }
 
 input GenerateUploadSignatureInput {

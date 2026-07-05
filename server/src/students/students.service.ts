@@ -21,6 +21,16 @@ export class StudentsService {
       throw new ConflictException('Email already exists.');
     }
 
+    // Phone is unique too (schema.prisma) — check it explicitly so a clash surfaces as a
+    // friendly conflict instead of an unhandled Prisma "Unique constraint failed" crash.
+    const existingPhone = await this.studentRepository.findByPhone(
+      createStudentInput.phone,
+    );
+
+    if (existingPhone) {
+      throw new ConflictException('Phone number already exists.');
+    }
+
     return await this.studentRepository.create(createStudentInput);
   }
 
@@ -40,6 +50,10 @@ export class StudentsService {
 
   async findOneByEmail(email: string) {
     return await this.studentRepository.findByEmail(email);
+  }
+
+  async findOneByPhone(phone: string) {
+    return await this.studentRepository.findByPhone(phone);
   }
 
   async update(updateStudentInput: UpdateStudentInput) {

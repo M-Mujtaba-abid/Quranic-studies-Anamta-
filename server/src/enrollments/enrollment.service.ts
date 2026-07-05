@@ -64,8 +64,15 @@ export class EnrollmentService {
     // 2. Resolve region-based pricing for this enrollment
     const pricing = await this.resolveEnrollmentPricing(courseId, country, enrollmentType, packageTier);
 
-    // 3. Check if student already exists by email
+    // 3. Check if student already exists by email or phone — phone is unique too
+    // (schema.prisma), so matching on email alone let a shared/reused phone number slip
+    // through to create() and crash on the DB's unique constraint instead of updating
+    // the existing record.
     let student = await this.studentsService.findOneByEmail(email);
+
+    if (!student) {
+      student = await this.studentsService.findOneByPhone(phone);
+    }
 
     if (student) {
       // Update student profile with latest details

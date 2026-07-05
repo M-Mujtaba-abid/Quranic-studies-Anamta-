@@ -3,6 +3,7 @@ import Navbar from "@/components/layout/Navbar";
 import CTABanner from "@/components/marketing/CTABanner";
 import FAQ from "@/components/marketing/FAQ";
 import Features from "@/components/marketing/Features";
+import GroupClassFeatures from "@/components/marketing/GroupClassFeatures";
 import HeroCarousel from "@/components/marketing/HeroCarousel";
 import HowItWorks from "@/components/marketing/HowItWorks";
 // import PopularCourses from "@/components/marketing/PopularCourses";
@@ -19,9 +20,10 @@ export default function Home() {
       <HeroCarousel />
       <TrustBar />
       <Features />
+      <GroupClassFeatures />
       {/* <PopularCourses /> */}
       <HowItWorks />
-      <Teachers />
+      {/* <Teachers /> */}
       <Testimonials />
       {/* <PricingPreview /> */}
       {/* <FAQ /> */}

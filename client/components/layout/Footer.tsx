@@ -1,6 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useMutation } from "@apollo/client/react";
+import { toast } from "sonner";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { SUBSCRIBE_TO_NEWSLETTER } from "@/graphql";
 
 const footerLinks = {
   Learn: [
@@ -79,6 +85,30 @@ const socials = [
 ];
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+
+  const [subscribe, { loading }] = useMutation(SUBSCRIBE_TO_NEWSLETTER, {
+    onCompleted: () => {
+      toast.success("Subscribed! You'll get an email whenever we add a new course.");
+      setEmail("");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to subscribe. Please try again.");
+    },
+  });
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      toast.warning("Please enter your email address.");
+      return;
+    }
+
+    await subscribe({
+      variables: { subscribeNewsletterInput: { email: email.trim() } },
+    });
+  };
+
   return (
     <footer className="relative overflow-hidden bg-surface">
       {/* Top gold hairline */}
@@ -200,16 +230,25 @@ export default function Footer() {
                 to your inbox.
               </p>
             </div>
-            <div className="flex w-full max-w-sm flex-col gap-2 sm:flex-row">
+            <form
+              onSubmit={handleSubscribe}
+              className="flex w-full max-w-sm flex-col gap-2 sm:flex-row"
+            >
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
                 className="flex-1 rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-text outline-none transition-colors duration-200 placeholder:text-text-secondary/50 focus:border-gold/50"
               />
-              <button className="rounded-xl bg-gradient-to-r from-gold to-gold-light px-5 py-2.5 text-xs font-semibold text-primary-dark transition-all duration-300 hover:scale-[1.03]">
-                Subscribe
+              <button
+                type="submit"
+                disabled={loading}
+                className="rounded-xl bg-gradient-to-r from-gold to-gold-light px-5 py-2.5 text-xs font-semibold text-primary-dark transition-all duration-300 hover:scale-[1.03] disabled:opacity-60 disabled:pointer-events-none"
+              >
+                {loading ? "Subscribing..." : "Subscribe"}
               </button>
-            </div>
+            </form>
           </div>
         </div>
 

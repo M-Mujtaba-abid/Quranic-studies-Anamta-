@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 import {
   Video,
   Award,
@@ -8,81 +10,34 @@ import {
   BarChart3,
   Globe,
   Heart,
+  CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
-import SectionHeading from "../ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const features = [
-  {
-    icon: Video,
-    title: "Live 1-on-1 Classes",
-    description:
-      "Every session is personal — your teacher, your pace, your schedule. No recordings, no crowds.",
-    gradient: "from-emerald-500/10 to-emerald-500/5",
-    border: "border-emerald-500/20",
-    iconColor: "text-emerald-400",
-  },
-  {
-    icon: Award,
-    title: "Ijazah-Certified Teachers",
-    description:
-      "All our teachers hold an unbroken chain of Quran certification going back to the Prophet ﷺ.",
-    gradient: "from-gold/10 to-gold/5",
-    border: "border-gold/20",
-    iconColor: "text-gold",
-  },
-  {
-    icon: Clock,
-    title: "Flexible Scheduling",
-    description:
-      "Morning, evening, or weekend — book classes that fit your life, not the other way around.",
-    gradient: "from-sky-500/10 to-sky-500/5",
-    border: "border-sky-500/20",
-    iconColor: "text-sky-400",
-  },
-  {
-    icon: BarChart3,
-    title: "Progress Tracking",
-    description:
-      "Track every lesson, milestone, and achievement through your personal student dashboard.",
-    gradient: "from-violet-500/10 to-violet-500/5",
-    border: "border-violet-500/20",
-    iconColor: "text-violet-400",
-  },
-  {
-    icon: Globe,
-    title: "Learn from Anywhere",
-    description:
-      "Students from 30+ countries learn with us daily. All you need is a device and an internet connection.",
-    gradient: "from-rose-500/10 to-rose-500/5",
-    border: "border-rose-500/20",
-    iconColor: "text-rose-400",
-  },
-  {
-    icon: Heart,
-    title: "Female Teachers Available",
-    description:
-      "Dedicated female Quran teachers available for sisters and children who prefer a comfortable environment.",
-    gradient: "from-pink-500/10 to-pink-500/5",
-    border: "border-pink-500/20",
-    iconColor: "text-pink-400",
-  },
+  { icon: Video, title: "Live 1-on-1 Classes" },
+  { icon: Clock, title: "Flexible Scheduling" },
+  { icon: BarChart3, title: "Progress Tracking" },
+  { icon: Globe, title: "Learn from Anywhere" },
+  { icon: Heart, title: "Teachers Availability" },
 ];
 
-const containerVariants = {
+const listVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
     },
   },
 };
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 32 },
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -94,56 +49,85 @@ export default function Features() {
       <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-        <SectionHeading
-          badge="Why Choose Us"
-          title="Everything you need to "
-          highlight="learn the Quran"
-          subtitle="We combine qualified teachers, structured curriculum, and modern technology to give you the best Quran learning experience — from anywhere in the world."
-          center
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left: Image */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div className="relative h-[320px] sm:h-[420px] w-full rounded-2xl overflow-hidden border border-gold/20 shadow-2xl">
+              <Image
+                src="/Web banner 2.jpg.jpeg"
+                alt="Student attending a live 1-on-1 Quran class online"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 600px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg/50 via-transparent to-transparent" />
+            </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {features.map((feature) => (
-            <motion.div
-              key={feature.title}
-              variants={cardVariants}
-              className={`group relative overflow-hidden rounded-2xl border bg-gradient-to-br p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.4)] ${feature.gradient} ${feature.border}`}
-            >
-              {/* top-right glow on hover */}
-              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/5 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
-
-              {/* icon */}
-              <div
-                className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border bg-surface/60 ${feature.border}`}
-              >
-                <feature.icon
-                  size={22}
-                  className={feature.iconColor}
-                  strokeWidth={1.5}
-                />
+            {/* Floating stat badge */}
+            <div className="absolute -bottom-6 left-6 right-6 sm:left-8 sm:right-auto sm:w-64 bg-surface border border-gold/20 rounded-2xl shadow-xl p-4 flex items-center gap-3">
+              <div className="h-10 w-10 shrink-0 rounded-xl bg-gold/10 text-gold flex items-center justify-center">
+                <Award size={20} />
               </div>
+              <div>
+                <span className="block text-sm font-bold font-display text-text">50+ Teachers</span>
+                <span className="block text-[11px] text-text-secondary">certified </span>
+              </div>
+            </div>
+          </motion.div>
 
-              {/* title */}
-              <h3 className="mb-2 font-display text-[17px] font-semibold text-text">
-                {feature.title}
-              </h3>
-
-              {/* description */}
-              <p className="text-sm leading-relaxed text-text-secondary">
-                {feature.description}
+          {/* Right: Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6 }}
+            className="space-y-8"
+          >
+            <div className="space-y-4">
+              <span className="inline-block rounded-full border border-gold bg-surface px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-gold">
+                Why Choose Us
+              </span>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-text leading-tight">
+                1-on-1 Live Quran Classes for{" "}
+                <span className="text-gold">Every Age</span>
+              </h2>
+              <p className="text-base text-text-secondary leading-relaxed max-w-xl">
+                We combine qualified, Ijazah-certified teachers, a structured Tajweed curriculum, and modern technology to give you the best Quran learning experience — from anywhere in the world.
               </p>
+            </div>
 
-              {/* bottom gold line on hover */}
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-gold to-gold-light transition-all duration-500 group-hover:w-full" />
+            <motion.div
+              variants={listVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-80px" }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+            >
+              {features.map((feature) => (
+                <motion.div
+                  key={feature.title}
+                  variants={itemVariants}
+                  className="flex items-center gap-2.5 rounded-xl border border-border bg-surface/60 px-4 py-3"
+                >
+                  <CheckCircle2 size={18} className="text-gold shrink-0" />
+                  <span className="text-sm font-medium text-text">{feature.title}</span>
+                </motion.div>
+              ))}
             </motion.div>
-          ))}
-        </motion.div>
+
+            <Link href="/courses" className="inline-block">
+              <Button variant="gold" size="lg" rightIcon={<ArrowRight size={16} />}>
+                View Courses
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

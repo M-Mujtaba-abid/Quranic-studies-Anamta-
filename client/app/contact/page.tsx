@@ -60,15 +60,17 @@ export default function ContactPage() {
     <div className="relative min-h-screen bg-bg text-text pb-20 overflow-hidden">
       <Navbar />
 
-      {/* Premium subtle background image overlay with gold patterns */}
-      <div className="absolute inset-0 opacity-15 pointer-events-none mix-blend-overlay">
+      {/* Premium subtle background image with gold patterns. Plain opacity (no blend mode) —
+          mix-blend-overlay against this page's near-black --color-bg crushes the image to invisible. */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <Image
           src="/images/about/contact_bg.png"
           alt="Contact Background"
           fill
           priority
-          className="object-cover"
+          className="object-cover opacity-40"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg/10 via-bg/70 to-bg" />
       </div>
 
       {/* Ambient background glows */}

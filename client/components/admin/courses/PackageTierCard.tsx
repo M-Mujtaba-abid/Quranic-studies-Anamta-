@@ -5,17 +5,18 @@ import { useFormContext } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { ImageUploadField } from './ImageUploadField';
 import type { CourseFormValues } from './CourseForm.types';
-import type { PackageTier } from '@/constants/regions';
+import type { PackageTier, Region } from '@/constants/regions';
 
 interface PackageTierCardProps {
   index: number;
+  region: Region;
   tier: PackageTier;
   tierLabel: string;
   tierBlurb: string;
   currency: string;
 }
 
-export function PackageTierCard({ index, tier, tierLabel, tierBlurb, currency }: PackageTierCardProps) {
+export function PackageTierCard({ index, region, tier, tierLabel, tierBlurb, currency }: PackageTierCardProps) {
   const {
     register,
     watch,
@@ -28,6 +29,13 @@ export function PackageTierCard({ index, tier, tierLabel, tierBlurb, currency }:
 
   return (
     <div className="border border-border bg-bg/40 rounded-xl p-4 space-y-3">
+      {/* useFieldArray.append() only seeds these on the field-array's initial shape — RHF drops
+          unregistered keys from the submitted values, so they must be registered here too. */}
+      <input type="hidden" {...register(`packages.${index}.region`)} defaultValue={region} />
+      <input type="hidden" {...register(`packages.${index}.packageTier`)} defaultValue={tier} />
+      <input type="hidden" {...register(`packages.${index}.currency`)} defaultValue={currency} />
+      <input type="hidden" {...register(`packages.${index}.imageUrl`)} defaultValue="" />
+
       <div>
         <h4 className="text-sm font-bold text-text">{tierLabel}</h4>
         <p className="text-[11px] text-text-secondary">{tierBlurb}</p>
