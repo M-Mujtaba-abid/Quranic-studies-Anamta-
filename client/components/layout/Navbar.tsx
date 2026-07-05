@@ -11,6 +11,7 @@ const navLinks = [
   // { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Enrollement", href: "/enrollement" },
 ];
 
 export default function Navbar() {
@@ -26,8 +27,8 @@ export default function Navbar() {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled
-          ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+        ? "border-b border-primary/20 bg-bg/80 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-xl"
+        : "border-b border-transparent bg-transparent"
         }`}
     >
       {/* Premium subtle Regatta border accent line over the header frame */}
@@ -81,10 +82,10 @@ export default function Navbar() {
           </button> */}
 
           <Link
-            href="/admin/login"
+            href="/Sponser-a-Student"
             className="rounded-xl border border-primary/60 bg-primary/5 px-5 py-2.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold hover:text-gold"
           >
-            Sign In
+            Sponser a Student
           </Link>
 
           <Link
@@ -128,7 +129,7 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="rounded-xl border border-primary/50 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text"
             >
-              Sign In
+
             </Link>
             <Link
               href="/courses"

@@ -30,8 +30,10 @@ import { ConfigModule } from '@nestjs/config';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       // Code-First Approach: NestJS khud schema file banayega is location par
-      autoSchemaFile: process.env.VERCEL ? true : join(process.cwd(), 'src/schema.gql'),      // Browser mein testing UI (Playground) enable karne ke liye
-      playground: true,
+      autoSchemaFile:
+        process.env.NODE_ENV === 'production'
+          ? true
+          : join(process.cwd(), 'src/schema.gql'), playground: true,
       context: ({ req, res }) => ({ req, res }),
     }),
     StudentsModule,
