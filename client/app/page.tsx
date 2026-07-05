@@ -23,10 +23,10 @@ export default function Home() {
       <HowItWorks />
       <Teachers />
       <Testimonials />
-      <PricingPreview />
+      {/* <PricingPreview /> */}
       <FAQ />
       <CTABanner />
-       <Footer />
+      <Footer />
     </main>
   );
 }

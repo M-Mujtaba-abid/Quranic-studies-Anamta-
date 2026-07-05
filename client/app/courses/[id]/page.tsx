@@ -111,10 +111,23 @@ export default function CourseDetailsPage() {
     return (
       <div className="min-h-screen bg-bg text-text">
         <Navbar />
-        <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
-          <RefreshCw className="h-10 w-10 text-gold animate-spin" />
-          <p className="text-text-secondary font-medium animate-pulse">Loading course info...</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="h-[70vh] flex flex-col items-center justify-center gap-4"
+        >
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}>
+            <RefreshCw className="h-10 w-10 text-gold" />
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="text-text-secondary font-medium"
+          >
+            Loading course info...
+          </motion.p>
+        </motion.div>
       </div>
     );
   }
@@ -267,10 +280,9 @@ export default function CourseDetailsPage() {
                             {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
                           </button>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
 
                 <div className="space-y-3">
                   {enrolledResult?.id && !isFreeTrial && (
