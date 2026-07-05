@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { motion } from 'framer-motion';
@@ -10,12 +10,11 @@ import { toast } from 'sonner';
 import Navbar from '@/components/layout/Navbar';
 import { GET_COURSE_BY_ID, GET_COURSE_PRICES_FOR_REGION, ENROLL_STUDENT_MUTATION } from '@/graphql';
 import { Button } from '@/components/ui/Button';
-import { CountrySelectModal } from '@/components/enrollment/CountrySelectModal';
 import { LocalEnrollmentForm } from '@/components/enrollment/LocalEnrollmentForm';
 import { InternationalEnrollmentForm } from '@/components/enrollment/InternationalEnrollmentForm';
 import type { StudentInfoValues } from '@/components/enrollment/enrollment.types';
 import { LOCAL_REGION } from '@/constants/regions';
-import type { CountryOption } from '@/constants/countries';
+import { useCountrySelection } from '@/providers/CountryProvider';
 import {
   RefreshCw,
   ArrowLeft,
@@ -36,14 +35,21 @@ export default function CourseDetailsPage() {
     variables: { id },
   });
 
-  // Country selection drives which region's pricing we fetch
-  const [isCountryModalOpen, setIsCountryModalOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<CountryOption | null>(null);
+  // Country selection (shared across pages) drives which region's pricing we fetch
+  const { country: selectedCountry, openCountryModal } = useCountrySelection();
 
   const { data: pricingData, loading: loadingPricing } = useQuery<any>(GET_COURSE_PRICES_FOR_REGION, {
     variables: { courseId: id, country: selectedCountry?.name },
     skip: !selectedCountry,
   });
+
+  // Prompt for a country the moment someone lands on a course page without one selected yet
+  // (including after a page reload — the selection is in-memory only, not persisted).
+  useEffect(() => {
+    if (!selectedCountry) {
+      openCountryModal();
+    }
+  }, [selectedCountry, openCountryModal]);
 
   const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
   const [enrolledResult, setEnrolledResult] = useState<any | null>(null);
@@ -67,11 +73,6 @@ export default function CourseDetailsPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  };
-
-  const handleSelectCountry = (country: CountryOption) => {
-    setSelectedCountry(country);
-    setIsCountryModalOpen(false);
   };
 
   const handleLocalSubmit = async (values: StudentInfoValues) => {
@@ -159,7 +160,7 @@ export default function CourseDetailsPage() {
   const isFreeTrial = enrolledResult?.enrollmentType === 'FREE_TRIAL';
 
   return (
-    <div className="min-h-screen bg-bg text-text pb-20">
+    <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
       <Navbar />
 
       {/* Decorative Gradients */}
@@ -318,7 +319,7 @@ export default function CourseDetailsPage() {
                     variant="gold"
                     className="w-full py-3.5 rounded-xl text-sm shadow-md"
                     leftIcon={<MapPin size={16} />}
-                    onClick={() => setIsCountryModalOpen(true)}
+                    onClick={() => openCountryModal()}
                   >
                     Select Your Country to Enroll
                   </Button>
@@ -331,7 +332,7 @@ export default function CourseDetailsPage() {
                   <>
                     <button
                       type="button"
-                      onClick={() => setIsCountryModalOpen(true)}
+                      onClick={() => openCountryModal()}
                       className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-gold transition-colors"
                     >
                       <Globe2 size={12} />
@@ -361,12 +362,6 @@ export default function CourseDetailsPage() {
         </div>
 
       </div>
-
-      <CountrySelectModal
-        isOpen={isCountryModalOpen}
-        onSelect={handleSelectCountry}
-        onClose={() => setIsCountryModalOpen(false)}
-      />
     </div>
   );
 }

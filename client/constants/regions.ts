@@ -41,7 +41,7 @@ export const REGION_META: Record<Region, RegionMeta> = {
   UAE: { label: 'UAE', currency: 'AED' },
   UK: { label: 'United Kingdom', currency: 'GBP' },
   US: { label: 'United States', currency: 'USD' },
-  OTHERS: { label: 'Rest of World', currency: 'USD' },
+  OTHERS: { label: 'Others', currency: 'USD' },
 };
 
 export const PACKAGE_TIER_META: Record<(typeof PACKAGE_TIERS)[number], { label: string; blurb: string }> = {
@@ -49,3 +49,25 @@ export const PACKAGE_TIER_META: Record<(typeof PACKAGE_TIERS)[number], { label: 
   INTENSIVE: { label: 'Intensive', blurb: 'More sessions and deeper coverage.' },
   PREMIUM: { label: 'Premium', blurb: 'The complete, fully-supported experience.' },
 };
+
+interface DisplayablePackage {
+  region: Region;
+  price: number;
+  currency: string;
+}
+
+// Picks the package to show on a course card for a given region — the cheapest tier if there
+// are several (international regions), falling back to OTHERS pricing when nothing is
+// configured for the resolved region, mirroring the backend's own fallback in
+// courses.service.ts#getCoursePricesForRegion.
+export function pickDisplayPackage<T extends DisplayablePackage>(packages: T[], region: Region): T | null {
+  let candidates = packages.filter((pkg) => pkg.region === region);
+
+  if (candidates.length === 0 && region !== 'OTHERS') {
+    candidates = packages.filter((pkg) => pkg.region === 'OTHERS');
+  }
+
+  if (candidates.length === 0) return null;
+
+  return candidates.reduce((cheapest, pkg) => (pkg.price < cheapest.price ? pkg : cheapest), candidates[0]);
+}

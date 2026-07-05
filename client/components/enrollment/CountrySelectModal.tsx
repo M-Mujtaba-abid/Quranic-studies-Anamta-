@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Globe2, X } from 'lucide-react';
-import { COUNTRIES, OTHER_COUNTRY, type CountryOption } from '@/constants/countries';
+import { COUNTRIES, type CountryOption } from '@/constants/countries';
 
 interface CountrySelectModalProps {
   isOpen: boolean;
@@ -45,14 +45,6 @@ export function CountrySelectModal({ isOpen, onSelect, onClose }: CountrySelectM
               </button>
             ))}
           </div>
-
-          <button
-            type="button"
-            onClick={() => onSelect(OTHER_COUNTRY)}
-            className="w-full px-3 py-2.5 rounded-xl border border-dashed border-border text-xs font-medium text-text-secondary hover:border-gold hover:text-gold transition-all cursor-pointer"
-          >
-            My country isn&apos;t listed
-          </button>
         </div>
       </div>
     </div>

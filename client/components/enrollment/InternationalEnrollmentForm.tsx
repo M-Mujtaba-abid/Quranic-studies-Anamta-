@@ -6,6 +6,7 @@ import { Sparkles, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { StudentInfoFields } from './StudentInfoFields';
 import { PackageCard, type CoursePackageOption } from './PackageCard';
+import { PackageDetailsModal } from './PackageDetailsModal';
 import type { StudentInfoValues } from './enrollment.types';
 
 interface InternationalEnrollmentFormProps {
@@ -22,6 +23,7 @@ export function InternationalEnrollmentForm({
   onSubmit,
 }: InternationalEnrollmentFormProps) {
   const [selectedTier, setSelectedTier] = useState<string | null>(packages[0]?.packageTier ?? null);
+  const [detailsPackage, setDetailsPackage] = useState<CoursePackageOption | null>(null);
 
   const {
     control,
@@ -49,10 +51,22 @@ export function InternationalEnrollmentForm({
               pkg={pkg}
               isSelected={selectedTier === pkg.packageTier}
               onSelect={() => setSelectedTier(pkg.packageTier)}
+              onViewDetails={() => setDetailsPackage(pkg)}
             />
           ))}
         </div>
       </div>
+
+      <PackageDetailsModal
+        pkg={detailsPackage}
+        isOpen={detailsPackage !== null}
+        isSelected={detailsPackage !== null && selectedTier === detailsPackage.packageTier}
+        onClose={() => setDetailsPackage(null)}
+        onSelect={() => {
+          if (detailsPackage) setSelectedTier(detailsPackage.packageTier);
+          setDetailsPackage(null);
+        }}
+      />
 
       <form className="space-y-6">
         <StudentInfoFields
@@ -62,7 +76,7 @@ export function InternationalEnrollmentForm({
           phoneCountryCode={phoneCountryCode}
         />
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Button
             type="button"
             variant="outline"

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,7 +8,8 @@ import Navbar from '@/components/layout/Navbar';
 import { GET_ALL_COURSES } from '@/graphql';
 import { Search, Globe2, ArrowRight, RefreshCw, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { LOCAL_REGION } from '@/constants/regions';
+import { LOCAL_REGION, pickDisplayPackage } from '@/constants/regions';
+import { useCountrySelection } from '@/providers/CountryProvider';
 
 export default function CoursesPage() {
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES, {
@@ -16,6 +17,17 @@ export default function CoursesPage() {
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+
+  const { country, openCountryModal } = useCountrySelection();
+
+  // Prompt for a country the moment someone lands here without one selected yet
+  // (whether via the navbar, a direct link, a bookmark, or a fresh page reload — the
+  // selection is in-memory only, so a reload always starts with no country selected).
+  useEffect(() => {
+    if (!country) {
+      openCountryModal();
+    }
+  }, [country, openCountryModal]);
 
   if (loading && !data) {
     return (
@@ -60,7 +72,7 @@ export default function CoursesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-bg text-text pb-20">
+    <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
       <Navbar />
 
       {/* Decorative Gradients */}
@@ -84,8 +96,8 @@ export default function CoursesPage() {
 
       {/* Search Row */}
       <div className="max-w-7xl mx-auto px-6 lg:px-10 mt-12">
-        <div className="flex items-center bg-surface border border-border p-4 rounded-2xl shadow-sm">
-          <div className="relative w-full md:w-96">
+        <div className="flex flex-col sm:flex-row items-center gap-3 bg-surface border border-border p-4 rounded-2xl shadow-sm">
+          <div className="relative w-full sm:w-96">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-text-secondary">
               <Search size={18} />
             </span>
@@ -97,6 +109,15 @@ export default function CoursesPage() {
               className="w-full bg-bg border border-border pl-10 pr-4 py-2.5 rounded-xl text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold transition-colors placeholder:text-text-secondary/50"
             />
           </div>
+
+          <button
+            type="button"
+            onClick={() => openCountryModal()}
+            className="flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-gold transition-colors sm:ml-auto shrink-0"
+          >
+            <Globe2 size={14} className="text-gold" />
+            {country ? `Pricing shown for ${country.name} — change` : 'Select your country'}
+          </button>
         </div>
       </div>
 
@@ -149,16 +170,23 @@ export default function CoursesPage() {
 
                   <div className="space-y-4">
                     {/* Meta info row */}
-                    <div className="flex items-center justify-between text-xs text-text-secondary border-t border-border pt-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-text-secondary border-t border-border pt-4">
                       <div className="flex items-center gap-1.5">
                         <Globe2 size={14} className="text-gold" />
-                        <span>Local &amp; international pricing</span>
+                        <span>{country ? country.name : 'Local & international pricing'}</span>
                       </div>
                       {(() => {
-                        const localPackage = course.packages?.find((pkg: any) => pkg.region === LOCAL_REGION);
-                        return localPackage ? (
-                          <span className="text-sm font-bold text-gold">From PKR {localPackage.price}</span>
-                        ) : null;
+                        if (!country) return null;
+
+                        const displayPackage = pickDisplayPackage(course.packages ?? [], country.region);
+                        if (!displayPackage) return null;
+
+                        const prefix = country.region === LOCAL_REGION ? '' : 'From ';
+                        return (
+                          <span className="text-sm font-bold text-gold">
+                            {prefix}{displayPackage.currency} {displayPackage.price}
+                          </span>
+                        );
                       })()}
                     </div>
 
