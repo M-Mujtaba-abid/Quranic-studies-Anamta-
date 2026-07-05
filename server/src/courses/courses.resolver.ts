@@ -1,5 +1,5 @@
 import { Args, ID, Query, Mutation, Resolver, ResolveField, Parent, Float } from '@nestjs/graphql';
-import { Course } from './models/course.model';
+import { Course, CoursePackage } from './models/course.model';
 import { CoursesService } from './courses.service';
 import { CreateCourseInput } from './dto/create-course.input';
 import { UpdateCourseInput } from './dto/update.course.input';
@@ -40,6 +40,18 @@ export class CoursesResolver {
     return await this.coursesService.findOne(id);
   }
 
+  @Query(() => [CoursePackage], {
+    name: 'coursePricesForRegion',
+  })
+  async getCoursePricesForRegion(
+    @Args('courseId', { type: () => ID })
+    courseId: string,
+    @Args('country', { nullable: true })
+    country?: string,
+  ) {
+    return await this.coursesService.getCoursePricesForRegion(courseId, country);
+  }
+
   @Mutation(() => Course)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
@@ -59,14 +71,16 @@ export class CoursesResolver {
   ) {
     return await this.coursesService.remove(id);
   }
+}
 
+@Resolver(() => CoursePackage)
+export class CoursePackageResolver {
   @ResolveField(() => Float)
-  price(@Parent() course: any) {
-    if (course.price === null || course.price === undefined) {
+  price(@Parent() coursePackage: any) {
+    if (coursePackage.price === null || coursePackage.price === undefined) {
       return 0;
     }
-    const parsed = Number(course.price);
+    const parsed = Number(coursePackage.price);
     return isNaN(parsed) ? 0 : parsed;
   }
 }
-// Trigger NestJS dev watch compile after prisma generate

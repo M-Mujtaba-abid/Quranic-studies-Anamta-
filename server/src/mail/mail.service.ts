@@ -51,9 +51,37 @@ export class MailService implements OnModuleInit {
     adminEmail: string,
     student: { firstName: string; lastName: string; email: string; phone: string; address?: string | null; city?: string | null; country?: string | null },
     course: { title: string },
-    enrollment: { preferredHour: number; preferredMinute: number; preferredPeriod: string; preferredDays: string }
+    enrollment: {
+      preferredHour?: number | null;
+      preferredMinute?: number | null;
+      preferredPeriod?: string | null;
+      preferredDays?: string | null;
+      enrollmentType: string;
+      packageTier?: string | null;
+      appliedCurrency?: string | null;
+      appliedPrice?: number | null;
+    }
   ) {
     const sender = this.configService.get<string>('GMAIL_USER');
+    const scheduleOrPackageRows = enrollment.preferredHour != null
+      ? `
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Preferred Days:</td>
+              <td style="padding: 8px; border-bottom: 1px solid #eee;">${enrollment.preferredDays}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Preferred Time:</td>
+              <td style="padding: 8px; border-bottom: 1px solid #eee;">${enrollment.preferredHour}:${String(enrollment.preferredMinute).padStart(2, '0')} ${enrollment.preferredPeriod}</td>
+            </tr>`
+      : `
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Package:</td>
+              <td style="padding: 8px; border-bottom: 1px solid #eee;">${enrollment.packageTier}${enrollment.enrollmentType === 'FREE_TRIAL' ? ' (Free Trial)' : ''}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Price:</td>
+              <td style="padding: 8px; border-bottom: 1px solid #eee;">${enrollment.appliedCurrency} ${enrollment.appliedPrice}</td>
+            </tr>`;
     const mailOptions = {
       from: `"Anamta Institute Admin Portal" <${sender}>`,
       to: adminEmail,
@@ -90,14 +118,7 @@ export class MailService implements OnModuleInit {
               <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; width: 35%;">Course:</td>
               <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; color: #2c3e50;">${course.title}</td>
             </tr>
-            <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Preferred Days:</td>
-              <td style="padding: 8px; border-bottom: 1px solid #eee;">${enrollment.preferredDays}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Preferred Time:</td>
-              <td style="padding: 8px; border-bottom: 1px solid #eee;">${enrollment.preferredHour}:${enrollment.preferredMinute.toString().padStart(2, '0')} ${enrollment.preferredPeriod}</td>
-            </tr>
+            ${scheduleOrPackageRows}
           </table>
 
           <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 12px; border-top: 1px solid #eee; padding-top: 15px;">
@@ -114,9 +135,37 @@ export class MailService implements OnModuleInit {
     studentEmail: string,
     student: { firstName: string; lastName: string },
     course: { title: string },
-    enrollment: { preferredHour: number; preferredMinute: number; preferredPeriod: string; preferredDays: string }
+    enrollment: {
+      preferredHour?: number | null;
+      preferredMinute?: number | null;
+      preferredPeriod?: string | null;
+      preferredDays?: string | null;
+      enrollmentType: string;
+      packageTier?: string | null;
+      appliedCurrency?: string | null;
+      appliedPrice?: number | null;
+    }
   ) {
     const sender = this.configService.get<string>('GMAIL_USER');
+    const scheduleOrPackageRows = enrollment.preferredHour != null
+      ? `
+              <tr>
+                <td style="padding: 6px; font-weight: bold;">Preferred Days:</td>
+                <td style="padding: 6px;">${enrollment.preferredDays}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px; font-weight: bold;">Preferred Time:</td>
+                <td style="padding: 6px;">${enrollment.preferredHour}:${String(enrollment.preferredMinute).padStart(2, '0')} ${enrollment.preferredPeriod}</td>
+              </tr>`
+      : `
+              <tr>
+                <td style="padding: 6px; font-weight: bold;">Package:</td>
+                <td style="padding: 6px;">${enrollment.packageTier}${enrollment.enrollmentType === 'FREE_TRIAL' ? ' (Free Trial)' : ''}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px; font-weight: bold;">Price:</td>
+                <td style="padding: 6px;">${enrollment.appliedCurrency} ${enrollment.appliedPrice}</td>
+              </tr>`;
     const mailOptions = {
       from: `"Anamta Institute" <${sender}>`,
       to: studentEmail,
@@ -134,14 +183,7 @@ export class MailService implements OnModuleInit {
                 <td style="padding: 6px; font-weight: bold; width: 40%;">Course Title:</td>
                 <td style="padding: 6px;">${course.title}</td>
               </tr>
-              <tr>
-                <td style="padding: 6px; font-weight: bold;">Preferred Days:</td>
-                <td style="padding: 6px;">${enrollment.preferredDays}</td>
-              </tr>
-              <tr>
-                <td style="padding: 6px; font-weight: bold;">Preferred Time:</td>
-                <td style="padding: 6px;">${enrollment.preferredHour}:${enrollment.preferredMinute.toString().padStart(2, '0')} ${enrollment.preferredPeriod}</td>
-              </tr>
+              ${scheduleOrPackageRows}
               <tr>
                 <td style="padding: 6px; font-weight: bold;">Current Status:</td>
                 <td style="padding: 6px; color: #f57c00; font-weight: bold;">PENDING APPROVAL</td>

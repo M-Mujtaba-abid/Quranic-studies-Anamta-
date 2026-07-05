@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEnrollmentInput } from './dto/create-enrollment.input';
 import { UpdateEnrollmentInput } from './dto/update-enrollment.input';
 import { EnrollStudentInput } from './dto/enroll-student.input';
@@ -7,6 +7,8 @@ import { StudentsService } from '../students/students.service';
 import { CoursesService } from '../courses/courses.service';
 import { MailService } from '../mail/mail.service';
 import { ConfigService } from '@nestjs/config';
+import { EnrollmentType, PackageTier } from '@prisma/client';
+import { mapCountryToRegion, isLocalRegion } from '../common/utils/region.util';
 
 @Injectable()
 export class EnrollmentService {
@@ -48,6 +50,8 @@ export class EnrollmentService {
       city,
       country,
       courseId,
+      enrollmentType,
+      packageTier,
       preferredHour,
       preferredMinute,
       preferredPeriod,
@@ -57,7 +61,10 @@ export class EnrollmentService {
     // 1. Verify course exists first
     const course = await this.coursesService.findOne(courseId);
 
-    // 2. Check if student already exists by email
+    // 2. Resolve region-based pricing for this enrollment
+    const pricing = await this.resolveEnrollmentPricing(courseId, country, enrollmentType, packageTier);
+
+    // 3. Check if student already exists by email
     let student = await this.studentsService.findOneByEmail(email);
 
     if (student) {
@@ -84,7 +91,7 @@ export class EnrollmentService {
       });
     }
 
-    // 3. Prevent duplicate enrollment for this student and course
+    // 4. Prevent duplicate enrollment for this student and course
     const existingEnrollment = await this.enrollmentRepository.findByStudentAndCourse(
       student.id,
       course.id,
@@ -94,7 +101,7 @@ export class EnrollmentService {
       throw new ConflictException('Student is already enrolled in this course.');
     }
 
-    // 4. Create enrollment record
+    // 5. Create enrollment record
     const enrollment = await this.enrollmentRepository.create({
       studentId: student.id,
       courseId: course.id,
@@ -102,17 +109,25 @@ export class EnrollmentService {
       preferredMinute,
       preferredPeriod,
       preferredDays,
+      enrollmentType: pricing.enrollmentType,
+      packageTier: pricing.packageTier,
+      appliedCurrency: pricing.appliedCurrency,
+      appliedPrice: pricing.appliedPrice,
     });
 
-    // 5. Send emails asynchronously (so they don't block the API response)
+    // 6. Send emails asynchronously (so they don't block the API response)
     const adminEmail = this.configService.get<string>('ADMIN_EMAIL') || 'anamtainstitute@gmail.com';
-    
+    const enrollmentForEmail = {
+      ...enrollment,
+      appliedPrice: enrollment.appliedPrice === null ? null : Number(enrollment.appliedPrice),
+    };
+
     // Notification for Admin
     this.mailService.sendEnrollmentNotification(
       adminEmail,
       student,
       course,
-      enrollment
+      enrollmentForEmail
     ).catch(err => console.error('Failed to send admin enrollment notification:', err));
 
     // Confirmation for Student
@@ -120,10 +135,59 @@ export class EnrollmentService {
       student.email,
       student,
       course,
-      enrollment
+      enrollmentForEmail
     ).catch(err => console.error('Failed to send student enrollment confirmation:', err));
 
     return enrollment;
+  }
+
+  private async resolveEnrollmentPricing(
+    courseId: string,
+    country: string | undefined,
+    requestedEnrollmentType: EnrollmentType | undefined,
+    requestedPackageTier: PackageTier | undefined,
+  ) {
+    const region = mapCountryToRegion(country);
+    const packages = await this.coursesService.getCoursePricesForRegion(courseId, country);
+
+    if (isLocalRegion(region)) {
+      // Local (Pakistan) enrollments ignore any packageTier/enrollmentType the client sent —
+      // there is exactly one direct PKR price and no free trial.
+      const localPricing = packages.find((pkg) => pkg.packageTier === PackageTier.NONE) ?? packages[0];
+
+      if (!localPricing) {
+        throw new NotFoundException('Pricing has not been configured for this course.');
+      }
+
+      return {
+        enrollmentType: EnrollmentType.REGULAR,
+        packageTier: PackageTier.NONE,
+        appliedCurrency: localPricing.currency,
+        appliedPrice: Number(localPricing.price),
+      };
+    }
+
+    if (!requestedPackageTier) {
+      throw new BadRequestException('A package tier is required for international enrollment.');
+    }
+
+    const selectedPackage = packages.find((pkg) => pkg.packageTier === requestedPackageTier);
+
+    if (!selectedPackage) {
+      throw new NotFoundException('The selected package is not available for this region.');
+    }
+
+    const enrollmentType =
+      requestedEnrollmentType === EnrollmentType.FREE_TRIAL
+        ? EnrollmentType.FREE_TRIAL
+        : EnrollmentType.REGULAR;
+
+    return {
+      enrollmentType,
+      packageTier: selectedPackage.packageTier,
+      appliedCurrency: selectedPackage.currency,
+      appliedPrice: enrollmentType === EnrollmentType.FREE_TRIAL ? 0 : Number(selectedPackage.price),
+    };
   }
 
   async findAll() {

@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseInput } from './dto/create-course.input';
 import { UpdateCourseInput } from './dto/update.course.input';
 import { CourseRepository } from './repositories/course.repository';
+import { mapCountryToRegion } from '../common/utils/region.util';
+import { Region } from '@prisma/client';
 import cloudinary from '../upload/cloudinary.config';
 
 @Injectable()
@@ -84,5 +86,19 @@ export class CoursesService {
     }
 
     return deletedCourse;
+  }
+
+  async getCoursePricesForRegion(courseId: string, countryCode?: string) {
+    await this.findOne(courseId);
+
+    const region = mapCountryToRegion(countryCode);
+    let packages = await this.courseRepository.findPackagesByCourseAndRegion(courseId, region);
+
+    // Fall back to OTHERS pricing when nothing is configured for the resolved region.
+    if (packages.length === 0 && region !== Region.OTHERS) {
+      packages = await this.courseRepository.findPackagesByCourseAndRegion(courseId, Region.OTHERS);
+    }
+
+    return packages;
   }
 }

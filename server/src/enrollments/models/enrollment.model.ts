@@ -1,5 +1,5 @@
-import { Field, ID, ObjectType, Int, registerEnumType } from '@nestjs/graphql';
-import { EnrollmentStatus } from '@prisma/client';
+import { Field, ID, ObjectType, Int, Float, registerEnumType } from '@nestjs/graphql';
+import { EnrollmentStatus, EnrollmentType, PackageTier } from '@prisma/client';
 import { Student } from '../../students/models/student.model';
 import { Course } from '../../courses/models/course.model';
 import { Payment } from '../../payments/models/payment.model';
@@ -7,6 +7,11 @@ import { Payment } from '../../payments/models/payment.model';
 registerEnumType(EnrollmentStatus, {
   name: 'EnrollmentStatus',
   description: 'The status of a student enrollment in a course',
+});
+
+registerEnumType(EnrollmentType, {
+  name: 'EnrollmentType',
+  description: 'Whether the enrollment is a regular paid enrollment or a free trial',
 });
 
 @ObjectType()
@@ -20,17 +25,29 @@ export class Enrollment {
   @Field()
   courseId!: string;
 
-  @Field(() => Int)
-  preferredHour!: number;
+  @Field(() => Int, { nullable: true })
+  preferredHour?: number;
 
-  @Field(() => Int)
-  preferredMinute!: number;
+  @Field(() => Int, { nullable: true })
+  preferredMinute?: number;
 
-  @Field()
-  preferredPeriod!: string; // "AM" or "PM"
+  @Field({ nullable: true })
+  preferredPeriod?: string; // "AM" or "PM"
 
-  @Field()
-  preferredDays!: string; // "Monday, Wednesday, Friday"
+  @Field({ nullable: true })
+  preferredDays?: string; // "Monday, Wednesday, Friday"
+
+  @Field(() => EnrollmentType)
+  enrollmentType!: EnrollmentType;
+
+  @Field(() => PackageTier, { nullable: true })
+  packageTier?: PackageTier;
+
+  @Field({ nullable: true })
+  appliedCurrency?: string;
+
+  @Field(() => Float, { nullable: true })
+  appliedPrice?: number;
 
   @Field(() => EnrollmentStatus)
   status!: EnrollmentStatus;
