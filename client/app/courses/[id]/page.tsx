@@ -1,30 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { useQuery, useMutation } from '@apollo/client/react';
+import { useQuery } from '@apollo/client/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { toast } from 'sonner';
 import Navbar from '@/components/layout/Navbar';
-import { GET_COURSE_BY_ID, GET_COURSE_PRICES_FOR_REGION, ENROLL_STUDENT_MUTATION } from '@/graphql';
+import { GET_COURSE_BY_ID } from '@/graphql';
 import { Button } from '@/components/ui/Button';
-import { LocalEnrollmentForm } from '@/components/enrollment/LocalEnrollmentForm';
-import { InternationalEnrollmentForm } from '@/components/enrollment/InternationalEnrollmentForm';
-import type { StudentInfoValues } from '@/components/enrollment/enrollment.types';
-import { LOCAL_REGION } from '@/constants/regions';
+import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
 import { useCountrySelection } from '@/providers/CountryProvider';
-import {
-  RefreshCw,
-  ArrowLeft,
-  CheckCircle,
-  ShieldCheck,
-  Copy,
-  Check,
-  Globe2,
-  MapPin,
-} from 'lucide-react';
+import { RefreshCw, ArrowLeft, ShieldCheck, Globe2 } from 'lucide-react';
 
 export default function CourseDetailsPage() {
   const params = useParams();
@@ -35,13 +22,8 @@ export default function CourseDetailsPage() {
     variables: { id },
   });
 
-  // Country selection (shared across pages) drives which region's pricing we fetch
+  // Country selection (shared across pages) drives which region's pricing EnrollmentPanel fetches
   const { country: selectedCountry, openCountryModal } = useCountrySelection();
-
-  const { data: pricingData, loading: loadingPricing } = useQuery<any>(GET_COURSE_PRICES_FOR_REGION, {
-    variables: { courseId: id, country: selectedCountry?.name },
-    skip: !selectedCountry,
-  });
 
   // Prompt for a country the moment someone lands on a course page without one selected yet
   // (including after a page reload — the selection is in-memory only, not persisted).
@@ -50,64 +32,6 @@ export default function CourseDetailsPage() {
       openCountryModal();
     }
   }, [selectedCountry, openCountryModal]);
-
-  const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
-  const [enrolledResult, setEnrolledResult] = useState<any | null>(null);
-  const [copied, setCopied] = useState(false);
-
-  const [enrollStudent, { loading: isEnrolling }] = useMutation<any, any>(ENROLL_STUDENT_MUTATION, {
-    onCompleted: (res) => {
-      setEnrolledResult(res?.enrollStudent ?? null);
-      setEnrollmentSuccess(true);
-      toast.success('Successfully registered for the course!');
-    },
-    onError: (err) => {
-      console.error(err);
-      toast.error(err.message || 'Failed to register. Please try again.');
-    },
-  });
-
-  const handleCopyId = () => {
-    if (enrolledResult?.id) {
-      navigator.clipboard.writeText(enrolledResult.id);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const handleLocalSubmit = async (values: StudentInfoValues) => {
-    await enrollStudent({
-      variables: {
-        enrollStudentInput: {
-          ...values,
-          address: values.address || undefined,
-          city: values.city || undefined,
-          country: selectedCountry?.name,
-          courseId: id,
-        },
-      },
-    });
-  };
-
-  const handleInternationalSubmit = async (
-    values: StudentInfoValues,
-    packageTier: string,
-    enrollmentType: 'REGULAR' | 'FREE_TRIAL',
-  ) => {
-    await enrollStudent({
-      variables: {
-        enrollStudentInput: {
-          ...values,
-          address: values.address || undefined,
-          city: values.city || undefined,
-          country: selectedCountry?.name,
-          courseId: id,
-          packageTier,
-          enrollmentType,
-        },
-      },
-    });
-  };
 
   if (loading && !data) {
     return (
@@ -155,9 +79,6 @@ export default function CourseDetailsPage() {
   }
 
   const course = data.course;
-  const packages = pricingData?.coursePricesForRegion ?? [];
-  const isLocal = packages[0]?.region === LOCAL_REGION;
-  const isFreeTrial = enrolledResult?.enrollmentType === 'FREE_TRIAL';
 
   return (
     <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
@@ -245,118 +166,7 @@ export default function CourseDetailsPage() {
 
           {/* Enrollment / Right Column */}
           <div className="lg:col-span-5 relative">
-            {enrollmentSuccess ? (
-              <div className="relative z-10 space-y-6 rounded-2xl border border-border bg-surface p-8 text-left shadow-md animate-fade-in">
-                <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
-                  <CheckCircle size={36} />
-                </div>
-                <div className="space-y-2 text-center">
-                  <h3 className="font-display text-xl font-bold text-text">Enrollment Submitted!</h3>
-                  <p className="text-xs leading-relaxed text-text-secondary">
-                    {isFreeTrial
-                      ? 'Alhamdulillah, your free trial request has been received. Our team will reach out to schedule it.'
-                      : 'Alhamdulillah, your registration has been successfully received.'}
-                  </p>
-                </div>
-
-                <div className="space-y-3 rounded-xl border border-border/40 bg-bg/50 p-4 text-xs">
-                  <h4 className="font-semibold uppercase tracking-wider text-[10px] text-text">Enrollment Details</h4>
-                  <div className="space-y-1.5 text-text-secondary">
-                    {enrolledResult?.appliedPrice !== null && enrolledResult?.appliedPrice !== undefined && (
-                      <p>
-                        <span className="font-medium text-text">Amount:</span>{' '}
-                        {isFreeTrial ? 'Free Trial' : `${enrolledResult.appliedCurrency} ${enrolledResult.appliedPrice}`}
-                      </p>
-                    )}
-                    {enrolledResult?.id && (
-                      <div className="mt-2 border-t border-border/30 pt-2">
-                        <span className="font-medium text-text">Enrollment ID:</span>
-                        <div className="mt-1 flex items-center gap-2 rounded border border-border bg-surface/60 p-2">
-                          <code className="select-all break-all font-mono text-[11px] text-gold">{enrolledResult.id}</code>
-                          <button
-                            type="button"
-                            onClick={handleCopyId}
-                            className="ml-auto cursor-pointer p-1 transition-colors hover:text-gold"
-                            title="Copy ID"
-                          >
-                            {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {enrolledResult?.id && !isFreeTrial && (
-                    <Link href={`/payment?enrollmentId=${enrolledResult.id}`} className="block w-full">
-                      <Button variant="gold" size="md" className="w-full py-2.5 text-sm font-semibold tracking-wide">
-                        Proceed to Payment
-                      </Button>
-                    </Link>
-                  )}
-                  <Link href="/courses" className="block w-full">
-                    <Button variant="outline" size="sm" className="w-full text-xs">
-                      Browse More Courses
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-surface border border-border p-6 md:p-8 rounded-2xl shadow-md space-y-6 relative z-10">
-                <div className="space-y-1">
-                  <h3 className="text-lg font-bold font-display text-text">Register for this Course</h3>
-                  <p className="text-xs text-text-secondary">
-                    {selectedCountry
-                      ? `Showing pricing for ${selectedCountry.name}.`
-                      : 'Select your country to see enrollment options and pricing.'}
-                  </p>
-                </div>
-
-                {!selectedCountry ? (
-                  <Button
-                    type="button"
-                    variant="gold"
-                    className="w-full py-3.5 rounded-xl text-sm shadow-md"
-                    leftIcon={<MapPin size={16} />}
-                    onClick={() => openCountryModal()}
-                  >
-                    Select Your Country to Enroll
-                  </Button>
-                ) : loadingPricing ? (
-                  <div className="flex flex-col items-center justify-center gap-3 py-10">
-                    <RefreshCw className="h-6 w-6 text-gold animate-spin" />
-                    <p className="text-xs text-text-secondary">Loading pricing for {selectedCountry.name}...</p>
-                  </div>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => openCountryModal()}
-                      className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-gold transition-colors"
-                    >
-                      <Globe2 size={12} />
-                      <span>{selectedCountry.name} — change country</span>
-                    </button>
-
-                    {isLocal ? (
-                      <LocalEnrollmentForm isSubmitting={isEnrolling} onSubmit={handleLocalSubmit} />
-                    ) : packages.length === 0 ? (
-                      <p className="text-sm text-text-secondary py-6 text-center">
-                        Pricing isn&apos;t configured for this course yet. Please check back soon.
-                      </p>
-                    ) : (
-                      <InternationalEnrollmentForm
-                        packages={packages}
-                        phoneCountryCode={selectedCountry.code}
-                        isSubmitting={isEnrolling}
-                        onSubmit={handleInternationalSubmit}
-                      />
-                    )}
-                  </>
-                )}
-              </div>
-            )}
+            <EnrollmentPanel presetCourseId={id} />
           </div>
 
         </div>

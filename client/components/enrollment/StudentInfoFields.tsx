@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Controller, type Control, type FieldErrors, type UseFormRegister } from 'react-hook-form';
-import PhoneInput from 'react-phone-input-2';
+import PhoneInput, { type CountryData } from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { User, Mail, MapPin } from 'lucide-react';
 import { Input } from '@/components/ui/Input';

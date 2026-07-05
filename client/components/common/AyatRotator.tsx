@@ -73,16 +73,16 @@ export function AyatRotator() {
   const activeAyat = useMemo(() => ayat[index], [index]);
 
   const content = (
-    <div className="flex min-w-0 flex-wrap items-center justify-center gap-2 text-center text-[10px] leading-5 text-white/30 sm:gap-3 sm:text-[11px]">
-      <span className="font-display uppercase tracking-[0.24em] text-white/35">
+    <div className="flex min-w-0 flex-wrap items-center justify-center gap-2 text-center text-[10px] leading-5 text-white/90 sm:gap-3 sm:text-[11px]">
+      <span className="font-display uppercase tracking-[0.24em] text-white/90">
         {activeAyat.reference}
       </span>
-      <span className="hidden text-white/20 sm:inline">•</span>
-      <span dir="rtl" className="font-[Cairo,serif] text-white/30">
+      <span className="hidden text-white/90 sm:inline">•</span>
+      <span dir="rtl" className="font-[Cairo,serif] text-white/90">
         {activeAyat.arabic}
       </span>
-      <span className="hidden text-white/20 sm:inline">•</span>
-      <span className="text-white/30">{activeAyat.translation}</span>
+      <span className="hidden text-white/90 sm:inline">•</span>
+      <span className="text-white/90">{activeAyat.translation}</span>
     </div>
   );
 

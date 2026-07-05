@@ -39,6 +39,14 @@ export class StudentRepository {
     });
   }
 
+  async findByPhone(phone: string): Promise<Student | null> {
+    return await this.database.student.findUnique({
+      where: {
+        phone,
+      },
+    });
+  }
+
   async update(updateStudentInput: UpdateStudentInput): Promise<Student> {
     const { id, ...data } = updateStudentInput;
 

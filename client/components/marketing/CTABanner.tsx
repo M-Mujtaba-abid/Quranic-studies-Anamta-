@@ -46,6 +46,14 @@ export default function CTABanner() {
           {/* Action Trigger Elements transformed to modern structural buttons */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
+              href="/enrollement"
+              className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gold px-8 py-3.5 font-display text-xs font-semibold text-primary-dark shadow-[0_4px_24px_rgba(212,175,55,0.35)] transition-all duration-300 hover:scale-[1.02]"
+            >
+              Enroll Now
+              <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+
+            <Link
               href="/courses"
               className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-primary border border-primary-light/30 px-8 py-3.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold"
             >
