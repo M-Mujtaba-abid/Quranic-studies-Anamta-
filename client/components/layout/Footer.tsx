@@ -105,7 +105,7 @@ export default function Footer() {
                 style={{ boxShadow: "0 0 0 1px rgba(201,162,39,0.3)" }}
               >
                 <Image
-                  src="/logo/logo.jpeg"
+                  src="/logo.jpeg"
                   alt="Anamta Institute"
                   width={44}
                   height={44}
