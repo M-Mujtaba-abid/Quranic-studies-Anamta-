@@ -58,12 +58,12 @@ export default function Features() {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            <div className="relative h-[320px] sm:h-[420px] w-full rounded-2xl overflow-hidden border border-gold/20 shadow-2xl">
+            <div className="relative h-[320px] sm:h-[420px]  rounded-2xl overflow-hidden border border-gold/20 shadow-2xl">
               <Image
                 src="/Web banner 2.jpg.jpeg"
                 alt="Student attending a live 1-on-1 Quran class online"
                 fill
-                className="object-cover"
+                className=""
                 sizes="(max-width: 1024px) 100vw, 600px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bg/50 via-transparent to-transparent" />

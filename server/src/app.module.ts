@@ -16,6 +16,7 @@ import { PaymentModule } from './payments/payment.module';
 import { PaymentSettingModule } from './payment-settings/payment-setting.module';
 import { ContactUsModule } from './contact-us/contact-us.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
+import { DonationsModule } from './donations/donations.module';
 import { TestimonialsModule } from './testimonials/testimonials.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ConfigModule } from '@nestjs/config';
@@ -47,6 +48,7 @@ import { ConfigModule } from '@nestjs/config';
     PaymentSettingModule,
     ContactUsModule,
     NewsletterModule,
+    DonationsModule,
     TestimonialsModule,
     DashboardModule,
   ],

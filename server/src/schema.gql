@@ -203,6 +203,36 @@ type ContactMessage {
   updatedAt: DateTime!
 }
 
+type Donation {
+  id: ID!
+  type: DonationType!
+  donorName: String
+  email: String
+  description: String
+  amount: Float!
+  currency: String!
+  screenshotUrl: String!
+  screenshotPublicId: String!
+  status: DonationStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""The category of a donation"""
+enum DonationType {
+  LILLAH
+  SADAQAH_JARIYAH
+  SADAQAH_NAFILLAH
+  ZAKAT
+}
+
+"""The verification status of a submitted donation"""
+enum DonationStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
 type Testimonial {
   id: ID!
   name: String!
@@ -286,6 +316,8 @@ type Query {
   paymentSettings: [PaymentSetting!]!
   contactMessages: [ContactMessage!]!
   contactMessage(id: ID!): ContactMessage!
+  donations: [Donation!]!
+  donation(id: ID!): Donation!
   approvedTestimonials: [Testimonial!]!
   testimonials: [Testimonial!]!
   testimonial(id: ID!): Testimonial!
@@ -329,6 +361,8 @@ type Mutation {
   markContactMessageAsRead(id: ID!): ContactMessage!
   replyToContactMessage(id: ID!, replyContent: String!): ContactMessage!
   deleteContactMessage(id: ID!): ContactMessage!
+  createDonation(createDonationInput: CreateDonationInput!): Donation!
+  updateDonationStatus(updateDonationStatusInput: UpdateDonationStatusInput!): Donation!
   submitTestimonial(createTestimonialInput: CreateTestimonialInput!): SubmitTestimonialResponse!
   approveTestimonial(id: ID!): Testimonial!
   rejectTestimonial(id: ID!): Testimonial!
@@ -505,6 +539,22 @@ input CreateContactMessageInput {
   email: String!
   subject: String!
   message: String!
+}
+
+input CreateDonationInput {
+  type: DonationType!
+  donorName: String
+  email: String
+  description: String
+  amount: Float!
+  currency: String!
+  screenshotUrl: String!
+  screenshotPublicId: String!
+}
+
+input UpdateDonationStatusInput {
+  id: ID!
+  status: DonationStatus!
 }
 
 input CreateTestimonialInput {

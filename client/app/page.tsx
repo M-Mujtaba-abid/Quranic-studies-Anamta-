@@ -8,6 +8,7 @@ import HeroCarousel from "@/components/marketing/HeroCarousel";
 import HowItWorks from "@/components/marketing/HowItWorks";
 // import PopularCourses from "@/components/marketing/PopularCourses";
 import PricingPreview from "@/components/marketing/PricingPreview";
+import SponsorCTA from "@/components/marketing/SponsorCTA";
 import Teachers from "@/components/marketing/Teachers";
 import Testimonials from "@/components/marketing/Testimonials";
 import TrustBar from "@/components/marketing/TrustBar";
@@ -28,6 +29,7 @@ export default function Home() {
       {/* <PricingPreview /> */}
       {/* <FAQ /> */}
       <CTABanner />
+      <SponsorCTA />
       <Footer />
     </main>
   );
