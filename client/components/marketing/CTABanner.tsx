@@ -60,13 +60,6 @@ export default function CTABanner() {
               Explore Courses
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-
-            <Link
-              href="/sponsor-a-student"
-              className="w-full sm:w-auto block rounded-xl border border-primary/60 bg-primary/5 px-8 py-3.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:bg-gold/10 hover:text-gold"
-            >
-              Sponsor a Student
-            </Link>
           </div>
 
           <p className="mt-8 text-[11px] tracking-wide font-display font-medium text-text-secondary/80">

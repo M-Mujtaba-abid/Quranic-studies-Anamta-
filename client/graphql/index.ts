@@ -3,6 +3,7 @@ export * from './fragments/user';
 export * from './fragments/course';
 export * from './fragments/student';
 export * from './fragments/payment';
+export * from './fragments/donation';
 export * from './fragments/enrollment';
 export * from './fragments/testimonial';
 export * from './fragments/contact';
@@ -10,6 +11,7 @@ export * from './fragments/contact';
 // Mutations
 export * from './mutations/auth';
 export * from './mutations/payment';
+export * from './mutations/donation';
 export * from './mutations/course';
 export * from './mutations/enrollment';
 export * from './mutations/testimonial';
@@ -24,6 +26,7 @@ export * from './queries/enrollment';
 export * from './queries/payment-setting';
 export * from './queries/student';
 export * from './queries/payment';
+export * from './queries/donation';
 export * from './queries/testimonial';
 export * from './queries/contact';
 

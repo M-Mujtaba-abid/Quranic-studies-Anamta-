@@ -158,6 +158,29 @@ model PaymentSetting {
   @@map("payment_settings")
 }
 
+model Donation {
+  id                 String         @id @default(cuid())
+
+  type               DonationType
+
+  donorName          String?
+  email              String?
+  description        String?
+
+  amount             Decimal
+  currency           String         @default("PKR")
+
+  screenshotUrl      String
+  screenshotPublicId String
+
+  status             DonationStatus @default(PENDING)
+
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@map("donations")
+}
+
 model Subscriber {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -255,4 +278,17 @@ enum PaymentStatus {
   UNDER_REVIEW
   PAID
   REJECTED
+}
+
+enum DonationType {
+  LILLAH
+  SADAQAH_JARIYAH
+  SADAQAH_NAFILLAH
+  ZAKAT
+}
+
+enum DonationStatus {
+  PENDING
+  COMPLETED
+  FAILED
 }

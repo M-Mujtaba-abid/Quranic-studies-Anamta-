@@ -20,7 +20,8 @@ import {
   MessageSquare,
   Mail,
   Settings2,
-  ShieldAlert
+  ShieldAlert,
+  HandCoins
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -35,6 +36,7 @@ const sidebarItems: SidebarItem[] = [
   { label: 'Students', href: '/admin/students', icon: Users },
   { label: 'Enrollments', href: '/admin/enrollments', icon: ClipboardList },
   { label: 'Payments', href: '/admin/payments', icon: CreditCard },
+  { label: 'Donations', href: '/admin/donations', icon: HandCoins },
   { label: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare },
   { label: 'Messages', href: '/admin/contact', icon: Mail },
   { label: 'Payment Settings', href: '/admin/payment-settings', icon: Settings2 },

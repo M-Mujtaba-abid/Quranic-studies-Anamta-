@@ -6,6 +6,7 @@ import { useQuery, useMutation } from '@apollo/client/react';
 import Navbar from '@/components/layout/Navbar';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { BankDetailsCard } from '@/components/payment/BankDetailsCard';
 import { toast } from 'sonner';
 import {
   GET_PUBLIC_ENROLLMENT,
@@ -476,92 +477,10 @@ function PaymentContent() {
                       </h3>
                     </div>
 
-                    {!loadingSettings && paymentSetting ? (
-                      <div className="space-y-4 text-xs">
-                        <p className="text-text-secondary leading-relaxed">
-                          Please transfer your tuition fee using any of the available payment methods below, then take a screenshot of the confirmation receipt:
-                        </p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          
-                          {/* Bank Transfer Box */}
-                          {(paymentSetting.bankName || paymentSetting.accountNumber) && (
-                            <div className="bg-bg/50 border border-border/40 p-3.5 rounded-xl space-y-2 relative">
-                              <span className="font-semibold text-text uppercase tracking-wider text-[10px] text-gold">Bank Account</span>
-                              <div className="space-y-1 text-text-secondary text-[11px]">
-                                <p><span className="font-medium text-text">Bank:</span> {paymentSetting.bankName}</p>
-                                <p><span className="font-medium text-text">Title:</span> {paymentSetting.accountTitle}</p>
-                                <div className="flex items-center gap-1.5">
-                                  <span><span className="font-medium text-text">A/C:</span> {paymentSetting.accountNumber}</span>
-                                  <button
-                                    onClick={() => handleCopyToClipboard(paymentSetting.accountNumber, 'acct')}
-                                    className="hover:text-gold transition-colors cursor-pointer"
-                                  >
-                                    {copiedField === 'acct' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
-                                  </button>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                  <span><span className="font-medium text-text">IBAN:</span> {paymentSetting.iban}</span>
-                                  <button
-                                    onClick={() => handleCopyToClipboard(paymentSetting.iban, 'iban')}
-                                    className="hover:text-gold transition-colors cursor-pointer"
-                                  >
-                                    {copiedField === 'iban' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Mobile Wallets Box */}
-                          {(paymentSetting.easyPaisaNumber || paymentSetting.jazzCashNumber) && (
-                            <div className="bg-bg/50 border border-border/40 p-3.5 rounded-xl space-y-2">
-                              <span className="font-semibold text-text uppercase tracking-wider text-[10px] text-gold">Mobile Wallets</span>
-                              <div className="space-y-2 text-text-secondary text-[11px]">
-                                {paymentSetting.easyPaisaNumber && (
-                                  <div className="flex items-center justify-between border-b border-border/20 pb-1.5">
-                                    <div>
-                                      <span className="block font-medium text-text">EasyPaisa</span>
-                                      <span>{paymentSetting.easyPaisaNumber}</span>
-                                    </div>
-                                    <button
-                                      onClick={() => handleCopyToClipboard(paymentSetting.easyPaisaNumber, 'easypaisa')}
-                                      className="p-1 hover:text-gold transition-colors cursor-pointer"
-                                    >
-                                      {copiedField === 'easypaisa' ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
-                                    </button>
-                                  </div>
-                                )}
-                                {paymentSetting.jazzCashNumber && (
-                                  <div className="flex items-center justify-between">
-                                    <div>
-                                      <span className="block font-medium text-text">JazzCash</span>
-                                      <span>{paymentSetting.jazzCashNumber}</span>
-                                    </div>
-                                    <button
-                                      onClick={() => handleCopyToClipboard(paymentSetting.jazzCashNumber, 'jazzcash')}
-                                      className="p-1 hover:text-gold transition-colors cursor-pointer"
-                                    >
-                                      {copiedField === 'jazzcash' ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Instructions Box */}
-                        {paymentSetting.instructions && (
-                          <div className="bg-primary/5 border border-primary/10 p-3 rounded-xl">
-                            <span className="block font-semibold text-text text-[10px] uppercase tracking-wider mb-1">Instructions:</span>
-                            <p className="text-[11px] leading-relaxed text-text-secondary whitespace-pre-wrap">{paymentSetting.instructions}</p>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-text-secondary">Loading account details...</p>
-                    )}
+                    <p className="text-text-secondary leading-relaxed text-xs">
+                      Please transfer your tuition fee using any of the available payment methods below, then take a screenshot of the confirmation receipt:
+                    </p>
+                    <BankDetailsCard paymentSetting={paymentSetting} loading={loadingSettings} />
                   </div>
 
                   {/* Submission Form */}
