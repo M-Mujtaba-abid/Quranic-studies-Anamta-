@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation } from '@apollo/client/react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -244,55 +245,56 @@ export default function CourseDetailsPage() {
           {/* Enrollment / Right Column */}
           <div className="lg:col-span-5 relative">
             {enrollmentSuccess ? (
-              <div className="bg-surface border border-border p-8 rounded-2xl shadow-md space-y-6 animate-fade-in relative z-10 text-left">
-                <div className="h-16 w-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto mb-2">
+              <div className="relative z-10 space-y-6 rounded-2xl border border-border bg-surface p-8 text-left shadow-md animate-fade-in">
+                <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
                   <CheckCircle size={36} />
                 </div>
                 <div className="space-y-2 text-center">
-                  <h3 className="text-xl font-bold font-display text-text">Enrollment Submitted!</h3>
-                  <p className="text-xs text-text-secondary leading-relaxed">
+                  <h3 className="font-display text-xl font-bold text-text">Enrollment Submitted!</h3>
+                  <p className="text-xs leading-relaxed text-text-secondary">
                     {isFreeTrial
                       ? 'Alhamdulillah, your free trial request has been received. Our team will reach out to schedule it.'
                       : 'Alhamdulillah, your registration has been successfully received.'}
                   </p>
                 </div>
 
-                <div className="bg-bg/50 border border-border/40 p-4 rounded-xl space-y-3 text-xs">
-                  <h4 className="font-semibold text-text uppercase tracking-wider text-[10px]">Enrollment Details</h4>
+                <div className="space-y-3 rounded-xl border border-border/40 bg-bg/50 p-4 text-xs">
+                  <h4 className="font-semibold uppercase tracking-wider text-[10px] text-text">Enrollment Details</h4>
                   <div className="space-y-1.5 text-text-secondary">
                     {enrolledResult?.appliedPrice !== null && enrolledResult?.appliedPrice !== undefined && (
                       <p>
-                        <span className="text-text font-medium">Amount:</span>{' '}
+                        <span className="font-medium text-text">Amount:</span>{' '}
                         {isFreeTrial ? 'Free Trial' : `${enrolledResult.appliedCurrency} ${enrolledResult.appliedPrice}`}
                       </p>
                     )}
                     {enrolledResult?.id && (
-                      <div className="pt-2 flex flex-col gap-1 border-t border-border/30 mt-2">
-                        <span className="text-text font-medium">Enrollment ID:</span>
-                        <div className="flex items-center gap-2 bg-surface/60 p-2 rounded border border-border mt-1">
-                          <code className="text-gold font-mono text-[11px] select-all break-all">{enrolledResult.id}</code>
+                      <div className="mt-2 border-t border-border/30 pt-2">
+                        <span className="font-medium text-text">Enrollment ID:</span>
+                        <div className="mt-1 flex items-center gap-2 rounded border border-border bg-surface/60 p-2">
+                          <code className="select-all break-all font-mono text-[11px] text-gold">{enrolledResult.id}</code>
                           <button
                             type="button"
                             onClick={handleCopyId}
-                            className="p-1 hover:text-gold transition-colors ml-auto cursor-pointer"
+                            className="ml-auto cursor-pointer p-1 transition-colors hover:text-gold"
                             title="Copy ID"
                           >
                             {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
                           </button>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
+                </div>
 
                 <div className="space-y-3">
                   {enrolledResult?.id && !isFreeTrial && (
-                    <Link href={`/payment?enrollmentId=${enrolledResult.id}`} className="w-full block">
-                      <Button variant="gold" size="md" className="w-full text-sm font-semibold tracking-wide py-2.5">
+                    <Link href={`/payment?enrollmentId=${enrolledResult.id}`} className="block w-full">
+                      <Button variant="gold" size="md" className="w-full py-2.5 text-sm font-semibold tracking-wide">
                         Proceed to Payment
                       </Button>
                     </Link>
                   )}
-                  <Link href="/courses" className="w-full block">
+                  <Link href="/courses" className="block w-full">
                     <Button variant="outline" size="sm" className="w-full text-xs">
                       Browse More Courses
                     </Button>
