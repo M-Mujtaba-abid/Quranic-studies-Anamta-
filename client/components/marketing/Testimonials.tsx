@@ -10,7 +10,7 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { GET_APPROVED_TESTIMONIALS, SUBMIT_TESTIMONIAL } from "@/graphql";
-// Flat-illustration style avatars — Sister (hijab/abaya) and Brother (molvi-style: cap, beard, kurta)
+// Minimal silhouette-style avatars — no facial features, just clean shapes
 const MaleAvatar = () => (
   <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
     <defs>
@@ -34,31 +34,16 @@ const MaleAvatar = () => (
     {/* Neck */}
     <rect x="44" y="47" width="12" height="10" fill="url(#maleSkin)" />
 
-    {/* Full round face — big and clearly visible like a friendly illustration */}
+    {/* Plain round face — no features */}
     <circle cx="50" cy="38" r="17" fill="url(#maleSkin)" />
 
-    {/* Beard — solid, wraps jaw and chin, distinctly dark */}
+    {/* Kufi cap — gold, bold and prominent on top */}
     <path
-      d="M 33 36 C 33 50 40 60 50 60 C 60 60 67 50 67 36
-         C 67 42 63 47 58 49 C 58 44 56 41 50 41
-         C 44 41 42 44 42 49 C 37 47 33 42 33 36 Z"
-      fill="#1c1c1c"
-    />
-
-    {/* Mustache */}
-    <path d="M 43 40 Q 50 44 57 40" fill="none" stroke="#1c1c1c" strokeWidth="2.4" strokeLinecap="round" />
-
-    {/* Kufi cap — gold, sits clearly on top, rounded dome */}
-    <path
-      d="M 33 26 Q 50 6 67 26 Q 68 30 63 30 Q 50 24 37 30 Q 32 30 33 26 Z"
+      d="M 32 27 Q 50 4 68 27 Q 69 32 63 32 Q 50 25 37 32 Q 31 32 32 27 Z"
       fill="#c9a227"
       stroke="#8a6d15"
       strokeWidth="1"
     />
-
-    {/* Eyes */}
-    <circle cx="44" cy="35" r="1.6" fill="#26221c" />
-    <circle cx="56" cy="35" r="1.6" fill="#26221c" />
   </svg>
 );
 
@@ -77,7 +62,7 @@ const FemaleAvatar = () => (
     {/* Background circle */}
     <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
 
-    {/* Abaya/robe body — gold tone, matches hijab for a cohesive full outfit look */}
+    {/* Abaya/robe body — gold tone */}
     <path d="M 16 90 Q 16 60 30 50 L 70 50 Q 84 60 84 90 Z" fill="url(#hijabGrad)" />
 
     {/* Hijab drape — large, rounded, covers head fully down to shoulders */}
@@ -95,15 +80,8 @@ const FemaleAvatar = () => (
     <path d="M 33 30 Q 34 42 37 53" fill="none" stroke="#7a5c14" strokeWidth="1.3" opacity="0.6" />
     <path d="M 67 30 Q 66 42 63 53" fill="none" stroke="#7a5c14" strokeWidth="1.3" opacity="0.6" />
 
-    {/* Full round face — big and clearly visible, matches male proportions */}
+    {/* Plain round face — no features */}
     <ellipse cx="50" cy="35" rx="14" ry="16" fill="url(#femaleSkin)" />
-
-    {/* Eyes */}
-    <circle cx="45" cy="34" r="1.6" fill="#3a2a1c" />
-    <circle cx="55" cy="34" r="1.6" fill="#3a2a1c" />
-
-    {/* Soft smile */}
-    <path d="M 45 41 Q 50 44 55 41" fill="none" stroke="#8a5a3c" strokeWidth="1.2" strokeLinecap="round" />
   </svg>
 );
 
