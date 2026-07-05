@@ -8,44 +8,80 @@ import { toast } from "sonner";
 import SectionHeading from "../ui/SectionHeading";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { GET_APPROVED_TESTIMONIALS, SUBMIT_TESTIMONIAL } from "@/graphql";
-
-// Elegant stylized vector avatar components for Male and Female students
+// Minimal silhouette-style avatars — no facial features, just clean shapes
 const MaleAvatar = () => (
   <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
     <defs>
-      <linearGradient id="maleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#c5a880" />
-        <stop offset="100%" stopColor="#9a7f5c" />
+      <linearGradient id="maleSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#e8c9a0" />
+        <stop offset="100%" stopColor="#d4ac7a" />
       </linearGradient>
     </defs>
+    {/* Background circle */}
     <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
-    {/* Body */}
-    <path d="M25,80 C25,65 35,58 50,58 C65,58 75,65 75,80" fill="url(#maleGrad)" />
-    {/* Head */}
-    <circle cx="50" cy="38" r="14" fill="url(#maleGrad)" />
-    {/* Stylized beard & kufi cap */}
-    <path d="M42,38 Q50,46 58,38" fill="none" stroke="#0d131a" strokeWidth="2.5" />
-    <path d="M38,28 Q50,22 62,28" fill="none" stroke="#0d131a" strokeWidth="2.5" />
+
+    {/* Kurta/Thobe body — brand primary blue tone */}
+    <path d="M 18 88 Q 18 62 34 54 L 66 54 Q 82 62 82 88 Z" fill="#21576f" />
+    {/* Kurta collar/placket line */}
+    <line x1="50" y1="54" x2="50" y2="80" stroke="#153a4a" strokeWidth="2" />
+    {/* Kurta buttons */}
+    <circle cx="50" cy="62" r="1.3" fill="#c9a227" />
+    <circle cx="50" cy="70" r="1.3" fill="#c9a227" />
+    <circle cx="50" cy="78" r="1.3" fill="#c9a227" />
+
+    {/* Neck */}
+    <rect x="44" y="47" width="12" height="10" fill="url(#maleSkin)" />
+
+    {/* Plain round face — no features */}
+    <circle cx="50" cy="38" r="17" fill="url(#maleSkin)" />
+
+    {/* Kufi cap — gold, bold and prominent on top */}
+    <path
+      d="M 32 27 Q 50 4 68 27 Q 69 32 63 32 Q 50 25 37 32 Q 31 32 32 27 Z"
+      fill="#c9a227"
+      stroke="#8a6d15"
+      strokeWidth="1"
+    />
   </svg>
 );
 
 const FemaleAvatar = () => (
   <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
     <defs>
-      <linearGradient id="femaleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#c5a880" />
-        <stop offset="100%" stopColor="#9a7f5c" />
+      <linearGradient id="femaleSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#f0d4ac" />
+        <stop offset="100%" stopColor="#dcb98a" />
+      </linearGradient>
+      <linearGradient id="hijabGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#d4a72c" />
+        <stop offset="100%" stopColor="#a8801a" />
       </linearGradient>
     </defs>
+    {/* Background circle */}
     <circle cx="50" cy="50" r="48" fill="#141d27" stroke="#c5a880" strokeWidth="1" />
-    {/* Hijab Silhouette */}
-    <path d="M28,80 C28,62 36,48 50,48 C64,48 72,62 72,80" fill="url(#femaleGrad)" />
-    {/* Face Area */}
-    <ellipse cx="50" cy="49" rx="9" ry="11" fill="#141d27" />
-    {/* Hijab wrap */}
-    <path d="M38,40 Q50,30 62,40 Q50,32 38,40" fill="url(#femaleGrad)" />
-    <path d="M38,40 C38,24 62,24 62,40 C62,56 38,56 38,40 Z" fill="none" stroke="url(#femaleGrad)" strokeWidth="2.5" />
+
+    {/* Abaya/robe body — gold tone */}
+    <path d="M 16 90 Q 16 60 30 50 L 70 50 Q 84 60 84 90 Z" fill="url(#hijabGrad)" />
+
+    {/* Hijab drape — large, rounded, covers head fully down to shoulders */}
+    <path
+      d="M 50 8
+         Q 70 8 74 30
+         Q 76 42 70 54
+         L 30 54
+         Q 24 42 26 30
+         Q 30 8 50 8 Z"
+      fill="url(#hijabGrad)"
+    />
+
+    {/* Hijab fold/drape lines for dimension */}
+    <path d="M 33 30 Q 34 42 37 53" fill="none" stroke="#7a5c14" strokeWidth="1.3" opacity="0.6" />
+    <path d="M 67 30 Q 66 42 63 53" fill="none" stroke="#7a5c14" strokeWidth="1.3" opacity="0.6" />
+
+    {/* Plain round face — no features */}
+    <ellipse cx="50" cy="35" rx="14" ry="16" fill="url(#femaleSkin)" />
   </svg>
 );
 
@@ -290,14 +326,15 @@ export default function Testimonials() {
                     <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
                       Gender *
                     </label>
-                    <select
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value as any)}
-                      className="w-full bg-bg border border-border rounded-xl p-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold"
-                    >
-                      <option value="MALE">Male</option>
-                      <option value="FEMALE">Female</option>
-                    </select>
+                    <Select value={gender} onValueChange={(value) => setGender(value as 'MALE' | 'FEMALE')}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="MALE">Brother</SelectItem>
+                        <SelectItem value="FEMALE">Sister</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
