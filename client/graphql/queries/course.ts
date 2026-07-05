@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { COURSE_FIELDS } from '../fragments/course';
+import { COURSE_FIELDS, COURSE_PACKAGE_FIELDS } from '../fragments/course';
 
 export const GET_ALL_COURSES = gql`
   query GetAllCourses {
@@ -17,4 +17,13 @@ export const GET_COURSE_BY_ID = gql`
     }
   }
   ${COURSE_FIELDS}
+`;
+
+export const GET_COURSE_PRICES_FOR_REGION = gql`
+  query GetCoursePricesForRegion($courseId: ID!, $country: String) {
+    coursePricesForRegion(courseId: $courseId, country: $country) {
+      ...CoursePackageFields
+    }
+  }
+  ${COURSE_PACKAGE_FIELDS}
 `;

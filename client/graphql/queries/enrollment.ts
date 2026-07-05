@@ -12,6 +12,10 @@ export const GET_PUBLIC_ENROLLMENT = gql`
       preferredMinute
       preferredPeriod
       preferredDays
+      enrollmentType
+      packageTier
+      appliedCurrency
+      appliedPrice
       status
       createdAt
       updatedAt

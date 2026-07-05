@@ -6,8 +6,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import { GET_ALL_COURSES } from '@/graphql';
-import { Search, Clock, Calendar, ArrowRight, RefreshCw, BookOpen } from 'lucide-react';
+import { Search, Globe2, ArrowRight, RefreshCw, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { LOCAL_REGION } from '@/constants/regions';
 
 export default function CoursesPage() {
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES, {
@@ -15,7 +16,6 @@ export default function CoursesPage() {
   });
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDuration, setSelectedDuration] = useState('all');
 
   if (loading && !data) {
     return (
@@ -51,21 +51,13 @@ export default function CoursesPage() {
   // Filter active courses only on user side
   const activeCourses = allCourses.filter((c: any) => c.isActive);
 
-  // Apply search & duration filters
+  // Apply search filter
   const filteredCourses = activeCourses.filter((course: any) => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          course.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    let matchesDuration = true;
-    if (selectedDuration !== 'all') {
-      matchesDuration = course.duration.toLowerCase().includes(selectedDuration.toLowerCase());
-    }
-
-    return matchesSearch && matchesDuration;
+    return (
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
-
-  // Extract unique durations for filter options
-  const durations = ['all', ...Array.from(new Set(activeCourses.map((c: any) => c.duration.split(' ')[0].toLowerCase())))];
 
   return (
     <div className="min-h-screen bg-bg text-text pb-20">
@@ -90,10 +82,9 @@ export default function CoursesPage() {
         </div>
       </div>
 
-      {/* Filters & Search Row */}
+      {/* Search Row */}
       <div className="max-w-7xl mx-auto px-6 lg:px-10 mt-12">
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-surface border border-border p-4 rounded-2xl shadow-sm">
-          {/* Search bar */}
+        <div className="flex items-center bg-surface border border-border p-4 rounded-2xl shadow-sm">
           <div className="relative w-full md:w-96">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-text-secondary">
               <Search size={18} />
@@ -105,33 +96,6 @@ export default function CoursesPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-bg border border-border pl-10 pr-4 py-2.5 rounded-xl text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold transition-colors placeholder:text-text-secondary/50"
             />
-          </div>
-
-          {/* Duration Filters */}
-          <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-            <button
-              onClick={() => setSelectedDuration('all')}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider border transition-all whitespace-nowrap cursor-pointer ${
-                selectedDuration === 'all'
-                  ? 'bg-gold border-gold text-primary-dark shadow-[0_4px_12px_rgba(201,162,39,0.3)]'
-                  : 'bg-transparent border-border text-text-secondary hover:text-text hover:border-gold/30'
-              }`}
-            >
-              All Durations
-            </button>
-            {durations.filter(d => d !== 'all').map((dur: any) => (
-              <button
-                key={dur}
-                onClick={() => setSelectedDuration(dur)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider border transition-all whitespace-nowrap cursor-pointer ${
-                  selectedDuration.toLowerCase() === dur.toLowerCase()
-                    ? 'bg-gold border-gold text-primary-dark shadow-[0_4px_12px_rgba(201,162,39,0.3)]'
-                    : 'bg-transparent border-border text-text-secondary hover:text-text hover:border-gold/30'
-                }`}
-              >
-                {dur}
-              </button>
-            ))}
           </div>
         </div>
       </div>
@@ -186,19 +150,16 @@ export default function CoursesPage() {
                   <div className="space-y-4">
                     {/* Meta info row */}
                     <div className="flex items-center justify-between text-xs text-text-secondary border-t border-border pt-4">
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1.5">
-                          <Clock size={14} className="text-gold" />
-                          <span>{course.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Calendar size={14} className="text-gold" />
-                          <span>{course.days}</span>
-                        </div>
+                      <div className="flex items-center gap-1.5">
+                        <Globe2 size={14} className="text-gold" />
+                        <span>Local &amp; international pricing</span>
                       </div>
-                      {course.price !== undefined && (
-                        <span className="text-sm font-bold text-gold">PKR {course.price}</span>
-                      )}
+                      {(() => {
+                        const localPackage = course.packages?.find((pkg: any) => pkg.region === LOCAL_REGION);
+                        return localPackage ? (
+                          <span className="text-sm font-bold text-gold">From PKR {localPackage.price}</span>
+                        ) : null;
+                      })()}
                     </div>
 
                     {/* CTA Button */}

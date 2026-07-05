@@ -688,8 +688,14 @@ export default function AdminDashboard() {
                           {enr.course?.title}
                         </td>
                         <td className="p-4 text-xs text-text-secondary whitespace-nowrap">
-                          {enr.preferredDays} <br />
-                          {enr.preferredHour}:{enr.preferredMinute.toString().padStart(2, '0')} {enr.preferredPeriod}
+                          {enr.preferredHour != null ? (
+                            <>
+                              {enr.preferredDays} <br />
+                              {enr.preferredHour}:{enr.preferredMinute.toString().padStart(2, '0')} {enr.preferredPeriod}
+                            </>
+                          ) : (
+                            <span>{enr.packageTier && enr.packageTier !== 'NONE' ? `${enr.packageTier} package` : 'International'}</span>
+                          )}
                         </td>
                         <td className="p-4 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${statusColors[enr.status] || 'bg-border text-text-secondary'}`}>
