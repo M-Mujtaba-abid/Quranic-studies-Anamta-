@@ -38,7 +38,7 @@ const footerLinks = {
 const socials = [
   {
     label: "Facebook",
-    href: "#",
+    href: "https://www.facebook.com/share/1BgJ4iiQ3H/",
     svg: (
       <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -47,7 +47,7 @@ const socials = [
   },
   {
     label: "Instagram",
-    href: "#",
+    href: "https://www.instagram.com/anamta.institute?igsh=MTVsdWhuNzdxbnNqMw==",
     svg: (
       <svg
         width="15"
@@ -65,7 +65,7 @@ const socials = [
   },
   {
     label: "YouTube",
-    href: "#",
+    href: "https://youtube.com/@anamta.institute?si=hUPXddTTW9Ewe42H",
     svg: (
       <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
         <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
@@ -74,11 +74,11 @@ const socials = [
     ),
   },
   {
-    label: "Twitter / X",
-    href: "#",
+    label: "TikTok",
+    href: "https://tiktok.com/@anamta.institute",
     svg: (
       <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        <path d="M16.6 5.82c-.9-.98-1.4-2.25-1.4-3.57h-3.03v13.79c0 1.56-1.27 2.83-2.83 2.83a2.83 2.83 0 0 1 0-5.66c.29 0 .58.05.85.13V9.99a5.9 5.9 0 0 0-.85-.06 5.86 5.86 0 0 0-5.86 5.86A5.86 5.86 0 0 0 9.34 21.65a5.86 5.86 0 0 0 5.86-5.86V9.02a8.86 8.86 0 0 0 5.17 1.66V7.65c-1.31 0-2.53-.42-3.77-1.83z" />
       </svg>
     ),
   },
@@ -161,11 +161,16 @@ export default function Footer() {
             <ul className="mb-8 flex flex-col gap-3">
               <li className="flex items-start gap-2.5 text-[11px] leading-relaxed text-text-secondary sm:text-xs">
                 <Mail size={13} className="mt-0.5 shrink-0 text-gold" />
-                <span className="break-all">support@anamtainstitute.com</span>
+                <span className="break-all">anamtainstitute@gmail.com</span>
               </li>
               <li className="flex items-start gap-2.5 text-[11px] leading-relaxed text-text-secondary sm:text-xs">
                 <Phone size={13} className="mt-0.5 shrink-0 text-gold" />
-                <span>+1 (800) 123-4567</span>
+                <span>
+                  +92 333 0493239
+                  <span className="block text-[9px] uppercase tracking-wider text-text-secondary/60">
+                    WhatsApp message &amp; calls only
+                  </span>
+                </span>
               </li>
               <li className="flex items-start gap-2.5 text-[11px] leading-relaxed text-text-secondary sm:text-xs">
                 <MapPin size={13} className="mt-0.5 shrink-0 text-gold" />
@@ -179,6 +184,8 @@ export default function Footer() {
                 <Link
                   key={s.label}
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={s.label}
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-text-secondary transition-all duration-200 hover:border-gold hover:text-gold"
                   style={{ background: "rgba(33,87,115,0.1)" }}
