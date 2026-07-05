@@ -54,10 +54,10 @@ export default function CTABanner() {
             </Link>
 
             <Link
-              href="/sponserastudent"
+              href="/sponsor-a-student"
               className="w-full sm:w-auto block rounded-xl border border-primary/60 bg-primary/5 px-8 py-3.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:bg-gold/10 hover:text-gold"
             >
-              Sponser a Student
+              Sponsor a Student
             </Link>
           </div>
 

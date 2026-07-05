@@ -90,10 +90,10 @@ export default function Navbar() {
           </button> */}
 
           <Link
-            href="/Sponser-a-Student"
+            href="/sponsor-a-student"
             className="rounded-xl border border-primary/60 bg-primary/5 px-5 py-2.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold hover:text-gold"
           >
-            Sponser a Student
+            Sponsor a Student
           </Link>
 
           <Link
@@ -115,34 +115,6 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Responsive Navigation overlay tray */}
-      <div
-        className={`overflow-hidden bg-bg/95 backdrop-blur-xl border-b border-primary/10 transition-all duration-300 md:hidden ${open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
-          }`}
-      >
-        <ul className="flex flex-col gap-1 px-6 py-6 border-t border-primary/10">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-          <li className="mt-4 flex flex-col gap-3 pt-4 border-t border-primary/10">
-            <Link
-              href="/admin/login"
-              onClick={() => setOpen(false)}
-              className="rounded-xl border border-primary/50 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text"
-            >
-
-            </Link>
-            <Link
-              href="/courses"
-              onClick={() => setOpen(false)}
-              className="rounded-xl bg-primary border border-primary-light/20 py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
@@ -180,6 +152,13 @@ export default function Navbar() {
                 transition={{ duration: 0.2, delay: 0.18 }}
                 className="mt-4 flex flex-col gap-3 border-t border-primary/10 pt-4"
               >
+                <Link
+                  href="/sponsor-a-student"
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl border border-primary/60 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text backdrop-blur-sm"
+                >
+                  Sponsor a Student
+                </Link>
                 <Link
                   href="/courses"
                   onClick={() => setOpen(false)}
