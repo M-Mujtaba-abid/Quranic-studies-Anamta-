@@ -86,7 +86,7 @@ export function InternationalEnrollmentForm({
             onClick={submitAs('FREE_TRIAL')}
             leftIcon={<Sparkles size={14} />}
           >
-            Book a Free Trial
+            Book a Free Triall
           </Button>
           <Button
             type="button"
