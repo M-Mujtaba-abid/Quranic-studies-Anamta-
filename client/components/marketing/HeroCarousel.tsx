@@ -82,9 +82,12 @@ export default function HeroCarousel() {
 
   return (
     <section
+      // className="relative w-full overflow-hidden bg-bg
+      //   h-[100svh] min-h-[560px]
+      //   sm:h-[92vh] sm:min-h-[620px]"
       className="relative w-full overflow-hidden bg-bg
-        h-[100svh] min-h-[560px]
-        sm:h-[92vh] sm:min-h-[620px]"
+   h-[calc(100svh-72px)] min-h-[490px]
+  sm:h-[92vh] sm:min-h-[620px]"
     >
       {/* ── Slider track ── */}
       <div className="absolute inset-0" ref={emblaRef}>
