@@ -81,7 +81,7 @@ const milestones = [
 // NOTE: place the uploaded founder photo at public/images/about/founder.jpg
 const team = [
   {
-    name: "Sheikh Bilal Ahmad",
+    name: "Sheikh Zubair",
     role: "Founder & Chief Instructor",
     credentials: "Graduate of Al-Azhar University, 10 Qira'at Ijazah Holder",
     bio: "Over 15 years of teaching Quranic Sciences and Tajweed to international students.",
@@ -598,7 +598,7 @@ export default function AboutUs() {
                 <div className="mx-auto h-20 w-20 overflow-hidden rounded-full border-2 border-gold/30 bg-surface-dark flex items-center justify-center">
                   {member.image ? (
                     <Image
-                      src={member.image}
+                      src="/mujiFriend.jpeg"
                       alt={member.name}
                       width={80}
                       height={80}
