@@ -292,3 +292,18 @@ enum DonationStatus {
   COMPLETED
   FAILED
 }
+
+enum EnrollmentMode {
+  ONE_ON_ONE
+  GROUP
+}
+
+model Country {
+  id             String           @id @default(cuid())
+  name           String
+  code           String           @unique
+  currency       String
+  supportedModes EnrollmentMode[]
+
+  @@map("countries")
+}
