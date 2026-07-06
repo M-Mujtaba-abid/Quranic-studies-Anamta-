@@ -11,7 +11,9 @@ import { ArrowLeft } from 'lucide-react';
 // tied to a specific course page. EnrollmentPanel handles picking the course itself.
 export default function EnrollementPage() {
   return (
-    <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
+    // <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
+    <div className="min-h-screen bg-bg text-text pb-20 relative">
+
       <Navbar />
 
       {/* Page-wide background image. Plain opacity (no blend mode) — mix-blend-overlay against
