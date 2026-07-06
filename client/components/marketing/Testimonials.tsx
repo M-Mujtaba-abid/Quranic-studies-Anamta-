@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Quote, Sparkles, X } from "lucide-react";
+import { Star, Quote, X, ChevronLeft, ChevronRight } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import { useQuery, useMutation } from "@apollo/client/react";
 import { toast } from "sonner";
 import SectionHeading from "../ui/SectionHeading";
@@ -85,51 +88,6 @@ const FemaleAvatar = () => (
   </svg>
 );
 
-const defaultTestimonials = [
-  {
-    name: "Sarah Johnson",
-    country: "🇺🇸 USA",
-    rating: 5,
-    gender: "FEMALE",
-    description: "I tried many online platforms before but nothing came close. My teacher is incredibly patient and my Quran recitation has improved beyond what I thought possible in just 3 months.",
-  },
-  {
-    name: "Ahmad Karimi",
-    country: "🇨🇦 Canada",
-    rating: 5,
-    gender: "MALE",
-    description: "My son started the kids program and Masha'Allah he's memorized 5 surahs in 2 months. The teacher makes him so comfortable. Best investment we've made for his deen.",
-  },
-  {
-    name: "Fatimah Al-Sayed",
-    country: "🇬🇧 UK",
-    rating: 5,
-    gender: "FEMALE",
-    description: "Finally I understand what I'm reading in Salah. The Quranic Arabic course changed my relationship with the Quran completely. I cry in prayer now because I know what I'm saying.",
-  },
-  {
-    name: "Omar Sheikh",
-    country: "🇦🇺 Australia",
-    rating: 5,
-    gender: "MALE",
-    description: "Sheikh Ahmad is a rare gem. His knowledge is deep and his teaching is structured. I'm preparing for my Ijazah and couldn't imagine doing this journey with anyone else.",
-  },
-  {
-    name: "Zainab Hussain",
-    country: "🇿🇦 South Africa",
-    rating: 5,
-    gender: "FEMALE",
-    description: "As a busy mother of three, the flexible scheduling is a lifesaver. My children look forward to their Quran class every day — something I never thought I'd say!",
-  },
-  {
-    name: "Yusuf Rahman",
-    country: "🇲🇾 Malaysia",
-    rating: 5,
-    gender: "MALE",
-    description: "The Tafsir course opened my eyes. I knew the words but now I understand the wisdom. Dr. Bilal's explanations are clear, deep, and always connect back to our daily lives.",
-  },
-];
-
 export default function Testimonials() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
@@ -138,8 +96,16 @@ export default function Testimonials() {
   const [rating, setRating] = useState(5);
   const [description, setDescription] = useState("");
 
-  // Query approved testimonials
+  // Query approved testimonials — sourced entirely from the backend
   const { data, refetch } = useQuery<any>(GET_APPROVED_TESTIMONIALS);
+  const displayTestimonials = data?.approvedTestimonials || [];
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start" },
+    [Autoplay({ delay: 4500, stopOnInteraction: false, stopOnMouseEnter: true })]
+  );
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   // Mutation to submit testimonial
   const [submitReview, { loading: isSubmitting }] = useMutation<any, any>(SUBMIT_TESTIMONIAL, {
@@ -179,101 +145,114 @@ export default function Testimonials() {
     });
   };
 
-  // Compile testimonials list
-  const dbTestimonials = data?.approvedTestimonials || [];
-  const displayTestimonials = [...dbTestimonials];
-  
-  if (displayTestimonials.length < 6) {
-    const existingNames = new Set(displayTestimonials.map(t => t.name.toLowerCase()));
-    for (const def of defaultTestimonials) {
-      if (!existingNames.has(def.name.toLowerCase()) && displayTestimonials.length < 6) {
-        displayTestimonials.push({
-          id: `def-${def.name}`,
-          name: def.name,
-          country: def.country,
-          rating: def.rating,
-          gender: def.gender as any,
-          description: def.description,
-          createdAt: new Date().toISOString()
-        });
-      }
-    }
-  }
-
   return (
-    <section className="relative overflow-hidden bg-bg py-24">
+    <section
+      className="relative overflow-hidden py-24"
+      style={{
+        background: `
+          radial-gradient(ellipse 55% 45% at 12% 0%, rgba(197,168,128,0.14) 0%, transparent 60%),
+          radial-gradient(ellipse 60% 55% at 100% 100%, rgba(11,58,85,0.45) 0%, transparent 65%),
+          linear-gradient(155deg, #070b0e 0%, #0d131a 35%, #0b1f2c 65%, #072537 100%)
+        `,
+      }}
+    >
       {/* Dynamic ambient backgrounds configured for premium dark UI layout */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(197,168,128,0.06)_0%,transparent_80%)] pointer-events-none" />
       <div className="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
       <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-          <div className="flex-1">
-            <SectionHeading
-              badge="Student Reviews"
-              title="Words from our "
-              highlight="students worldwide"
-              subtitle="Real stories from real students — from beginners who couldn't read Arabic to those now teaching others."
-              center={false}
-            />
-          </div>
-          <motion.button
-            onClick={() => setIsModalOpen(true)}
-            whileHover={{ y: -2, scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-gold/15 to-gold/5 border border-gold/40 text-gold hover:border-gold hover:text-gold-light text-xs font-semibold uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_20px_rgba(197,168,128,0.08)] cursor-pointer"
-          >
-            Share Your Journey
-          </motion.button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayTestimonials.map((t, index) => (
-            <motion.div
-              key={t.id}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold/30 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.5)] glow-gold-hover w-full"
+        <div className="mb-12">
+          <SectionHeading
+            badge="Testimonials"
+            title="What Our Students "
+            highlight="Say"
+            subtitle="Real stories from real students — from beginners who couldn't read Arabic to those now teaching others."
+            center
+          />
+          <div className="flex justify-center md:justify-end">
+            <motion.button
+              onClick={() => setIsModalOpen(true)}
+              whileHover={{ y: -2, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-gold/15 to-gold/5 border border-gold/40 text-gold hover:border-gold hover:text-gold-light text-xs font-semibold uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_20px_rgba(197,168,128,0.08)] cursor-pointer"
             >
-              <div>
-                {/* Header layout for Quote and Stars alignment */}
-                <div className="flex items-center justify-between mb-4">
-                  <Quote size={28} className="text-gold/10 transform -scale-x-100" />
-                  <div className="flex gap-0.5">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <Star key={i} size={12} className="fill-gold text-gold" />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Review Paragraph */}
-                <p className="mb-6 text-[13px] leading-relaxed text-text-secondary italic">
-                  "{t.description}"
-                </p>
-              </div>
-
-              {/* Bottom Fixed Meta Info Area */}
-              <div>
-                {/* Author Details */}
-                <div className="flex items-center gap-3 border-t border-border pt-4">
-                  {t.gender === "MALE" ? <MaleAvatar /> : <FemaleAvatar />}
-                  <div>
-                    <p className="text-sm font-semibold text-text group-hover:text-gold transition-colors duration-200">{t.name}</p>
-                    <p className="font-display text-[10px] font-medium text-text-secondary uppercase tracking-wider">{t.country}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Micro bottom layout strip using the core colors */}
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-gold transition-all duration-500 ease-[0.22,1,0.36,1] group-hover:w-full" />
-            </motion.div>
-          ))}
+              Share Your Journey
+            </motion.button>
+          </div>
         </div>
+
+        {displayTestimonials.length > 0 ? (
+          <div className="relative">
+            <div className="overflow-hidden -mx-3" ref={emblaRef}>
+              <div className="flex">
+                {displayTestimonials.map((t: any) => (
+                  <div
+                    key={t.id}
+                    className="min-w-0 flex-[0_0_88%] px-3 sm:flex-[0_0_50%] lg:flex-[0_0_34%]"
+                  >
+                    <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-gold/30 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.5)] glow-gold-hover">
+                      <div>
+                        {/* Header layout for Quote and Stars alignment */}
+                        <div className="flex items-center justify-between mb-4">
+                          <Quote size={28} className="text-gold/10 transform -scale-x-100" />
+                          <div className="flex gap-0.5">
+                            {Array.from({ length: t.rating }).map((_, i) => (
+                              <Star key={i} size={12} className="fill-gold text-gold" />
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Review Paragraph */}
+                        <p className="mb-6 text-[13px] leading-relaxed text-text-secondary italic">
+                          "{t.description}"
+                        </p>
+                      </div>
+
+                      {/* Bottom Fixed Meta Info Area */}
+                      <div>
+                        {/* Author Details */}
+                        <div className="flex items-center gap-3 border-t border-border pt-4">
+                          {t.gender === "MALE" ? <MaleAvatar /> : <FemaleAvatar />}
+                          <div>
+                            <p className="text-sm font-semibold text-text group-hover:text-gold transition-colors duration-200">{t.name}</p>
+                            <p className="font-display text-[10px] font-medium text-text-secondary uppercase tracking-wider">{t.country}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Micro bottom layout strip using the core colors */}
+                      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-gold transition-all duration-500 ease-[0.22,1,0.36,1] group-hover:w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Manual navigation */}
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <button
+                onClick={scrollPrev}
+                aria-label="Previous testimonial"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-text-secondary transition-all duration-300 hover:border-gold/50 hover:text-gold cursor-pointer"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={scrollNext}
+                aria-label="Next testimonial"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-text-secondary transition-all duration-300 hover:border-gold/50 hover:text-gold cursor-pointer"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="py-12 text-center text-sm text-text-secondary">
+            Be the first to share your journey.
+          </p>
+        )}
       </div>
 
       {/* Review Submission Popup Modal */}
@@ -304,8 +283,8 @@ export default function Testimonials() {
               </button>
 
               <div className="text-center">
-                <div className="inline-flex h-10 w-10 rounded-full bg-gold/10 text-gold items-center justify-center mb-3">
-                  <Sparkles size={20} />
+                <div className="inline-flex h-10 w-10 overflow-hidden rounded-full bg-gold/10 items-center justify-center mb-3">
+                  <Image src="/logo.jpeg" alt="Anamta Institute" width={40} height={40} className="h-full w-full object-cover" />
                 </div>
                 <h3 className="text-xl font-bold font-display text-text">Share Your Experience</h3>
                 <p className="text-xs text-text-secondary mt-1">

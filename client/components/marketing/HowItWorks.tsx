@@ -45,9 +45,31 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-bg py-24">
-      {/* Ambient background glow optimized for dark navy base */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(33,87,115,0.08)_0%,_transparent_70%)]" />
+    <section className="relative overflow-hidden bg-bg py-10">
+      {/* Background photo */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url('/bg.avif')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "brightness(0.45) saturate(0.9)",
+        }}
+      />
+
+      {/* Dark wash so step text stays legible over the photo */}
+      <div className="absolute inset-0 bg-bg/75" />
+
+      {/* Theme tint — Regatta blue (top-left) + Golden Rule gold (bottom-right) */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(ellipse 70% 60% at 10% 0%, rgba(33,87,115,0.45) 0%, transparent 65%),
+            radial-gradient(ellipse 65% 55% at 100% 100%, rgba(197,168,128,0.28) 0%, transparent 65%)
+          `,
+        }}
+      />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10">
         <SectionHeading

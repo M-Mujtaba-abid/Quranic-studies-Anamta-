@@ -144,7 +144,7 @@ export default function HeroCarousel() {
       <div className="relative z-10 flex h-full flex-col">
         <AyatRotator />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pb-20 pt-6 sm:px-6 sm:pb-0 sm:justify-center lg:px-12">
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pt-6 sm:justify-center sm:px-6 lg:px-12">
           <AnimatePresence mode="wait">
           <motion.div
             key={active.id}
@@ -262,63 +262,65 @@ export default function HeroCarousel() {
           </motion.div>
         </AnimatePresence>
         </div>
-      </div>
 
-      {/* ── Prev / Next — desktop only ── */}
-      <button
-        onClick={scrollPrev}
-        aria-label="Previous"
-        className="absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full p-2.5 text-white backdrop-blur-md transition-all duration-300 hover:text-gold md:flex lg:left-6 lg:p-3"
-        style={{ border: "1px solid rgba(33,87,115,0.5)", background: "rgba(33,87,115,0.25)" }}
-      >
-        <ChevronLeft size={18} />
-      </button>
-      <button
-        onClick={scrollNext}
-        aria-label="Next"
-        className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full p-2.5 text-white backdrop-blur-md transition-all duration-300 hover:text-gold md:flex lg:right-6 lg:p-3"
-        style={{ border: "1px solid rgba(33,87,115,0.5)", background: "rgba(33,87,115,0.25)" }}
-      >
-        <ChevronRight size={18} />
-      </button>
-
-      {/* ── Bottom bar: dots + counter ── */}
-      <div className="absolute bottom-3 z-10 flex w-full items-center justify-between px-3 sm:bottom-8 sm:px-8">
-        {/* Progress dots */}
-        <div className="flex items-center gap-2">
-          {slides.map((slide, index) => (
+        {/* ── Bottom control row: prev / dots / next + counter — in normal flow so it can never overlap the text above ── */}
+        <div className="flex w-full items-center justify-between gap-4 px-5 pb-4 pt-4 sm:px-8 sm:pb-8">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
-              key={slide.id}
-              onClick={() => scrollTo(index)}
-              aria-label={`Slide ${index + 1}`}
-              className="relative h-[3px] w-6 overflow-hidden rounded-full transition-all duration-300 sm:w-12"
-              style={{ background: "rgba(33,87,115,0.4)" }}
+              onClick={scrollPrev}
+              aria-label="Previous"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white backdrop-blur-md transition-all duration-300 hover:text-gold sm:h-9 sm:w-9"
+              style={{ border: "1px solid rgba(33,87,115,0.5)", background: "rgba(33,87,115,0.25)" }}
             >
-              {index === selectedIndex && (
-                <motion.span
-                  key={`p-${active.id}`}
-                  className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-gold to-gold-light"
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{
-                    duration: AUTOPLAY_DELAY / 1000,
-                    ease: "linear",
-                  }}
-                />
-              )}
+              <ChevronLeft size={16} />
             </button>
-          ))}
-        </div>
 
-        {/* Slide counter */}
-        <div className="flex items-center gap-1">
-          <span className="font-display text-base font-medium text-gold sm:text-lg">
-            0{selectedIndex + 1}
-          </span>
-          <span className="text-[10px] text-text-secondary/50">/</span>
-          <span className="text-[11px] text-text-secondary">
-            0{slides.length}
-          </span>
+            {/* Progress dots */}
+            <div className="flex items-center gap-2">
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  onClick={() => scrollTo(index)}
+                  aria-label={`Slide ${index + 1}`}
+                  className="relative h-[3px] w-6 overflow-hidden rounded-full transition-all duration-300 sm:w-12"
+                  style={{ background: "rgba(33,87,115,0.4)" }}
+                >
+                  {index === selectedIndex && (
+                    <motion.span
+                      key={`p-${active.id}`}
+                      className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-gold to-gold-light"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{
+                        duration: AUTOPLAY_DELAY / 1000,
+                        ease: "linear",
+                      }}
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={scrollNext}
+              aria-label="Next"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white backdrop-blur-md transition-all duration-300 hover:text-gold sm:h-9 sm:w-9"
+              style={{ border: "1px solid rgba(33,87,115,0.5)", background: "rgba(33,87,115,0.25)" }}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+
+          {/* Slide counter */}
+          <div className="flex items-center gap-1">
+            <span className="font-display text-base font-medium text-gold sm:text-lg">
+              0{selectedIndex + 1}
+            </span>
+            <span className="text-[10px] text-text-secondary/50">/</span>
+            <span className="text-[11px] text-text-secondary">
+              0{slides.length}
+            </span>
+          </div>
         </div>
       </div>
     </section>
