@@ -165,7 +165,7 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
     <div className="bg-surface border border-border p-6 md:p-8 rounded-2xl shadow-md space-y-6 relative z-10">
       <div className="space-y-1">
         <h3 className="text-lg font-bold font-display text-text">
-          {isDirectFlow ? 'Enroll Now' : 'Register for this Course'}
+          {isDirectFlow ? 'Enroll Now' : isLocal ? 'Register Now' : 'Book a free trial class'}
         </h3>
         <p className="text-xs text-text-secondary">
           {selectedCountry

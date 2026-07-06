@@ -42,7 +42,16 @@ export default function Navbar() {
       {/* Premium subtle Regatta border accent line over the header frame */}
       <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+      <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+        {/* Mobile-only centered wordmark — fills the empty space between logo and menu button */}
+        <Link
+          href="/"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-display text-sm font-bold tracking-[0.1em] sm:hidden"
+        >
+          <span className="text-white">ANAMTA</span>{" "}
+          <span className="text-gold">INSTITUTE</span>
+        </Link>
+
         {/* Logo Section branding */}
         <Link href="/" className="group flex items-center gap-3">
           <div className="relative overflow-hidden rounded-xl border border-primary/30 bg-surface/40 p-0.5 transition-all duration-300 group-hover:border-gold/60 group-hover:shadow-[0_0_20px_rgba(33,87,115,0.4)]">

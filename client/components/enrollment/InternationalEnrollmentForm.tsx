@@ -24,6 +24,7 @@ export function InternationalEnrollmentForm({
 }: InternationalEnrollmentFormProps) {
   const [selectedTier, setSelectedTier] = useState<string | null>(packages[0]?.packageTier ?? null);
   const [detailsPackage, setDetailsPackage] = useState<CoursePackageOption | null>(null);
+  const [pendingType, setPendingType] = useState<'REGULAR' | 'FREE_TRIAL' | null>(null);
 
   const {
     control,
@@ -37,6 +38,7 @@ export function InternationalEnrollmentForm({
   const submitAs = (enrollmentType: 'REGULAR' | 'FREE_TRIAL') =>
     handleSubmit((values) => {
       if (!selectedTier) return;
+      setPendingType(enrollmentType);
       onSubmit(values, selectedTier, enrollmentType);
     });
 
@@ -81,19 +83,18 @@ export function InternationalEnrollmentForm({
             type="button"
             variant="outline"
             className="w-full py-3 rounded-xl text-sm"
-            isLoading={isSubmitting}
-            disabled={!selectedTier}
+            isLoading={isSubmitting && pendingType === 'FREE_TRIAL'}
+            disabled={!selectedTier || isSubmitting}
             onClick={submitAs('FREE_TRIAL')}
-            leftIcon={<Sparkles size={14} />}
           >
-            Book a Free Triall
+            Book a Free Trial
           </Button>
           <Button
             type="button"
             variant="gold"
             className="w-full py-3 rounded-xl text-sm shadow-md"
-            isLoading={isSubmitting}
-            disabled={!selectedTier}
+            isLoading={isSubmitting && pendingType === 'REGULAR'}
+            disabled={!selectedTier || isSubmitting}
             onClick={submitAs('REGULAR')}
             leftIcon={<CreditCard size={14} />}
           >
