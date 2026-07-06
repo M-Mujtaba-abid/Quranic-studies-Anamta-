@@ -70,6 +70,9 @@ export class Course {
   @Field(() => [CoursePackage], { nullable: true })
   packages?: CoursePackage[];
 
+  @Field(() => [CoursePackage], { nullable: true })
+  pricing?: CoursePackage[];
+
   @Field()
   createdAt!: Date;
 

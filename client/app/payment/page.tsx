@@ -31,6 +31,7 @@ import {
   FileText
 } from 'lucide-react';
 import Image from 'next/image';
+import { getCurrencySymbol } from '@/constants/countries';
 
 function PaymentContent() {
   const searchParams = useSearchParams();
@@ -347,7 +348,7 @@ function PaymentContent() {
                     <div>
                       <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Tuition Fee</span>
                       <span className="text-gold font-bold text-sm">
-                        {enrollment.enrollmentType === 'FREE_TRIAL' ? 'Free Trial' : `${enrollment.appliedCurrency} ${enrollment.appliedPrice}`}
+                        {enrollment.enrollmentType === 'FREE_TRIAL' ? 'Free Trial' : `${getCurrencySymbol(enrollment.appliedCurrency)} ${enrollment.appliedPrice}`}
                       </span>
                     </div>
                   )}
@@ -404,7 +405,7 @@ function PaymentContent() {
                     </p>
                   </div>
                   <div className="bg-bg/40 border border-border/40 p-3 rounded-lg text-left text-xs space-y-1">
-                    <p><span className="text-text font-medium">Verified Amount:</span> PKR {enrollment.payment.amount}</p>
+                    <p><span className="text-text font-medium">Verified Amount:</span> {getCurrencySymbol(enrollment.appliedCurrency)} {enrollment.payment.amount}</p>
                     <p><span className="text-text font-medium">Method:</span> {enrollment.payment.paymentMethod.replace('_', ' ')}</p>
                     {enrollment.payment.transactionId && (
                       <p><span className="text-text font-medium">Transaction ID:</span> {enrollment.payment.transactionId}</p>
@@ -431,7 +432,7 @@ function PaymentContent() {
                     </p>
                   </div>
                   <div className="bg-bg/40 border border-border/40 p-3 rounded-lg text-left text-xs space-y-1">
-                    <p><span className="text-text font-medium">Submitted Amount:</span> PKR {enrollment.payment.amount}</p>
+                    <p><span className="text-text font-medium">Submitted Amount:</span> {getCurrencySymbol(enrollment.appliedCurrency)} {enrollment.payment.amount}</p>
                     <p><span className="text-text font-medium">Method:</span> {enrollment.payment.paymentMethod.replace('_', ' ')}</p>
                     {enrollment.payment.transactionId && (
                       <p><span className="text-text font-medium">Transaction ID:</span> {enrollment.payment.transactionId}</p>
@@ -495,7 +496,7 @@ function PaymentContent() {
                     <div className="space-y-4">
                       {/* Amount */}
                       <Input
-                        label="Transferred Amount (PKR) *"
+                        label={`Transferred Amount (${getCurrencySymbol(enrollment.appliedCurrency)}) *`}
                         name="amount"
                         type="number"
                         step="0.01"

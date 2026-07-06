@@ -5,27 +5,29 @@ import { useQuery } from '@apollo/client/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
-import { GET_ALL_COURSES } from '@/graphql';
+import { GET_ALL_COURSES_WITH_PRICING } from '@/graphql';
 import { Search, Globe2, ArrowRight, RefreshCw, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { LOCAL_REGION, pickDisplayPackage } from '@/constants/regions';
 import { useCountrySelection } from '@/providers/CountryProvider';
+import { getCurrencySymbol } from '@/constants/countries';
 
 export default function CoursesPage() {
-  const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES, {
+  const { country, openCountryModal } = useCountrySelection();
+
+  const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES_WITH_PRICING, {
+    variables: { country: country?.name },
     fetchPolicy: 'cache-and-network',
   });
 
   const [searchQuery, setSearchQuery] = useState('');
-
-  const { country, openCountryModal } = useCountrySelection();
 
   // Prompt for a country the moment someone lands here without one selected yet
   // (whether via the navbar, a direct link, a bookmark, or a fresh page reload — the
   // selection is in-memory only, so a reload always starts with no country selected).
   useEffect(() => {
     if (!country) {
-      openCountryModal();
+      openCountryModal('ONE_ON_ONE');
     }
   }, [country, openCountryModal]);
 
@@ -121,7 +123,7 @@ export default function CoursesPage() {
 
           <button
             type="button"
-            onClick={() => openCountryModal()}
+            onClick={() => openCountryModal('ONE_ON_ONE')}
             className="flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-gold transition-colors sm:ml-auto shrink-0"
           >
             <Globe2 size={14} className="text-gold" />
@@ -188,13 +190,13 @@ export default function CoursesPage() {
                       {(() => {
                         if (!country) return null;
 
-                        const displayPackage = pickDisplayPackage(course.packages ?? [], country.region);
+                        const displayPackage = pickDisplayPackage(course.pricing ?? [], country.region);
                         if (!displayPackage) return null;
 
                         const prefix = country.region === LOCAL_REGION ? '' : 'From ';
                         return (
                           <span className="text-sm font-bold text-gold">
-                            {prefix}{displayPackage.currency} {displayPackage.price}
+                            {prefix}{getCurrencySymbol(displayPackage.currency)} {displayPackage.price}
                           </span>
                         );
                       })()}
