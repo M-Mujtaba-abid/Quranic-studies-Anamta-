@@ -8,11 +8,11 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "Courses", href: "/courses" },
+  { label: "Enrolment", href: "/enrollement" },
   // { label: "Teachers", href: "/teachers" },
   // { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
-  { label: "Enrolment", href: "/enrollement" },
 ];
 
 export default function Navbar() {
@@ -109,7 +109,7 @@ export default function Navbar() {
             href="/courses"
             className="block rounded-xl bg-primary border border-primary-light/30 px-5 py-2.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold"
           >
-            Start Learning
+            Book a free trial class
           </Link>
         </div>
 
