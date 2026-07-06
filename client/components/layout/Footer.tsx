@@ -19,7 +19,7 @@ const footerLinks = {
   // ],
   Institute: [
     { label: "About Us", href: "/about" },
-    { label: "Our Teachers", href: "/teachers" },
+    // { label: "Our Teachers", href: "/teachers" },
     { label: "Pricing", href: "/pricing" },
     { label: "Testimonials", href: "/testimonials" },
     // { label: "Blog", href: "/blog" },

@@ -572,7 +572,7 @@ export default function AboutUs() {
       </section>
 
       {/* Team / Leadership */}
-      <section className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-10">
+      {/* <section className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-10">
         <div className="text-center mb-12">
           <SectionHeading
             badge="Advisory & Faculty"
@@ -626,7 +626,7 @@ export default function AboutUs() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
