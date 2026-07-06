@@ -9,27 +9,27 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { SUBSCRIBE_TO_NEWSLETTER } from "@/graphql";
 
 const footerLinks = {
-  Learn: [
-    { label: "All Courses", href: "/courses" },
-    { label: "Tajweed", href: "/courses?category=tajweed" },
-    { label: "Hifz Program", href: "/courses?category=hifz" },
-    { label: "Quranic Arabic", href: "/courses?category=arabic" },
-    { label: "Kids Quran", href: "/courses?category=kids" },
-    { label: "Tafsir", href: "/courses?category=tafsir" },
-  ],
-  Company: [
+  // Learn: [
+  //   { label: "All Courses", href: "/courses" },
+  //   { label: "Tajweed", href: "/courses?category=tajweed" },
+  //   { label: "Hifz Program", href: "/courses?category=hifz" },
+  //   { label: "Quranic Arabic", href: "/courses?category=arabic" },
+  //   { label: "Kids Quran", href: "/courses?category=kids" },
+  //   { label: "Tafsir", href: "/courses?category=tafsir" },
+  // ],
+  Institute: [
     { label: "About Us", href: "/about" },
     { label: "Our Teachers", href: "/teachers" },
     { label: "Pricing", href: "/pricing" },
     { label: "Testimonials", href: "/testimonials" },
-    { label: "Blog", href: "/blog" },
+    // { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ],
   Support: [
-    { label: "FAQ", href: "/faq" },
+    // { label: "FAQ", href: "/faq" },
     { label: "Book Free Trial", href: "/contact" },
-    { label: "Student Dashboard", href: "/dashboard" },
-    { label: "My Courses", href: "/my-courses" },
+    // { label: "Student Dashboard", href: "/dashboard" },
+    // { label: "My Courses", href: "/my-courses" },
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms & Conditions", href: "/terms" },
   ],
@@ -153,7 +153,7 @@ export default function Footer() {
             </Link>
 
             <p className="mb-6 max-w-xs text-sm leading-relaxed text-text-secondary">
-              A modern Quran learning platform connecting students worldwide
+              A modern Islam and Quran learning platform connecting students worldwide
               with certified, ijazah-holding teachers — one lesson at a time.
             </p>
 

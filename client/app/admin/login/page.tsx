@@ -93,6 +93,16 @@ export default function AdminLoginPage() {
             >
               Sign In
             </Button>
+
+            <p className="text-center text-sm text-text-secondary">
+              Don't have an account?{' '}
+              <Link
+                href="/admin/register"
+                className="font-semibold text-gold hover:text-gold-light transition-colors"
+              >
+                Create one
+              </Link>
+            </p>
           </form>
         </div>
       </div>
