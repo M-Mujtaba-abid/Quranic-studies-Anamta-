@@ -1,7 +1,14 @@
 'use client';
 
 import { useMutation } from '@apollo/client/react';
-import { LOGIN_MUTATION, LOGOUT_MUTATION } from '../../graphql';
+import { toast } from 'sonner';
+import {
+  LOGIN_MUTATION,
+  LOGOUT_MUTATION,
+  FORGOT_PASSWORD_MUTATION,
+  RESET_PASSWORD_MUTATION,
+  CHANGE_PASSWORD_MUTATION,
+} from '../../graphql';
 import { AuthService } from '../../services/auth/auth.service';
 
 export function useAuth() {
@@ -15,6 +22,21 @@ export function useAuth() {
   const [logoutMutation, { loading: isLoggingOut }] = useMutation<any, any>(LOGOUT_MUTATION, {
     fetchPolicy: 'no-cache',
   });
+
+  const [forgotPasswordMutation, { loading: isSendingResetLink }] = useMutation<any, any>(
+    FORGOT_PASSWORD_MUTATION,
+    { fetchPolicy: 'no-cache' }
+  );
+
+  const [resetPasswordMutation, { loading: isResettingPassword }] = useMutation<any, any>(
+    RESET_PASSWORD_MUTATION,
+    { fetchPolicy: 'no-cache' }
+  );
+
+  const [changePasswordMutation, { loading: isChangingPassword }] = useMutation<any, any>(
+    CHANGE_PASSWORD_MUTATION,
+    { fetchPolicy: 'no-cache' }
+  );
 
   const login = async (variables: any) => {
     try {
@@ -69,11 +91,56 @@ export function useAuth() {
     }
   };
 
+  const forgotPassword = async (email: string) => {
+    try {
+      await forgotPasswordMutation({ variables: { email } });
+      toast.success('Reset link sent', {
+        description: 'If an account exists for that email, a password reset link has been sent.',
+      });
+      return { success: true };
+    } catch (err: any) {
+      AuthService.handleAuthError(err);
+      return { success: false, error: err };
+    }
+  };
+
+  const resetPassword = async (token: string, newPassword: string) => {
+    try {
+      await resetPasswordMutation({ variables: { token, newPassword } });
+      toast.success('Password reset', {
+        description: 'Your password has been updated. Please sign in.',
+      });
+      return { success: true };
+    } catch (err: any) {
+      AuthService.handleAuthError(err);
+      return { success: false, error: err };
+    }
+  };
+
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    try {
+      await changePasswordMutation({ variables: { currentPassword, newPassword } });
+      toast.success('Password updated', {
+        description: 'Your password has been changed successfully.',
+      });
+      return { success: true };
+    } catch (err: any) {
+      AuthService.handleAuthError(err);
+      return { success: false, error: err };
+    }
+  };
+
   return {
     login,
     logout,
+    forgotPassword,
+    resetPassword,
+    changePassword,
     isLoggingIn,
     isLoggingOut,
+    isSendingResetLink,
+    isResettingPassword,
+    isChangingPassword,
     loginError,
   };
 }

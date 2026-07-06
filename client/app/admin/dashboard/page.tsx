@@ -329,7 +329,7 @@ export default function AdminDashboard() {
               No revenue data available for {selectedYear}
             </div>
           ) : (
-            <div className="relative w-full overflow-x-auto pt-2 min-w-0">
+            <div className="relative w-full overflow-x-auto pt-2 min-w-0 scrollbar-hide">
               <svg 
                 viewBox={`0 0 ${revenueChartWidth} ${revenueChartHeight}`} 
                 className="w-full h-auto max-w-full min-w-0"
@@ -429,7 +429,7 @@ export default function AdminDashboard() {
               No enrollment data available for {selectedYear}
             </div>
           ) : (
-            <div className="relative w-full overflow-x-auto pt-2 min-w-0">
+            <div className="relative w-full overflow-x-auto pt-2 min-w-0 scrollbar-hide">
               <svg 
                 viewBox={`0 0 ${enrollmentChartWidth} ${enrollmentChartHeight}`} 
                 className="w-full h-auto max-w-full min-w-0"
@@ -649,7 +649,7 @@ export default function AdminDashboard() {
             </span>
           </div>
 
-          <div className="overflow-x-auto min-w-0">
+          <div className="overflow-x-auto min-w-0 scrollbar-hide">
             {latestEnrollments.length === 0 ? (
               <div className="py-12 text-center text-text-secondary text-sm">
                 No enrollments registered yet
@@ -723,7 +723,7 @@ export default function AdminDashboard() {
             </span>
           </div>
 
-          <div className="overflow-x-auto min-w-0">
+          <div className="overflow-x-auto min-w-0 scrollbar-hide">
             {latestPayments.length === 0 ? (
               <div className="py-12 text-center text-text-secondary text-sm">
                 No payments submitted yet

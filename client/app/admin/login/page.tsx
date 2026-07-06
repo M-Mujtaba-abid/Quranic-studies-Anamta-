@@ -4,6 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import Link from 'next/link';
 import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -64,14 +65,24 @@ export default function AdminLoginPage() {
               leftIcon={<Mail className="h-4 w-4" />}
             />
 
-            <Input
-              label="Password"
-              type="password"
-              placeholder="••••••••"
-              {...register('password')}
-              error={errors.password?.message}
-              leftIcon={<Lock className="h-4 w-4" />}
-            />
+            <div className="space-y-1.5">
+              <Input
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                {...register('password')}
+                error={errors.password?.message}
+                leftIcon={<Lock className="h-4 w-4" />}
+              />
+              <div className="flex justify-end">
+                <Link
+                  href="/admin/forgot-password"
+                  className="text-xs font-medium text-text-secondary hover:text-gold transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
 
             <Button
               type="submit"

@@ -193,7 +193,7 @@ export default function AdminCoursesPage() {
 
       {/* Courses List Table */}
       <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto scrollbar-hide">
           {courses.length === 0 ? (
             <div className="py-20 text-center text-text-secondary">
               <BookOpen size={48} className="mx-auto text-text-secondary/35 mb-4" />

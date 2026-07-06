@@ -25,11 +25,14 @@ function decodeJwt(token: string): any {
   }
 }
 
+// Admin routes reachable without an active session
+const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/forgot-password', '/admin/reset-password'];
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect all /admin routes except /admin/login
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+  // Protect all /admin routes except the public auth-adjacent ones
+  if (pathname.startsWith('/admin') && !PUBLIC_ADMIN_PATHS.includes(pathname)) {
     const token = request.cookies.get('token')?.value;
 
     if (!token) {
@@ -41,21 +44,9 @@ export function proxy(request: NextRequest) {
     const payload = decodeJwt(token);
 
     if (!payload || payload.role !== 'ADMIN') {
-      const reason = !payload
-        ? 'decode-failed'
-        : `role=${String(payload.role)}`;
-
-      console.error('[proxy] Rejecting admin request:', {
-        pathname,
-        hasPayload: !!payload,
-        role: payload?.role,
-      });
-
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       loginUrl.searchParams.set('error', 'unauthorized');
-      // TEMPORARY diagnostic — remove once the prod redirect issue is confirmed fixed.
-      loginUrl.searchParams.set('reason', reason);
 
       const response = NextResponse.redirect(loginUrl);
       // Clear token since it is invalid or unauthorized

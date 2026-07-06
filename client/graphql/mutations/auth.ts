@@ -18,3 +18,23 @@ export const LOGOUT_MUTATION = gql`
     logout
   }
 `;
+
+export const FORGOT_PASSWORD_MUTATION = gql`
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email)
+  }
+`;
+
+export const RESET_PASSWORD_MUTATION = gql`
+  mutation ResetPassword($token: String!, $newPassword: String!) {
+    resetPassword(resetPasswordInput: { token: $token, newPassword: $newPassword })
+  }
+`;
+
+export const CHANGE_PASSWORD_MUTATION = gql`
+  mutation ChangePassword($currentPassword: String!, $newPassword: String!) {
+    changePassword(
+      changePasswordInput: { currentPassword: $currentPassword, newPassword: $newPassword }
+    )
+  }
+`;
