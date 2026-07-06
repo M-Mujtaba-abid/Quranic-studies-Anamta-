@@ -26,7 +26,7 @@ import Link from "next/link";
 const stats = [
   { value: 5000, suffix: "+", label: "Active Students Worldwide", icon: Users },
   { value: 100, suffix: "K+", label: "Completed Classes", icon: BookOpen },
-  { value: 35, suffix: "+", label: "Countries Served", icon: Globe },
+  { value: 30, suffix: "+", label: "Countries Served", icon: Globe },
   { value: 50, suffix: "+", label: "Ijazah Certified Teachers", icon: Award },
 ];
 
@@ -230,7 +230,7 @@ function FounderStory() {
             <div className="relative overflow-hidden rounded-[1.6rem] aspect-[4/5]">
               {founder.image ? (
                 <Image
-                src="/mujiFriend.jpeg"
+                  src="/mujiFriend.jpeg"
                   alt={founder.name}
                   fill
                   className="object-cover object-center"

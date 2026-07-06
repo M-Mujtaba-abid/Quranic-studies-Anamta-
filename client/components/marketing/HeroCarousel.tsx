@@ -146,75 +146,81 @@ export default function HeroCarousel() {
 
         <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pt-6 sm:justify-center sm:px-6 lg:px-12">
           <AnimatePresence mode="wait">
-          <motion.div
-            key={active.id}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-2xl"
-          >
-            {/* Badge */}
             <motion.div
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-4 sm:mb-6"
-            >
-              <span
-                className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-medium tracking-wide text-sand backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs"
-                style={{
-                  borderColor: "rgba(201,162,39,0.35)",
-                  background: "rgba(33,87,115,0.35)",
-                }}
-              >
-                <Star size={10} className="fill-gold text-gold" />
-                {active.badge}
-              </span>
-            </motion.div>
-
-            {/* Heading */}
-            <h1
-              className="max-w-[15ch] font-display text-[1.55rem] font-semibold leading-[1.08] text-text sm:max-w-none sm:text-4xl sm:leading-[1.18] md:text-5xl lg:text-[3.4rem]"
-            >
-              {active.title.split(active.highlight)[0]}
-              <span className="relative inline-block text-gold">
-                {active.highlight}
-                <motion.span
-                  key={`underline-${active.id}`}
-                  className="absolute -bottom-0.5 left-0 h-[2px] bg-gradient-to-r from-gold to-gold-light"
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                />
-              </span>
-              {active.title.split(active.highlight)[1]}
-            </h1>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mt-3 max-w-xl text-sm leading-relaxed text-text-secondary sm:mt-5 sm:text-base lg:text-lg"
-            >
-              {active.text}
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              key={active.id}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="mt-5 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap"
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-2xl"
             >
-              <Link
-                href="/courses"
-                className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5"
+              {/* Badge */}
+              <motion.div
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mb-4 sm:mb-6"
               >
-                Explore Courses
-              </Link>
-              {/* <Link
+                <span
+                  className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-medium tracking-wide text-sand backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs"
+                  style={{
+                    borderColor: "rgba(201,162,39,0.35)",
+                    background: "rgba(33,87,115,0.35)",
+                  }}
+                >
+                  <Star size={10} className="fill-gold text-gold" />
+                  {active.badge}
+                </span>
+              </motion.div>
+
+              {/* Heading */}
+              <h1
+                className="max-w-[15ch] font-display text-[1.55rem] font-semibold leading-[1.08] text-text sm:max-w-none sm:text-4xl sm:leading-[1.18] md:text-5xl lg:text-[3.4rem]"
+              >
+                {active.title.split(active.highlight)[0]}
+                <span className="relative inline-block text-gold">
+                  {active.highlight}
+                  <motion.span
+                    key={`underline-${active.id}`}
+                    className="absolute -bottom-0.5 left-0 h-[2px] bg-gradient-to-r from-gold to-gold-light"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  />
+                </span>
+                {active.title.split(active.highlight)[1]}
+              </h1>
+
+              {/* Description */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="mt-3 max-w-xl text-sm leading-relaxed text-text-secondary sm:mt-5 sm:text-base lg:text-lg"
+              >
+                {active.text}
+              </motion.p>
+
+              {/* CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="mt-5 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap"
+              >
+                <Link
+                  href="/courses"
+                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5"
+                >
+                  Explore Courses
+                </Link>
+                <Link
+                  href="/courses"
+                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5"
+                >
+                  Book a free trial class
+                </Link>
+                {/* <Link
                 href="/contact"
                 className="w-full rounded-full border px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:text-gold sm:w-auto sm:px-8 sm:py-3.5"
                 style={{
@@ -230,37 +236,37 @@ export default function HeroCarousel() {
               >
                 Book a Free Trial
               </Link> */}
-            </motion.div>
+              </motion.div>
 
-            {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.55 }}
-              className="mt-6 flex flex-wrap items-start gap-3 sm:mt-10 sm:gap-6"
-            >
-              {active.stats.map((stat, i) => (
-                <div key={i} className="flex min-w-[72px] flex-col">
-                  <span className="font-display text-lg font-semibold text-gold sm:text-2xl">
-                    {stat.value}
-                  </span>
-                  <span className="text-[10px] text-text-secondary sm:text-xs">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-              <div
-                className="hidden h-7 w-[1px] self-center sm:ml-2 sm:block sm:h-8"
-                style={{ background: "rgba(33,87,115,0.6)" }}
-              />
-              <p className="max-w-[9rem] text-[10px] text-text-secondary sm:max-w-none sm:text-xs">
-                Join a growing{" "}
-                <br className="hidden sm:block" />
-                community of learners
-              </p>
+              {/* Stats row */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.55 }}
+                className="mt-6 flex flex-wrap items-start gap-3 sm:mt-10 sm:gap-6"
+              >
+                {active.stats.map((stat, i) => (
+                  <div key={i} className="flex min-w-[72px] flex-col">
+                    <span className="font-display text-lg font-semibold text-gold sm:text-2xl">
+                      {stat.value}
+                    </span>
+                    <span className="text-[10px] text-text-secondary sm:text-xs">
+                      {stat.label}
+                    </span>
+                  </div>
+                ))}
+                <div
+                  className="hidden h-7 w-[1px] self-center sm:ml-2 sm:block sm:h-8"
+                  style={{ background: "rgba(33,87,115,0.6)" }}
+                />
+                <p className="max-w-[9rem] text-[10px] text-text-secondary sm:max-w-none sm:text-xs">
+                  Join a growing{" "}
+                  <br className="hidden sm:block" />
+                  community of learners
+                </p>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
         </div>
 
         {/* ── Bottom control row: prev / dots / next + counter — in normal flow so it can never overlap the text above ── */}

@@ -13,6 +13,7 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { GET_APPROVED_TESTIMONIALS, SUBMIT_TESTIMONIAL } from "@/graphql";
+import { CountryFlag } from "../common/CountryFlag";
 // Minimal silhouette-style avatars — no facial features, just clean shapes
 const MaleAvatar = () => (
   <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
@@ -217,7 +218,7 @@ export default function Testimonials() {
                           {t.gender === "MALE" ? <MaleAvatar /> : <FemaleAvatar />}
                           <div>
                             <p className="text-sm font-semibold text-text group-hover:text-gold transition-colors duration-200">{t.name}</p>
-                            <p className="font-display text-[10px] font-medium text-text-secondary uppercase tracking-wider">{t.country}</p>
+                            <CountryFlag country={t.country} className="mt-1 h-3.5 w-5" />
                           </div>
                         </div>
                       </div>

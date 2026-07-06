@@ -26,7 +26,12 @@ function decodeJwt(token: string): any {
 }
 
 // Admin routes reachable without an active session
-const PUBLIC_ADMIN_PATHS = ['/admin/login', '/admin/forgot-password', '/admin/reset-password'];
+const PUBLIC_ADMIN_PATHS = [
+  '/admin/login',
+  '/admin/register',
+  '/admin/forgot-password',
+  '/admin/reset-password',
+];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

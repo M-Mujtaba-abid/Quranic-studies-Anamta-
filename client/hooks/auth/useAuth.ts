@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import {
   LOGIN_MUTATION,
   LOGOUT_MUTATION,
+  REGISTER_MUTATION,
   FORGOT_PASSWORD_MUTATION,
   RESET_PASSWORD_MUTATION,
   CHANGE_PASSWORD_MUTATION,
@@ -22,6 +23,11 @@ export function useAuth() {
   const [logoutMutation, { loading: isLoggingOut }] = useMutation<any, any>(LOGOUT_MUTATION, {
     fetchPolicy: 'no-cache',
   });
+
+  const [registerMutation, { loading: isRegistering }] = useMutation<any, any>(
+    REGISTER_MUTATION,
+    { fetchPolicy: 'no-cache' }
+  );
 
   const [forgotPasswordMutation, { loading: isSendingResetLink }] = useMutation<any, any>(
     FORGOT_PASSWORD_MUTATION,
@@ -91,6 +97,24 @@ export function useAuth() {
     }
   };
 
+  const register = async (variables: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }) => {
+    try {
+      await registerMutation({ variables });
+      toast.success('Account created', {
+        description: 'Your account has been created. An administrator needs to grant it dashboard access before you can sign in.',
+      });
+      return { success: true };
+    } catch (err: any) {
+      AuthService.handleAuthError(err);
+      return { success: false, error: err };
+    }
+  };
+
   const forgotPassword = async (email: string) => {
     try {
       await forgotPasswordMutation({ variables: { email } });
@@ -133,11 +157,13 @@ export function useAuth() {
   return {
     login,
     logout,
+    register,
     forgotPassword,
     resetPassword,
     changePassword,
     isLoggingIn,
     isLoggingOut,
+    isRegistering,
     isSendingResetLink,
     isResettingPassword,
     isChangingPassword,

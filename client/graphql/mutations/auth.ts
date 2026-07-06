@@ -19,6 +19,27 @@ export const LOGOUT_MUTATION = gql`
   }
 `;
 
+export const REGISTER_MUTATION = gql`
+  ${USER_FIELDS}
+  mutation Register(
+    $email: String!
+    $password: String!
+    $firstName: String!
+    $lastName: String!
+  ) {
+    register(
+      createUserInput: {
+        email: $email
+        password: $password
+        firstName: $firstName
+        lastName: $lastName
+      }
+    ) {
+      ...UserFields
+    }
+  }
+`;
+
 export const FORGOT_PASSWORD_MUTATION = gql`
   mutation ForgotPassword($email: String!) {
     forgotPassword(email: $email)
