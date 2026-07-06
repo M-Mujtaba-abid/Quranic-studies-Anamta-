@@ -90,7 +90,9 @@ export function AyatRotator() {
     return (
       <div
         aria-hidden="true"
-        className="pointer-events-none relative z-[2] flex w-full shrink-0 items-center justify-center border-b border-white/5 bg-black/20 px-4 py-2 backdrop-blur-sm sm:px-6"
+        // className="pointer-events-none relative z-[2] flex w-full shrink-0 items-center justify-center border-b border-white/5 bg-black/20 px-4 py-2 backdrop-blur-sm sm:px-6"
+         className="pointer-events-none relative z-[2] hidden w-full shrink-0 items-center justify-center border-b border-white/5 bg-black/20 px-4 py-2 backdrop-blur-sm sm:flex sm:px-6"
+
       >
         {content}
       </div>
@@ -101,7 +103,9 @@ export function AyatRotator() {
     <div
       aria-live="off"
       aria-hidden="true"
-      className="pointer-events-none relative z-[2] flex w-full shrink-0 items-center justify-center border-b border-white/5 bg-black/20 px-4 py-2 backdrop-blur-sm sm:px-6"
+      // className="pointer-events-none relative z-[2] flex w-full shrink-0 items-center justify-center border-b border-white/5 bg-black/20 px-4 py-2 backdrop-blur-sm sm:px-6"
+       className="pointer-events-none relative z-[2] hidden w-full shrink-0 items-center justify-center border-b border-white/5 bg-black/20 px-4 py-2 backdrop-blur-sm sm:flex sm:px-6"
+
     >
       <AnimatePresence mode="wait">
         <motion.div
