@@ -13,6 +13,7 @@ import { CourseSelectField } from './CourseSelectField';
 import type { StudentInfoValues } from './enrollment.types';
 import { LOCAL_REGION } from '@/constants/regions';
 import { useCountrySelection } from '@/providers/CountryProvider';
+import { getCurrencySymbol } from '@/constants/countries';
 
 interface EnrollmentPanelProps {
   // Course-specific flow passes the id it already knows and the dropdown never renders.
@@ -31,7 +32,20 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
   });
   const availableCourses = (coursesData?.courses ?? []).filter((c: any) => c.isActive);
 
-  const { country: selectedCountry, openCountryModal } = useCountrySelection();
+  const { country: selectedCountry, setCountry, openCountryModal } = useCountrySelection();
+
+  const [enrollmentMode, setEnrollmentMode] = useState<'ONE_ON_ONE' | 'GROUP'>('ONE_ON_ONE');
+
+  const handleModeChange = (mode: 'ONE_ON_ONE' | 'GROUP') => {
+    setEnrollmentMode(mode);
+    if (mode === 'GROUP') {
+      setCountry({ name: 'Pakistan', code: 'pk', region: 'PAKISTAN' });
+    } else {
+      if (selectedCountry?.name === 'Pakistan') {
+        setCountry(null);
+      }
+    }
+  };
 
   const { data: pricingData, loading: loadingPricing } = useQuery<any>(GET_COURSE_PRICES_FOR_REGION, {
     variables: { courseId, country: selectedCountry?.name },
@@ -118,7 +132,7 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
             {enrolledResult?.appliedPrice !== null && enrolledResult?.appliedPrice !== undefined && (
               <p>
                 <span className="font-medium text-text">Amount:</span>{' '}
-                {isFreeTrial ? 'Free Trial' : `${enrolledResult.appliedCurrency} ${enrolledResult.appliedPrice}`}
+                {isFreeTrial ? 'Free Trial' : `${getCurrencySymbol(enrolledResult.appliedCurrency)} ${enrolledResult.appliedPrice}`}
               </p>
             )}
             {enrolledResult?.id && (
@@ -174,6 +188,32 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
         </p>
       </div>
 
+      {/* Enrollment Mode Selector */}
+      <div className="flex rounded-xl bg-bg p-1 border border-border">
+        <button
+          type="button"
+          onClick={() => handleModeChange('ONE_ON_ONE')}
+          className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
+            enrollmentMode === 'ONE_ON_ONE'
+              ? 'bg-gold text-primary-dark shadow-sm'
+              : 'text-text-secondary hover:text-gold'
+          }`}
+        >
+          1-on-1 Classes
+        </button>
+        <button
+          type="button"
+          onClick={() => handleModeChange('GROUP')}
+          className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
+            enrollmentMode === 'GROUP'
+              ? 'bg-gold text-primary-dark shadow-sm'
+              : 'text-text-secondary hover:text-gold'
+          }`}
+        >
+          Group Classes
+        </button>
+      </div>
+
       {isDirectFlow && (
         <CourseSelectField
           courses={availableCourses}
@@ -193,7 +233,7 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
           variant="gold"
           className="w-full py-3.5 rounded-xl text-sm shadow-md"
           leftIcon={<MapPin size={16} />}
-          onClick={() => openCountryModal()}
+          onClick={() => openCountryModal(enrollmentMode)}
         >
           Select Your Country to Enroll
         </Button>
@@ -206,7 +246,7 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
         <>
           <button
             type="button"
-            onClick={() => openCountryModal()}
+            onClick={() => openCountryModal(enrollmentMode)}
             className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-gold transition-colors"
           >
             <Globe2 size={12} />
