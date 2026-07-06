@@ -141,8 +141,9 @@ export default function CoursesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredCourses.map((course: any) => (
-              <div
+              <Link
                 key={course.id}
+                href={`/courses/${course.id}`}
                 className="bg-surface border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-gold/30 transition-all duration-300 flex flex-col group"
               >
                 {/* Course Image */}
@@ -199,17 +200,14 @@ export default function CoursesPage() {
                       })()}
                     </div>
 
-                    {/* CTA Button */}
-                    <Link
-                      href={`/courses/${course.id}`}
-                      className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/95 text-white py-3 text-xs font-semibold transition-all duration-200 group-hover:bg-gold group-hover:text-primary-dark"
-                    >
+                    {/* CTA (visual only — the whole card is the link) */}
+                    <span className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary group-hover:bg-gold text-white py-3 text-xs font-semibold transition-all duration-200 group-hover:text-primary-dark">
                       <span>Explore Syllabus & Enroll</span>
                       <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-                    </Link>
+                    </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

@@ -30,8 +30,7 @@ export function CourseSelectField({ courses, value, onChange, loading }: CourseS
           <SelectTrigger className="pl-9">
             <SelectValue placeholder={loading ? 'Loading courses...' : 'Choose a course...'} />
           </SelectTrigger>
-          {/* <SelectContent> */}
-      <SelectContent side="bottom" align="start" avoidCollisions={false}>
+          <SelectContent side="bottom" align="start">
             {courses.map((course) => (
               <SelectItem key={course.id} value={course.id}>
                 {course.title}
