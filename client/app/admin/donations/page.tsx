@@ -192,7 +192,7 @@ export default function AdminDonationsPage() {
               <p className="text-xs">No records matched the selected filters or search parameters.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-hide">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-bg/50 text-text-secondary uppercase tracking-wider text-[10px] font-semibold">

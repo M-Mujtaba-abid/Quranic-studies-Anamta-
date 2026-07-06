@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="relative min-h-screen bg-bg text-text flex overflow-x-hidden">
+    <div className="relative h-screen bg-bg text-text flex overflow-hidden">
       {/* Background Gradients */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
@@ -108,7 +108,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Sidebar Links */}
-        <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 min-h-0 py-6 px-3 space-y-1.5 overflow-y-auto scrollbar-hide">
           {sidebarItems.map((item) => {
             const isActive = pathname.startsWith(item.href);
             const Icon = item.icon;
@@ -175,7 +175,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <X size={20} />
             </button>
           </div>
-          <nav className="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto">
+          <nav className="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto scrollbar-hide">
             {sidebarItems.map((item) => {
               const isActive = pathname.startsWith(item.href);
               const Icon = item.icon;
@@ -210,7 +210,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 relative z-10">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 relative z-10">
         {/* Top Header */}
         <header className="h-16 bg-surface/95 border-b border-border flex items-center justify-between px-4 md:px-8 sticky top-0 backdrop-blur-md z-20">
           <div className="flex items-center gap-4">
@@ -250,7 +250,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Content Wrapper */}
-        <main className="flex-1 min-w-0 p-4 md:p-8 overflow-y-auto">
+        <main className="flex-1 min-w-0 min-h-0 p-4 md:p-8 overflow-y-auto scrollbar-hide">
           {children}
         </main>
       </div>

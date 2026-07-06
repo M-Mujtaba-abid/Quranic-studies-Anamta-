@@ -216,7 +216,7 @@ export default function AdminContactMessages() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Messages List (Span 7) */}
         <div className="lg:col-span-7 bg-surface border border-border rounded-2xl overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             {filteredMessages.length === 0 ? (
               <div className="py-20 text-center text-text-secondary">
                 <Mail size={48} className="mx-auto text-text-secondary/35 mb-4" />

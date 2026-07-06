@@ -22,7 +22,8 @@ export class MailService implements OnModuleInit {
 
   async sendPasswordResetEmail(email: string, token: string) {
     const user = this.configService.get<string>('GMAIL_USER');
-    const resetUrl = `http://localhost:3000/reset-password?token=${token}`;
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const resetUrl = `${frontendUrl}/admin/reset-password?token=${token}`;
 
     const mailOptions = {
       from: `"Quranic Studies" <${user}>`,
