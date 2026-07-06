@@ -24,6 +24,18 @@ export function useAuth() {
       if (loginData) {
         const { token, user } = loginData;
 
+        if (!token) {
+          AuthService.handleAuthError({
+            message: 'Login Failed',
+            extensions: {
+              originalError: {
+                message: 'No session token was returned. Please try again.',
+              },
+            },
+          });
+          return { success: false };
+        }
+
         if (user.role !== 'ADMIN') {
           AuthService.handleAuthError({
             message: 'Access Denied',

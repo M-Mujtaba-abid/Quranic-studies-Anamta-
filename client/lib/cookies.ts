@@ -27,6 +27,11 @@ export async function setCookie(
   value: string,
   options: { maxAge?: number; secure?: boolean; sameSite?: 'lax' | 'strict' | 'none' } = {}
 ): Promise<void> {
+  if (!value) {
+    console.warn(`Refusing to set cookie "${name}" with an empty/undefined value.`);
+    return;
+  }
+
   if (isBrowser) {
     let cookieString = `${name}=${encodeURIComponent(value)}; path=/`;
     if (options.maxAge) cookieString += `; max-age=${options.maxAge}`;
