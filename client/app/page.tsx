@@ -6,6 +6,7 @@ import Features from "@/components/marketing/Features";
 import GroupClassFeatures from "@/components/marketing/GroupClassFeatures";
 import HeroCarousel from "@/components/marketing/HeroCarousel";
 import HowItWorks from "@/components/marketing/HowItWorks";
+import SponsorStudentSection from "@/components/marketing/SponsorStudentSection";
 // import PopularCourses from "@/components/marketing/PopularCourses";
 import PricingPreview from "@/components/marketing/PricingPreview";
 import SponsorCTA from "@/components/marketing/SponsorCTA";
@@ -24,6 +25,7 @@ export default function Home() {
       <GroupClassFeatures />
       {/* <PopularCourses /> */}
       <HowItWorks />
+      <SponsorStudentSection />
       {/* <Teachers /> */}
       <Testimonials />
       {/* <PricingPreview /> */}
