@@ -7,7 +7,7 @@ import { StudentsService } from '../students/students.service';
 import { CoursesService } from '../courses/courses.service';
 import { MailService } from '../mail/mail.service';
 import { ConfigService } from '@nestjs/config';
-import { EnrollmentType, PackageTier } from '@prisma/client';
+import { EnrollmentType, PackageTier, EnrollmentMode } from '@prisma/client';
 import { mapCountryToRegion, isLocalRegion } from '../common/utils/region.util';
 
 @Injectable()
@@ -62,7 +62,7 @@ export class EnrollmentService {
     const course = await this.coursesService.findOne(courseId);
 
     // 2. Resolve region-based pricing for this enrollment
-    const pricing = await this.resolveEnrollmentPricing(courseId, country, enrollmentType, packageTier);
+    const pricing = await this.resolveEnrollmentPricing(course, country, enrollmentType, packageTier);
 
     // 3. Check if student already exists by email or phone — phone is unique too
     // (schema.prisma), so matching on email alone let a shared/reused phone number slip
@@ -149,15 +149,15 @@ export class EnrollmentService {
   }
 
   private async resolveEnrollmentPricing(
-    courseId: string,
+    course: any,
     country: string | undefined,
     requestedEnrollmentType: EnrollmentType | undefined,
     requestedPackageTier: PackageTier | undefined,
   ) {
     const region = mapCountryToRegion(country);
-    const packages = await this.coursesService.getCoursePricesForRegion(courseId, country);
+    const packages = await this.coursesService.getCoursePricesForRegion(course.id, country);
 
-    if (isLocalRegion(region)) {
+    if (isLocalRegion(region) && course.category === EnrollmentMode.GROUP) {
       // Local (Pakistan) enrollments ignore any packageTier/enrollmentType the client sent —
       // there is exactly one direct PKR price and no free trial.
       const localPricing = packages.find((pkg) => pkg.packageTier === PackageTier.NONE) ?? packages[0];
