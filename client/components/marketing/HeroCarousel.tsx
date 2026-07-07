@@ -14,7 +14,7 @@ const slides = [
     id: 1,
     image: "/Web banner 1.jpg.jpeg",
     badge: "Trusted by 10,000+ students worldwide",
-    title: "Learn the Quran with certified teachers, from anywhere.",
+    title: "Learn the Quran with certified teachers.",
     highlight: "certified teachers",
     text: "Tajweed, Hifz, Tafsir and Arabic — structured courses taught one-on-one, on a schedule that works for you.",
     stats: [
@@ -27,7 +27,7 @@ const slides = [
     id: 2,
     image: "/Web banner 2.jpg.jpeg",
     badge: "Live, one-on-one online classes",
-    title: "A personal teacher, a curriculum built around you.",
+    title: "A personalized curriculum built around you.",
     highlight: "built around you",
     text: "No crowded classrooms. Every lesson is paced to your level, your goals, and your schedule.",
     stats: [
@@ -40,9 +40,9 @@ const slides = [
     id: 3,
     image: "/Web banner 3.jpg.jpeg",
     badge: "Join students from 30+ countries",
-    title: "From your first letter to a lifelong connection with the Quran.",
+    title: "Build a lifelong connection with the Quran.",
     highlight: "lifelong connection",
-    text: "Structured pathways for kids and adults alike — start where you are, grow at your own pace.",
+    text: "Structured pathways for kids and adults alike start where you are.",
     stats: [
       { value: "5+", label: "Programs" },
       { value: "Kids", label: "& Adults" },
@@ -213,18 +213,20 @@ export default function HeroCarousel() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="mt-5 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap"
               >
-                <button
-                  onClick={openModeSelectionModal}
-                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 cursor-pointer"
-                >
-                  Explore Courses
-                </button>
-                <button
-                  onClick={openTrialModal}
-                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 cursor-pointer"
-                >
-                  Book a free trial class
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={openModeSelectionModal}
+                    className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-3 py-2 text-center text-xs font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 sm:text-sm cursor-pointer"
+                  >
+                    Explore Courses
+                  </button>
+                  <button
+                    onClick={openTrialModal}
+                    className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-3 py-2 text-center text-xs font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 sm:text-sm cursor-pointer"
+                  >
+                    Book a free trial class
+                  </button>
+                </div>
                 {/* <Link
                 href="/contact"
                 className="w-full rounded-full border px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:text-gold sm:w-auto sm:px-8 sm:py-3.5"
