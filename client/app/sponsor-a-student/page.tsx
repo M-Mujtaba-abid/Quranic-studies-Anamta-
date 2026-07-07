@@ -18,10 +18,10 @@ import { SUBMIT_DONATION_MUTATION, GET_ACTIVE_PAYMENT_SETTING } from '@/graphql'
 const DONATION_CURRENCY = 'PKR';
 
 const DONATION_TYPES: { value: string; label: string }[] = [
-  { value: 'LILLAH', label: 'Lillah' },
-  { value: 'SADAQAH_JARIYAH', label: 'Sadaqah Jariyah' },
-  { value: 'SADAQAH_NAFILLAH', label: 'Sadaqah Nafillah' },
-  { value: 'ZAKAT', label: 'Zakat' },
+  { value: 'LILLAH', label: 'Fii Sabiilillah (Unconditional/Pure Charity)' },
+  { value: 'SADAQAH_JARIYAH', label: 'Sadaqah Jariyah (Ongoing/Continuous Charity)' },
+  { value: 'SADAQAH_NAFILLAH', label: 'Sadaqah Nafillah (General Voluntary Charity)' },
+  { value: 'ZAKAT', label: 'Zakat (Obligatory Charity)' },
 ];
 
 interface DonationFormValues {
@@ -181,86 +181,86 @@ export default function SponsorAStudentPage() {
               </div>
 
               <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                Donation Type *
-              </label>
-              <Controller
-                name="type"
-                control={control}
-                rules={{ required: 'Please select a donation type.' }}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose a donation type..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DONATION_TYPES.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.type?.message && <span className="text-xs text-red-500">{errors.type.message}</span>}
-            </div>
+                <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
+                  Donation Type *
+                </label>
+                <Controller
+                  name="type"
+                  control={control}
+                  rules={{ required: 'Please select a donation type.' }}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose a donation type..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DONATION_TYPES.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.type?.message && <span className="text-xs text-red-500">{errors.type.message}</span>}
+              </div>
 
-            <Input
-              label="Amount (PKR) *"
-              type="number"
-              min="1"
-              step="0.01"
-              leftIcon={<HandCoins size={14} />}
-              {...register('amount', {
-                required: 'Amount is required.',
-                min: { value: 1, message: 'Amount must be greater than 0.' },
-                valueAsNumber: true,
-              })}
-              error={errors.amount?.message}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
               <Input
-                label="Your Name"
-                placeholder="Anas Ahmed"
-                leftIcon={<User size={14} />}
-                {...register('donorName')}
-              />
-              <Input
-                label="Email Address"
-                type="email"
-                placeholder="donor@gmail.com"
-                leftIcon={<Mail size={14} />}
-                {...register('email', {
-                  pattern: { value: /^\S+@\S+\.\S+$/, message: 'Enter a valid email address.' },
+                label="Amount (PKR) *"
+                type="number"
+                min="1"
+                step="0.01"
+                leftIcon={<HandCoins size={14} />}
+                {...register('amount', {
+                  required: 'Amount is required.',
+                  min: { value: 1, message: 'Amount must be greater than 0.' },
+                  valueAsNumber: true,
                 })}
-                error={errors.email?.message}
+                error={errors.amount?.message}
               />
-            </div>
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                Message (optional)
-              </label>
-              <textarea
-                rows={3}
-                placeholder="Dedicate this donation or leave a note..."
-                {...register('description')}
-                className="w-full bg-bg border border-border rounded-xl p-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold placeholder:text-text-secondary/40"
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="Your Name"
+                  placeholder="Anas Ahmed"
+                  leftIcon={<User size={14} />}
+                  {...register('donorName')}
+                />
+                <Input
+                  label="Email Address"
+                  type="email"
+                  placeholder="donor@gmail.com"
+                  leftIcon={<Mail size={14} />}
+                  {...register('email', {
+                    pattern: { value: /^\S+@\S+\.\S+$/, message: 'Enter a valid email address.' },
+                  })}
+                  error={errors.email?.message}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
+                  Message (optional)
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Dedicate this donation or leave a note..."
+                  {...register('description')}
+                  className="w-full bg-bg border border-border rounded-xl p-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold placeholder:text-text-secondary/40"
+                />
+              </div>
+
+              <ImageUploadField
+                label="Transfer Screenshot *"
+                value={screenshotUrl}
+                onChange={(url, publicId) => {
+                  setScreenshotUrl(url);
+                  setScreenshotPublicId(publicId);
+                }}
+                folder="donations"
+                inputId="donation-screenshot-upload"
               />
-            </div>
-
-            <ImageUploadField
-              label="Transfer Screenshot *"
-              value={screenshotUrl}
-              onChange={(url, publicId) => {
-                setScreenshotUrl(url);
-                setScreenshotPublicId(publicId);
-              }}
-              folder="donations"
-              inputId="donation-screenshot-upload"
-            />
 
               <Button type="submit" variant="gold" className="w-full py-3.5 rounded-xl text-sm shadow-md" isLoading={isSubmitting}>
                 Submit Donation

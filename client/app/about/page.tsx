@@ -1,3 +1,9 @@
+// 2.5% gateway 
+
+
+
+// 0.3%
+
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
@@ -78,28 +84,34 @@ const milestones = [
   },
 ];
 
-// NOTE: place the uploaded founder photo at public/images/about/founder.jpg
 const team = [
   {
-    name: "Sheikh Zubair",
-    role: "Founder & Chief Instructor",
-    credentials: "Graduate of Al-Azhar University, 10 Qira'at Ijazah Holder",
+    name: "Ustaaz Muhammad Zubair",
+    role: "Founder and Chief Instructor",
+    credentials: "Masters in Islamic Education and Ijazah Holder in 5 Qiraa'ts",
     bio: "Over 15 years of teaching Quranic Sciences and Tajweed to international students.",
-    image: "/images/about/founder.jpg",
+    image: "/mujiFriend.jpeg",
   },
   {
-    name: "Ustadh Omar Farooq",
-    role: "Head of Tajweed Program",
-    credentials: "Masters in Islamic Studies, Specialist in Hifz pedagogy",
-    bio: "Dedicated to designing effective Quran memorization methodologies for children.",
-    image: "",
+    name: "Ustaaz Talha Bin Tariq",
+    role: "Team Leader and Instructor",
+    credentials: "Masters in Islamic Education and Ijazah Holder",
+    bio: "Specializes in advanced Tajweed, Quranic phonetics, and student coordination.",
+    image: "/images/about/IMG_2423.jpg",
   },
+  // {
+  //   name: "Ustadh Omar Farooq",
+  //   role: "Head of Tajweed Program",
+  //   credentials: "Masters in Islamic Studies, Specialist in Hifz pedagogy",
+  //   bio: "Dedicated to designing effective Quran memorization methodologies for children.",
+  //   image: "/images/about/omar.png",
+  // },
   {
-    name: "Ustadha Fatimah Al-Mansoori",
-    role: "Head of Sisters & Kids Section",
-    credentials: "Licensed reciter with expertise in early-childhood Islamic education",
+    name: "Ustaazah Humaira Farooqi",
+    role: "Sister's coordinator and Instructor",
+    credentials: "Bachelor's degree in Islamic Education and Ijazah Holder",
     bio: "Supervises standard curriculum pathways and teacher training for female classes.",
-    image: "",
+    image: "/images/about/humaira.png",
   },
 ];
 
@@ -230,7 +242,7 @@ function FounderStory() {
             <div className="relative overflow-hidden rounded-[1.6rem] aspect-[4/5]">
               {founder.image ? (
                 <Image
-                  src="/mujiFriend.jpeg"
+                  src={founder.image}
                   alt={founder.name}
                   fill
                   className="object-cover object-center"
@@ -318,6 +330,140 @@ function FounderStory() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Team Leader Story — highlighted section with layout reversed       */
+/* ------------------------------------------------------------------ */
+
+function LeaderStory() {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const mvX = useMotionValue(0);
+  const mvY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mvY, [-0.5, 0.5], [8, -8]), { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(useTransform(mvX, [-0.5, 0.5], [-8, 8]), { stiffness: 150, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mvX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mvY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    mvX.set(0);
+    mvY.set(0);
+  };
+
+  const leader = team[1];
+
+  return (
+    <section className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 mb-28">
+      {/* Ambient glow specific to this section */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-gold/10 blur-[130px]" />
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
+        {/* ── Left: story content (details left) ── */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-6 pt-8 lg:pt-0"
+        >
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold">
+            <Sparkles size={12} />
+            Meet our Team Leader
+          </span>
+
+          <h2 className="font-display text-3xl sm:text-4xl font-bold leading-tight text-text">
+            Guiding Academic Excellence & <span className="text-gold">Mentorship</span>
+          </h2>
+
+          <p className="text-sm sm:text-base leading-relaxed text-text-secondary font-medium">
+            Ustaaz Talha Bin Tariq leads our teaching faculty with a dedicated focus on maintaining
+            the highest standards of Quranic pedagogy. His role involves coordinating student progression,
+            mentoring new instructors, and designing tailored study plans that fit the modern learner's pace.
+          </p>
+
+          <p className="text-sm sm:text-base leading-relaxed text-text-secondary font-medium">
+            With his deep expertise in Islamic education, he ensures that the authentic chains of
+            recitation (Ijazah) and the values of patient, personalized guidance are consistently delivered
+            across all our sessions.
+          </p>
+
+          {/* Quote card */}
+          <div className="relative rounded-2xl border border-gold/20 bg-surface/50 p-5 backdrop-blur-sm">
+            <Quote className="absolute top-3 left-4 h-6 w-6 text-gold/30" />
+            <p className="pl-8 text-sm italic leading-relaxed text-text-secondary">
+              "Our mission is to make the learning process engaging, rigorous, and deeply transformative.
+              We want every student to feel supported in their unique spiritual and academic journey."
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── Right: floating tilt image card (image right) ── */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          className="relative mx-auto w-full max-w-[420px]"
+          style={{ perspective: 1000 }}
+        >
+          {/* Blur circles behind the card */}
+          <div className="absolute -top-10 -left-10 h-56 w-56 rounded-full bg-primary/20 blur-[90px] pointer-events-none" />
+          <div className="absolute -bottom-10 -right-6 h-64 w-64 rounded-full bg-gold/20 blur-[100px] pointer-events-none" />
+
+          {/* Decorative geometric pattern */}
+          <GeometricPattern className="absolute -top-8 -right-8 h-28 w-28 text-gold/25 pointer-events-none" />
+
+          <motion.div
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            whileHover={{ scale: 1.02 }}
+            className="relative rounded-[2rem] border border-gold/30 bg-surface/60 p-3 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          >
+            {/* Animated gold ring */}
+            <div className="absolute inset-0 rounded-[2rem] border-2 border-gold/20" />
+            <div className="relative overflow-hidden rounded-[1.6rem] aspect-[4/5]">
+              {leader.image ? (
+                <Image
+                  src={leader.image}
+                  alt={leader.name}
+                  fill
+                  className="object-cover object-[65%_center]"
+                  sizes="(max-width: 1024px) 90vw, 420px"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-surface-dark text-5xl font-display font-bold text-gold/40">
+                  {getInitials(leader.name)}
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
+            </div>
+
+            {/* Decorative quotation mark */}
+            <Quote className="absolute -top-4 -left-4 h-10 w-10 text-gold/70 fill-gold/10" />
+
+            {/* Name badge floating on the card */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-gold/30 bg-bg/90 px-5 py-2 shadow-lg backdrop-blur-md"
+            >
+              <p className="font-display text-sm font-semibold text-text">{leader.name}</p>
+              <p className="text-[10px] uppercase tracking-wider text-gold text-center">{leader.role}</p>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Page                                                                */
 /* ------------------------------------------------------------------ */
 
@@ -364,6 +510,9 @@ export default function AboutUs() {
 
       {/* Founder Story — visual centerpiece */}
       <FounderStory />
+
+      {/* Team Leader Story */}
+      <LeaderStory />
 
       {/* Statistics dashboard — count-up on scroll into view */}
       <section className="relative px-5 sm:px-6 lg:px-10 max-w-7xl mx-auto mb-24">
@@ -572,7 +721,7 @@ export default function AboutUs() {
       </section>
 
       {/* Team / Leadership */}
-      {/* <section className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-10">
+      <section className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-10">
         <div className="text-center mb-12">
           <SectionHeading
             badge="Advisory & Faculty"
@@ -583,7 +732,7 @@ export default function AboutUs() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {team.map((member, idx) => (
             <motion.div
               key={member.name}
@@ -598,7 +747,7 @@ export default function AboutUs() {
                 <div className="mx-auto h-20 w-20 overflow-hidden rounded-full border-2 border-gold/30 bg-surface-dark flex items-center justify-center">
                   {member.image ? (
                     <Image
-                      src="/mujiFriend.jpeg"
+                      src={member.image}
                       alt={member.name}
                       width={80}
                       height={80}
@@ -620,13 +769,13 @@ export default function AboutUs() {
                   </p>
                 </div>
               </div>
-              <p className="text-xs text-text-secondary/90 leading-relaxed pt-2 border-t border-border/40 mt-4 text-center">
+              <p className="text-xs text-text-secondary/90 leading-relaxed  border-t border-border/40  text-center">
                 {member.bio}
               </p>
             </motion.div>
           ))}
         </div>
-      </section> */}
+      </section>
     </div>
   );
 }
