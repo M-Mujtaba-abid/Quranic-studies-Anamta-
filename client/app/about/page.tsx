@@ -50,9 +50,11 @@ const pillars = [
     icon: Heart,
   },
   {
-    title: "Interactive Portal Experience",
+
+
+    title: "Community-Driven Group Sessions",
     description:
-      "Seamlessly manage scheduling, register enrollments, view payments history, and track weekly progress all within our modern client dashboard.",
+      "Engaging group classes designed to foster teamwork and shared learning, helping you build confidence through peer interaction and expert guidance.",
     icon: Calendar,
   },
 ];
