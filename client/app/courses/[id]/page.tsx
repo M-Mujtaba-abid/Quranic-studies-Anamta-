@@ -1,17 +1,16 @@
 'use client';
-
+// Trigger compile
 import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@apollo/client/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
 import { GET_COURSE_BY_ID } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
 import { useCountrySelection } from '@/providers/CountryProvider';
-import { RefreshCw, ArrowLeft, ShieldCheck, Globe2 } from 'lucide-react';
+import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Sparkles, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Star } from 'lucide-react';
 
 export default function CourseDetailsPage() {
   const params = useParams();
@@ -36,7 +35,6 @@ export default function CourseDetailsPage() {
   if (loading && !data) {
     return (
       <div className="min-h-screen bg-bg text-text">
-        <Navbar />
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,7 +59,6 @@ export default function CourseDetailsPage() {
   if (error || !data?.course) {
     return (
       <div className="min-h-screen bg-bg text-text">
-        <Navbar />
         <div className="h-[70vh] flex flex-col items-center justify-center gap-4 text-center px-4">
           <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
             <ShieldCheck size={32} />
@@ -81,104 +78,156 @@ export default function CourseDetailsPage() {
   const course = data.course;
 
   return (
-    <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
-      <Navbar />
+    <div className="relative min-h-screen bg-bg text-text pb-24 overflow-hidden">
+      {/* Background patterns and decorative glows */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <Image
+          src="/images/about/contact_bg.png"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-25"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg/10 via-bg/80 to-bg" />
+      </div>
 
-      {/* Decorative Gradients */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-[50vh] left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-[40vh] left-[-200px] w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 mt-8 space-y-8">
-
-        {/* Back Link */}
-        <Link href="/courses" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-gold transition-colors">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 mt-8 relative z-10 space-y-12">
+        {/* Breadcrumb Back Link */}
+        <Link 
+          href="/courses" 
+          className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-gold transition-all duration-300 hover:translate-x-[-4px]"
+        >
           <ArrowLeft size={16} />
-          <span>Back to Courses</span>
+          <span className="font-semibold tracking-wide font-display text-xs uppercase">Back to Courses</span>
         </Link>
 
-        {/* Course Banner Card */}
-        <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-md p-6 md:p-8 flex flex-col lg:flex-row gap-8 items-center">
-          <div className="flex-1 space-y-4">
-            <span className="text-[10px] font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/20">
-              Active Syllabus
-            </span>
-            <h1 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-text leading-tight">
-              {course.title}
-            </h1>
-            <p className="text-text-secondary text-sm md:text-base leading-relaxed">
-              {course.description}
-            </p>
-            <div className="flex items-center gap-1.5 text-sm text-text-secondary pt-2">
-              <Globe2 size={16} className="text-gold" />
-              <span className="font-semibold text-text">Regional pricing available for Pakistan &amp; international students</span>
+        {/* Hero Area: Big Banner & Image */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* Left Column: Title & Info */}
+          <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 backdrop-blur-sm">
+                <Sparkles size={12} className="text-gold animate-pulse" />
+                <span className="text-[10px] font-bold tracking-widest text-gold uppercase">
+                  {course.category === 'GROUP' ? 'Group Learning Course' : 'Personal 1-on-1 Course'}
+                </span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display tracking-tight text-text leading-[1.1] pb-1">
+                <span className="bg-gradient-to-r from-text via-text-secondary to-gold-light bg-clip-text text-transparent">
+                  {course.title}
+                </span>
+              </h1>
+              
+              <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light">
+                {course.description}
+              </p>
+            </div>
+
+            {/* Quick Specs Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gold/10">
+              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                <Clock size={18} className="text-gold" />
+                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Duration</span>
+                <span className="text-sm font-medium text-text">30-45 mins</span>
+              </div>
+              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                <Calendar size={18} className="text-gold" />
+                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Schedule</span>
+                <span className="text-sm font-medium text-text">Flexible Days</span>
+              </div>
+              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                <Compass size={18} className="text-gold" />
+                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Level</span>
+                <span className="text-sm font-medium text-text">All Levels</span>
+              </div>
+              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                <Award size={18} className="text-gold" />
+                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Certificate</span>
+                <span className="text-sm font-medium text-text">Ijazah / Cert.</span>
+              </div>
             </div>
           </div>
-          <div className="relative h-56 w-full lg:w-96 rounded-xl overflow-hidden bg-surface-light border border-border">
-            {course.imageUrl ? (
-              <Image
-                src={course.imageUrl}
-                alt={course.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 384px"
-              />
-            ) : (
-              <div className="h-full w-full flex items-center justify-center text-text-secondary">
-                <ShieldCheck size={48} className="text-gold/50" />
+
+          {/* Right Column: Prominent Image */}
+          <div className="lg:col-span-5 flex items-center justify-center">
+            <div className="relative w-full h-[320px] md:h-[400px] rounded-2xl overflow-hidden bg-surface border-2 border-gold/20 shadow-[0_20px_50px_rgba(201,162,39,0.15)] group transition-transform hover:scale-[1.01] duration-500">
+              {course.imageUrl ? (
+                <Image
+                  src={course.imageUrl}
+                  alt={course.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 500px"
+                  priority
+                />
+              ) : (
+                <div className="h-full w-full flex flex-col items-center justify-center text-text-secondary gap-3 bg-surface-light">
+                  <ShieldCheck size={64} className="text-gold/30 animate-pulse" />
+                  <span className="font-display text-sm font-semibold tracking-wider text-gold/60">Anamta Syllabus</span>
+                </div>
+              )}
+              {/* Glass overlay details */}
+              <div className="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent opacity-80" />
+              <div className="absolute bottom-4 left-4 right-4 bg-surface/60 backdrop-blur-md p-4 rounded-xl border border-gold/15 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Globe2 size={16} className="text-gold shrink-0" />
+                  <span className="text-xs font-medium text-text">Learn Worldwide</span>
+                </div>
+                <span className="text-[10px] font-bold text-gold uppercase bg-gold/10 px-2 py-0.5 rounded border border-gold/25">Live One-on-One</span>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
-        {/* Content & Form Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Content Details & Enrollment Section */}
+        {course?.features && course.features.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start pt-4">
+            {/* Left Column: Syllabus & Outlines */}
+            <div className="lg:col-span-7 space-y-8">
+              <div className="bg-surface/40 border border-border p-6 md:p-8 rounded-2xl shadow-sm space-y-6 backdrop-blur-sm hover:border-gold/15 transition-all">
+                <h3 className="text-xl md:text-2xl font-bold font-display text-text border-b border-border/60 pb-3 flex items-center gap-3">
+                  <BookOpen className="text-gold" size={22} />
+                  Course Syllabus & Curriculum
+                </h3>
 
-          {/* Syllabus / Left Column */}
-          <div className="lg:col-span-7 bg-surface border border-border p-6 md:p-8 rounded-2xl shadow-sm space-y-6">
-            <h3 className="text-xl font-bold font-display text-text border-b border-border pb-3">
-              What You Will Learn
-            </h3>
+                <div className="space-y-6 text-[15px] leading-relaxed text-text-secondary">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    {course.features.map((feature: string, idx: number) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-surface-light/45 rounded-xl border border-border/30 hover:border-gold/10 transition-colors">
+                        <CheckCircle2 className="h-5 w-5 text-gold shrink-0 mt-0.5" />
+                        <span className="text-text font-medium text-sm leading-snug">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <div className="space-y-4 text-sm leading-relaxed text-text-secondary">
-              <p>
-                Our Quran classes are tailored specifically to your learning speed and initial levels. Our verified, experienced tutors provide structured guidance to help you master the material.
-              </p>
-
-              <h4 className="font-bold text-text mt-6">Course Outline & Syllabus</h4>
-              {course?.features && course.features.length > 0 ? (
-                <ul className="list-disc list-inside space-y-2.5 pl-2">
-                  {course.features.map((feature: string, idx: number) => (
-                    <li key={idx}>{feature}</li>
-                  ))}
-                </ul>
-              ) : (
-                <ul className="list-disc list-inside space-y-2.5 pl-2">
-                  <li>Complete foundational rules and phonetics guidance.</li>
-                  <li>Proper articulation points (Makharij) and phonology.</li>
-                  <li>Rules of Tajweed (Nunnation, Elongation, Stop signs).</li>
-                  <li>Interactive practice sessions with continuous assessments.</li>
-                  <li>Memorization (Hifz) tracking or Translation (Tafsir) details (if applicable).</li>
-                </ul>
-              )}
-
-              <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-6 flex items-start gap-3">
-                <ShieldCheck className="h-5 w-5 text-gold shrink-0 mt-0.5" />
-                <div className="space-y-1">
-                  <h5 className="font-semibold text-text text-xs">Certified Teachers</h5>
-                  <p className="text-xs text-text-secondary">All our teachers are thoroughly tested, certified, and hold references (Ijazah) to teach Quran studies online.</p>
+            {/* Right Column: Sticky Enrollment Form */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24">
+              <div className="relative">
+                {/* Outer decorative back-shadow */}
+                <div className="absolute inset-0 bg-gradient-to-r from-gold/15 to-primary/10 rounded-2xl blur-xl opacity-50 pointer-events-none" />
+                <div className="relative">
+                  <EnrollmentPanel presetCourseId={id} />
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Enrollment / Right Column */}
-          <div className="lg:col-span-5 relative">
-            <EnrollmentPanel presetCourseId={id} />
+        ) : (
+          <div className="max-w-2xl mx-auto pt-4 relative">
+            {/* Outer decorative back-shadow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-gold/15 to-primary/10 rounded-2xl blur-xl opacity-50 pointer-events-none" />
+            <div className="relative">
+              <EnrollmentPanel presetCourseId={id} />
+            </div>
           </div>
-
-        </div>
-
+        )}
       </div>
     </div>
   );

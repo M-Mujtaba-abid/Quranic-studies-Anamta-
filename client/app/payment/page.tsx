@@ -3,7 +3,6 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@apollo/client/react';
-import Navbar from '@/components/layout/Navbar';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { BankDetailsCard } from '@/components/payment/BankDetailsCard';
@@ -192,7 +191,6 @@ function PaymentContent() {
 
   return (
     <div className="min-h-screen bg-bg text-text pb-20">
-      <Navbar />
 
       {/* Background blobs */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
@@ -628,7 +626,6 @@ export default function PaymentPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-bg text-text">
-        <Navbar />
         <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
           <Clock className="h-10 w-10 text-gold animate-spin" />
           <p className="text-text-secondary font-medium">Loading page...</p>

@@ -63,7 +63,7 @@ export default function Features() {
                 src="/Web banner 2.jpg.jpeg"
                 alt="Student attending a live 1-on-1 Quran class online"
                 fill
-                className=""
+                className="object-cover object-center"
                 sizes="(max-width: 1024px) 100vw, 600px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bg/50 via-transparent to-transparent" />

@@ -1,5 +1,4 @@
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
+
 import CTABanner from "@/components/marketing/CTABanner";
 import FAQ from "@/components/marketing/FAQ";
 import Features from "@/components/marketing/Features";
@@ -18,7 +17,6 @@ import TrustBar from "@/components/marketing/TrustBar";
 export default function Home() {
   return (
     <main>
-      <Navbar />
       <HeroCarousel />
       <TrustBar />
       <Features />
@@ -31,8 +29,7 @@ export default function Home() {
       {/* <PricingPreview /> */}
       {/* <FAQ /> */}
       <CTABanner />
-      <SponsorCTA />
-      <Footer />
+      {/* <SponsorCTA /> */}
     </main>
   );
 }

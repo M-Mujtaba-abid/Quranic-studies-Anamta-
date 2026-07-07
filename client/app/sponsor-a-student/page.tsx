@@ -7,7 +7,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { CheckCircle, CreditCard, HandCoins, Mail, Upload, User } from 'lucide-react';
-import Navbar from '@/components/layout/Navbar';
+
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -91,7 +91,6 @@ export default function SponsorAStudentPage() {
 
   return (
     <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
-      <Navbar />
 
       {/* Page-wide background image, matching /courses, /about, /contact, /enrollement */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">

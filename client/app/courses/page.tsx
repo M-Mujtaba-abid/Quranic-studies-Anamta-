@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useQuery } from '@apollo/client/react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Navbar from '@/components/layout/Navbar';
 import { GET_ALL_COURSES_WITH_PRICING } from '@/graphql';
 import { Search, Globe2, ArrowRight, RefreshCw, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -43,7 +42,6 @@ function CoursesDirectoryContent() {
   if (loading && !data) {
     return (
       <div className="min-h-screen bg-bg text-text">
-        <Navbar />
         <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
           <RefreshCw className="h-10 w-10 text-gold animate-spin" />
           <p className="text-text-secondary font-medium animate-pulse">Loading course directory...</p>
@@ -55,7 +53,6 @@ function CoursesDirectoryContent() {
   if (error) {
     return (
       <div className="min-h-screen bg-bg text-text">
-        <Navbar />
         <div className="h-[70vh] flex flex-col items-center justify-center gap-4 text-center px-4">
           <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
             <BookOpen size={32} />
@@ -84,7 +81,6 @@ function CoursesDirectoryContent() {
 
   return (
     <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
-      <Navbar />
 
       {/* Decorative Gradients */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
@@ -268,7 +264,6 @@ export default function CoursesPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-bg text-text">
-          <Navbar />
           <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
             <RefreshCw className="h-10 w-10 text-gold animate-spin" />
             <p className="text-text-secondary font-medium animate-pulse">

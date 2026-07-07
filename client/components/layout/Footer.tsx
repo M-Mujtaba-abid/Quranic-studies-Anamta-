@@ -18,16 +18,19 @@ const footerLinks = {
   //   { label: "Tafsir", href: "/courses?category=tafsir" },
   // ],
   Institute: [
-    { label: "About Us", href: "/about" },
     // { label: "Our Teachers", href: "/teachers" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "Testimonials", href: "/testimonials" },
-    // { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
+    { label: "Courses", href: "/courses" },
+    { label: "book a free trial", href: "/courses" },
+    // { label: "Pricing", href: "/pricing" },
+
+    { label: "Testimonials", href: "/#testimonials" },
+    { label: "Blog", href: "/blog" },
+    { label: "Sponsor A Student", href: "/sponsor-a-student" },
+    { label: "About Us", href: "/about" },
   ],
   Support: [
     // { label: "FAQ", href: "/faq" },
-    { label: "Book Free Trial", href: "/contact" },
+    { label: "Contact Us", href: "/contact" },
     // { label: "Student Dashboard", href: "/dashboard" },
     // { label: "My Courses", href: "/my-courses" },
     { label: "Privacy Policy", href: "/privacy-policy" },
@@ -204,7 +207,7 @@ export default function Footer() {
               </h4>
               <ul className="flex flex-col gap-3">
                 {links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <Link
                       href={link.href}
                       className="group flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-200 hover:text-text"

@@ -7,6 +7,7 @@ import { ThemeProvider } from "../providers/ThemeProvider";
 import { ToastProvider } from "../providers/ToastProvider";
 import { CountryProvider } from "../providers/CountryProvider";
 import { WhatsAppButton } from "../components/common/WhatsAppButton";
+import LayoutWrapper from "@/components/layout/LayoutWrapper";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -24,10 +25,10 @@ export const metadata: Metadata = {
   title: "Anamta Institute | Online Quran Learning",
   description:
     "Learn Quran with certified teachers — Tajweed, Hifz, Tafsir and Arabic.",
-    icons: {
+  icons: {
     icon: "/logo.jpeg",       // Aapki file jpeg hai, toh yahan .jpeg likhein
-    shortcut: "/logo.jpeg",   
-    apple: "/logo.jpeg",      
+    shortcut: "/logo.jpeg",
+    apple: "/logo.jpeg",
   },
 };
 
@@ -60,7 +61,7 @@ export default function RootLayout({
         <ApolloProvider>
           <ThemeProvider>
             <CountryProvider>
-              {children}
+              <LayoutWrapper>{children}</LayoutWrapper>
               <WhatsAppButton />
               <ToastProvider />
             </CountryProvider>
