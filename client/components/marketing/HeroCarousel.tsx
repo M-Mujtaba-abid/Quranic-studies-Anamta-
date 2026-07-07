@@ -7,6 +7,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { AyatRotator } from "../common/AyatRotator";
+import { useCountrySelection } from "@/providers/CountryProvider";
 
 const slides = [
   {
@@ -53,6 +54,7 @@ const slides = [
 const AUTOPLAY_DELAY = 6000;
 
 export default function HeroCarousel() {
+  const { openModeSelectionModal, openTrialModal } = useCountrySelection();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: AUTOPLAY_DELAY, stopOnInteraction: false }),
   ]);
@@ -211,18 +213,18 @@ export default function HeroCarousel() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="mt-5 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap"
               >
-                <Link
-                  href="/courses"
-                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5"
+                <button
+                  onClick={openModeSelectionModal}
+                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 cursor-pointer"
                 >
                   Explore Courses
-                </Link>
-                <Link
-                  href="/courses"
-                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5"
+                </button>
+                <button
+                  onClick={openTrialModal}
+                  className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-6 py-3 text-center text-sm font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 cursor-pointer"
                 >
                   Book a free trial class
-                </Link>
+                </button>
                 {/* <Link
                 href="/contact"
                 className="w-full rounded-full border px-6 py-3 text-center text-sm font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:text-gold sm:w-auto sm:px-8 sm:py-3.5"

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useCountrySelection } from "@/providers/CountryProvider";
 
 const navLinks = [
   { label: "Courses", href: "/courses" },
@@ -16,6 +17,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const { openModeSelectionModal, openTrialModal } = useCountrySelection();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -74,17 +76,28 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Navigation Core Center Links */}
+        {/* Desktop Nav Links */}
         <ul className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <Link
-                href={link.href}
-                className="group relative font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors duration-200 hover:text-text"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-gold transition-all duration-300 group-hover:w-full" />
-              </Link>
+              {link.label === "Courses" ? (
+                <button
+                  type="button"
+                  onClick={openModeSelectionModal}
+                  className="group relative font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors duration-200 hover:text-text cursor-pointer text-left"
+                >
+                  {link.label}
+                  <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-gold transition-all duration-300 group-hover:w-full" />
+                </button>
+              ) : (
+                <Link
+                  href={link.href}
+                  className="group relative font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors duration-200 hover:text-text"
+                >
+                  {link.label}
+                  <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-gold transition-all duration-300 group-hover:w-full" />
+                </Link>
+              )}
             </li>
           ))}
         </ul>
@@ -105,12 +118,12 @@ export default function Navbar() {
             Sponsor a Student
           </Link>
 
-          <Link
-            href="/courses"
-            className="block rounded-xl bg-primary border border-primary-light/30 px-5 py-2.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold"
+          <button
+            onClick={openTrialModal}
+            className="block rounded-xl bg-primary border border-primary-light/30 px-5 py-2.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold cursor-pointer"
           >
             Book a free trial class
-          </Link>
+          </button>
         </div>
 
         {/* Mobile menu toggle action */}
@@ -146,13 +159,26 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: 0.06 + index * 0.04 }}
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
-                  >
-                    {link.label}
-                  </Link>
+                  {link.label === "Courses" ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpen(false);
+                        openModeSelectionModal();
+                      }}
+                      className="block w-full text-left py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold cursor-pointer"
+                    >
+                      {link.label}
+                    </button>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className="block py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </motion.li>
               ))}
               <motion.li
@@ -168,13 +194,15 @@ export default function Navbar() {
                 >
                   Sponsor a Student
                 </Link>
-                <Link
-                  href="/courses"
-                  onClick={() => setOpen(false)}
-                  className="rounded-xl border border-primary-light/20 bg-primary py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20"
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    openModeSelectionModal();
+                  }}
+                  className="rounded-xl border border-primary-light/20 bg-primary py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20 cursor-pointer"
                 >
                   Start Learning
-                </Link>
+                </button>
               </motion.li>
             </motion.ul>
           </motion.div>

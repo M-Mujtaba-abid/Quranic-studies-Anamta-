@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
+import { useCountrySelection } from "@/providers/CountryProvider";
 
 export default function CTABanner() {
+  const { openModeSelectionModal, openTrialModal } = useCountrySelection();
   return (
     <section className="relative overflow-hidden bg-bg py-24">
       {/* Premium Dark Core Mesh & Aura Background */}
@@ -45,21 +47,21 @@ export default function CTABanner() {
 
           {/* Action Trigger Elements transformed to modern structural buttons */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/enrollement"
-              className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gold px-8 py-3.5 font-display text-xs font-semibold text-primary-dark shadow-[0_4px_24px_rgba(212,175,55,0.35)] transition-all duration-300 hover:scale-[1.02]"
+            <button
+              onClick={openTrialModal}
+              className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gold px-8 py-3.5 font-display text-xs font-semibold text-primary-dark shadow-[0_4px_24px_rgba(212,175,55,0.35)] transition-all duration-300 hover:scale-[1.02] cursor-pointer"
             >
               Book a free trial class
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+            </button>
 
-            <Link
-              href="/courses"
-              className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-primary border border-primary-light/30 px-8 py-3.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold"
+            <button
+              onClick={openModeSelectionModal}
+              className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-primary border border-primary-light/30 px-8 py-3.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold cursor-pointer"
             >
               Explore Courses
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+            </button>
           </div>
 
           <p className="mt-8 text-[11px] tracking-wide font-display font-medium text-text-secondary/80">
