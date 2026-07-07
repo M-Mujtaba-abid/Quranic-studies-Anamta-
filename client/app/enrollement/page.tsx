@@ -3,7 +3,6 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Navbar from '@/components/layout/Navbar';
 import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
 import { ArrowLeft } from 'lucide-react';
 
@@ -13,8 +12,6 @@ export default function EnrollementPage() {
   return (
     // <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
     <div className="min-h-screen bg-bg text-text pb-20 relative">
-
-      <Navbar />
 
       {/* Page-wide background image. Plain opacity (no blend mode) — mix-blend-overlay against
           this page's near-black --color-bg crushes the image to invisible. */}

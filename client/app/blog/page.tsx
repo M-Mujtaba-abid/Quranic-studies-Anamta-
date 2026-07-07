@@ -4,8 +4,7 @@ import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Calendar, Clock, ArrowRight, X, BookOpen, Sparkles } from "lucide-react";
 import Image from "next/image";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+
 
 interface Article {
   id: number;
@@ -133,7 +132,6 @@ export default function BlogPage() {
 
   return (
     <div className="relative min-h-screen bg-bg text-text pb-20 overflow-hidden">
-      <Navbar />
 
       {/* Premium subtle background image with gold patterns */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -351,8 +349,6 @@ export default function BlogPage() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <Footer />
     </div>
   );
 }

@@ -13,7 +13,6 @@ import {
   Sparkles
 } from "lucide-react";
 import Image from "next/image";
-import Navbar from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { SUBMIT_CONTACT_MESSAGE } from "@/graphql";
@@ -58,7 +57,6 @@ export default function ContactPage() {
 
   return (
     <div className="relative min-h-screen bg-bg text-text pb-20 overflow-hidden">
-      <Navbar />
 
       {/* Premium subtle background image with gold patterns. Plain opacity (no blend mode) —
           mix-blend-overlay against this page's near-black --color-bg crushes the image to invisible. */}

@@ -22,7 +22,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Navbar from "@/components/layout/Navbar";
 import Link from "next/link";
 
 /* ------------------------------------------------------------------ */
@@ -479,7 +478,6 @@ export default function AboutUs() {
 
   return (
     <div className="relative min-h-screen bg-bg text-text pb-20 overflow-hidden">
-      <Navbar />
       {/* Background Ambient Glows */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(197,168,128,0.08)_0%,transparent_80%)] pointer-events-none" />
       <div className="absolute -left-40 top-[20%] h-[500px] w-[500px] rounded-full bg-primary/5 blur-[150px] pointer-events-none" />

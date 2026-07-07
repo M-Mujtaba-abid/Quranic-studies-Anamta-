@@ -6,7 +6,6 @@ import { useQuery } from '@apollo/client/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
 import { GET_COURSE_BY_ID } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
@@ -36,7 +35,6 @@ export default function CourseDetailsPage() {
   if (loading && !data) {
     return (
       <div className="min-h-screen bg-bg text-text">
-        <Navbar />
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,7 +59,6 @@ export default function CourseDetailsPage() {
   if (error || !data?.course) {
     return (
       <div className="min-h-screen bg-bg text-text">
-        <Navbar />
         <div className="h-[70vh] flex flex-col items-center justify-center gap-4 text-center px-4">
           <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
             <ShieldCheck size={32} />
@@ -82,7 +79,6 @@ export default function CourseDetailsPage() {
 
   return (
     <div className="min-h-screen bg-bg text-text pb-20 relative overflow-x-hidden">
-      <Navbar />
 
       {/* Decorative Gradients */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
