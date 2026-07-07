@@ -13,6 +13,8 @@ export interface PackageFormValues {
 export interface CourseFormValues {
   title: string;
   description: string;
+  category: 'ONE_ON_ONE' | 'GROUP';
+  features: string[];
   imageUrl: string;
   imageId: string;
   isActive: boolean;
@@ -22,6 +24,8 @@ export interface CourseFormValues {
 export interface CourseSubmitInput {
   title: string;
   description: string;
+  category: 'ONE_ON_ONE' | 'GROUP';
+  features: string[];
   imageUrl: string;
   imageId: string;
   isActive?: boolean;

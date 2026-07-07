@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
@@ -47,7 +47,13 @@ export default function EnrollementPage() {
           </p>
         </div>
 
-        <EnrollmentPanel />
+        <Suspense fallback={
+          <div className="flex flex-col items-center justify-center gap-3 py-10">
+            <span className="text-xs text-text-secondary">Loading enrollment options...</span>
+          </div>
+        }>
+          <EnrollmentPanel />
+        </Suspense>
       </div>
     </div>
   );

@@ -53,11 +53,19 @@ type Course {
   imageId: String!
   title: String!
   description: String!
+  features: [String!]
+  category: EnrollmentMode!
   isActive: Boolean!
   packages: [CoursePackage!]
   pricing(country: String): [CoursePackage!]
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+"""Available enrollment modes: ONE_ON_ONE or GROUP"""
+enum EnrollmentMode {
+  ONE_ON_ONE
+  GROUP
 }
 
 type Payment {
@@ -304,12 +312,6 @@ type Country {
   supportedModes: [EnrollmentMode!]!
 }
 
-"""Available enrollment modes: ONE_ON_ONE or GROUP"""
-enum EnrollmentMode {
-  ONE_ON_ONE
-  GROUP
-}
-
 type Query {
   healthCheck: String!
   myStudentProfile: Student!
@@ -437,6 +439,8 @@ input CreateCourseInput {
   imageId: String!
   title: String!
   description: String!
+  features: [String!]
+  category: EnrollmentMode! = ONE_ON_ONE
   packages: [CreateCoursePackageInput!]!
 }
 
@@ -455,6 +459,8 @@ input UpdateCourseInput {
   imageId: String
   title: String
   description: String
+  features: [String!]
+  category: EnrollmentMode = ONE_ON_ONE
   packages: [CreateCoursePackageInput!]
   id: ID!
   isActive: Boolean

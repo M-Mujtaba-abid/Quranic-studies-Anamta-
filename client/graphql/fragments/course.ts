@@ -24,6 +24,8 @@ export const COURSE_FIELDS = gql`
     imageUrl
     imageId
     isActive
+    features
+    category
     createdAt
     updatedAt
     packages {

@@ -42,9 +42,11 @@ export function PackageTierCard({ index, region, tier, tierLabel, tierBlurb, cur
       </div>
 
       <Input
-        label="Package Title *"
+        label={tier === 'NONE' || tier === 'CUSTOM' ? "Package Title *" : "Package Title"}
         placeholder={`e.g. ${tierLabel} Plan`}
-        {...register(`packages.${index}.title`, { required: 'Title is required.' })}
+        {...register(`packages.${index}.title`, {
+          required: tier === 'NONE' || tier === 'CUSTOM' ? 'Title is required.' : false
+        })}
         error={packageErrors?.title?.message}
       />
 
