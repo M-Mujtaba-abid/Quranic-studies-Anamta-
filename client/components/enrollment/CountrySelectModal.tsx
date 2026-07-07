@@ -22,11 +22,17 @@ export function CountrySelectModal({ isOpen, enrollmentMode, onSelect, onClose }
   if (!isOpen) return null;
 
   const rawCountries = data?.countries ?? [];
-  const mappedCountries: CountryOption[] = rawCountries.map((c: any) => ({
-    name: c.name,
-    code: c.code.toLowerCase(),
-    region: mapCountryToRegion(c.code, c.name),
-  }));
+  const mappedCountries: CountryOption[] = rawCountries
+    .map((c: any) => ({
+      name: c.name,
+      code: c.code.toLowerCase(),
+      region: mapCountryToRegion(c.code, c.name),
+    }))
+    .sort((a, b) => {
+      if (a.name === 'Others') return 1;
+      if (b.name === 'Others') return -1;
+      return a.name.localeCompare(b.name);
+    });
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
