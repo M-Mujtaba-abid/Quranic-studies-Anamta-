@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useQuery } from '@apollo/client/react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,9 +12,15 @@ import { Button } from '@/components/ui/Button';
 import { LOCAL_REGION, pickDisplayPackage } from '@/constants/regions';
 import { useCountrySelection } from '@/providers/CountryProvider';
 import { getCurrencySymbol } from '@/constants/countries';
+import { Suspense } from 'react';
 
-export default function CoursesPage() {
-  const { country, openCountryModal } = useCountrySelection();
+function CoursesDirectoryContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const modeParam = searchParams.get('mode') as 'ONE_ON_ONE' | 'GROUP' | null;
+  const activeCategory = modeParam || 'ONE_ON_ONE';
+
+  const { country, openCountryModal, openGroupAlertModal } = useCountrySelection();
 
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES_WITH_PRICING, {
     variables: { country: country?.name },
@@ -23,13 +30,15 @@ export default function CoursesPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Prompt for a country the moment someone lands here without one selected yet
-  // (whether via the navbar, a direct link, a bookmark, or a fresh page reload — the
-  // selection is in-memory only, so a reload always starts with no country selected).
   useEffect(() => {
     if (!country) {
-      openCountryModal('ONE_ON_ONE');
+      if (activeCategory === 'GROUP') {
+        openGroupAlertModal();
+      } else {
+        openCountryModal('ONE_ON_ONE');
+      }
     }
-  }, [country, openCountryModal]);
+  }, [country, activeCategory, openCountryModal, openGroupAlertModal]);
 
   if (loading && !data) {
     return (
@@ -63,7 +72,7 @@ export default function CoursesPage() {
 
   const allCourses = data?.courses || [];
   // Filter active courses only on user side
-  const activeCourses = allCourses.filter((c: any) => c.isActive);
+  const activeCourses = allCourses.filter((c: any) => c.isActive && c.category === activeCategory);
 
   // Apply search filter
   const filteredCourses = activeCourses.filter((course: any) => {
@@ -81,16 +90,10 @@ export default function CoursesPage() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-[30vh] left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header Banner */}
-      <div className="relative py-20 border-b border-gold/10 bg-surface/35 backdrop-blur-sm overflow-hidden">
+      {/* Category Tabs & Header Banner */}
+      <div className="relative py-16 border-b border-gold/10 bg-surface/35 backdrop-blur-sm overflow-hidden">
         <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <Image
-            src="/images/about/contact_bg.png"
-            alt=""
-            fill
-            priority
-            className="object-cover"
-          />
+          <Image src="/images/about/contact_bg.png" alt="" fill priority className="object-cover" />
         </div>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center relative z-10 space-y-4">
           <span className="text-xs font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/25">
@@ -102,6 +105,36 @@ export default function CoursesPage() {
           <p className="text-text-secondary max-w-2xl mx-auto text-[15px] leading-relaxed">
             Select one of our structured learning programs designed for kids and adults. Connect with certified teachers for personalized one-on-one sessions.
           </p>
+
+          {/* Directory Category selector tabs */}
+          <div className="flex rounded-xl bg-surface border border-border p-1 max-w-md w-full mx-auto mt-6">
+            <button
+              type="button"
+              onClick={() => {
+                openCountryModal('ONE_ON_ONE', () => {
+                  router.push(`/courses?mode=ONE_ON_ONE`);
+                });
+              }}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
+                activeCategory === 'ONE_ON_ONE'
+                  ? 'bg-gold text-primary-dark shadow-sm font-bold'
+                  : 'text-text-secondary hover:text-text'
+              }`}
+            >
+              1-on-1 Classes
+            </button>
+            <button
+              type="button"
+              onClick={openGroupAlertModal}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
+                activeCategory === 'GROUP'
+                  ? 'bg-gold text-primary-dark shadow-sm font-bold'
+                  : 'text-text-secondary hover:text-text'
+              }`}
+            >
+              Group Classes
+            </button>
+          </div>
         </div>
       </div>
 
@@ -121,14 +154,16 @@ export default function CoursesPage() {
             />
           </div>
 
-          <button
-            type="button"
-            onClick={() => openCountryModal('ONE_ON_ONE')}
-            className="flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-gold transition-colors sm:ml-auto shrink-0"
-          >
-            <Globe2 size={14} className="text-gold" />
-            {country ? `Pricing shown for ${country.name} — change` : 'Select your country'}
-          </button>
+          {activeCategory !== 'GROUP' && (
+            <button
+              type="button"
+              onClick={() => openCountryModal('ONE_ON_ONE')}
+              className="flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-gold transition-colors sm:ml-auto shrink-0"
+            >
+              <Globe2 size={14} className="text-gold" />
+              {country ? `Pricing shown for ${country.name} — change` : 'Select your country'}
+            </button>
+          )}
         </div>
       </div>
 
@@ -148,8 +183,8 @@ export default function CoursesPage() {
                 href={`/courses/${course.id}`}
                 className="bg-surface border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-gold/30 transition-all duration-300 flex flex-col group"
               >
-                {/* Course Image */}
-                <div className="relative h-52 w-full overflow-hidden bg-surface-dark border-b border-border">
+                {/* Course Image 16:9 container */}
+                <div className="relative aspect-video w-full overflow-hidden bg-surface-dark border-b border-border">
                   {course.imageUrl ? (
                     <Image
                       src={course.imageUrl}
@@ -215,5 +250,25 @@ export default function CoursesPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function CoursesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-bg text-text">
+          <Navbar />
+          <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
+            <RefreshCw className="h-10 w-10 text-gold animate-spin" />
+            <p className="text-text-secondary font-medium animate-pulse">
+              Loading course directory...
+            </p>
+          </div>
+        </div>
+      }
+    >
+      <CoursesDirectoryContent />
+    </Suspense>
   );
 }

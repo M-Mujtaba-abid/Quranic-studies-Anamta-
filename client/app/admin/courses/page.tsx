@@ -125,6 +125,8 @@ export default function AdminCoursesPage() {
             id: activeCourse.id,
             title: input.title,
             description: input.description,
+            category: input.category,
+            features: input.features,
             imageUrl: input.imageUrl,
             imageId: input.imageId,
             isActive: input.isActive,
@@ -138,6 +140,8 @@ export default function AdminCoursesPage() {
           createCourseInput: {
             title: input.title,
             description: input.description,
+            category: input.category,
+            features: input.features,
             imageUrl: input.imageUrl,
             imageId: input.imageId,
             packages,

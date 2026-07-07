@@ -39,6 +39,9 @@ model Course {
 
   title       String
   description String
+  features    String[]
+
+  category    EnrollmentMode @default(ONE_ON_ONE)
 
   imageUrl    String
   imageId     String

@@ -142,17 +142,25 @@ export default function CourseDetailsPage() {
 
             <div className="space-y-4 text-sm leading-relaxed text-text-secondary">
               <p>
-                Our 1-on-1 online classes are tailored specifically to your learning speed and initial levels. Our verified, experienced tutors provide structured guidance to help you master the material.
+                Our Quran classes are tailored specifically to your learning speed and initial levels. Our verified, experienced tutors provide structured guidance to help you master the material.
               </p>
 
               <h4 className="font-bold text-text mt-6">Course Outline & Syllabus</h4>
-              <ul className="list-disc list-inside space-y-2.5 pl-2">
-                <li>Complete foundational rules and phonetics guidance.</li>
-                <li>Proper articulation points (Makharij) and phonology.</li>
-                <li>Rules of Tajweed (Nunnation, Elongation, Stop signs).</li>
-                <li>Interactive 1-on-1 practice sessions with continuous assessments.</li>
-                <li>Memorization (Hifz) tracking or Translation (Tafsir) details (if applicable).</li>
-              </ul>
+              {course?.features && course.features.length > 0 ? (
+                <ul className="list-disc list-inside space-y-2.5 pl-2">
+                  {course.features.map((feature: string, idx: number) => (
+                    <li key={idx}>{feature}</li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="list-disc list-inside space-y-2.5 pl-2">
+                  <li>Complete foundational rules and phonetics guidance.</li>
+                  <li>Proper articulation points (Makharij) and phonology.</li>
+                  <li>Rules of Tajweed (Nunnation, Elongation, Stop signs).</li>
+                  <li>Interactive practice sessions with continuous assessments.</li>
+                  <li>Memorization (Hifz) tracking or Translation (Tafsir) details (if applicable).</li>
+                </ul>
+              )}
 
               <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 mt-6 flex items-start gap-3">
                 <ShieldCheck className="h-5 w-5 text-gold shrink-0 mt-0.5" />

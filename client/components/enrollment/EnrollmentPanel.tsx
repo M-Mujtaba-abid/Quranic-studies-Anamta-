@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation } from '@apollo/client/react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { RefreshCw, CheckCircle, Copy, Check, Globe2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { GET_ALL_COURSES, GET_COURSE_PRICES_FOR_REGION, ENROLL_STUDENT_MUTATION } from '@/graphql';
+import { GET_ALL_COURSES, GET_COURSE_BY_ID, GET_COURSE_PRICES_FOR_REGION, ENROLL_STUDENT_MUTATION } from '@/graphql';
 import { LocalEnrollmentForm } from './LocalEnrollmentForm';
 import { InternationalEnrollmentForm } from './InternationalEnrollmentForm';
 import { CourseSelectField } from './CourseSelectField';
@@ -23,21 +24,47 @@ interface EnrollmentPanelProps {
 
 export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
   const isDirectFlow = !presetCourseId;
+  const { country: selectedCountry, setCountry, openCountryModal } = useCountrySelection();
+
+  const searchParams = useSearchParams();
+  const modeParam = searchParams.get('mode') as 'ONE_ON_ONE' | 'GROUP' | null;
 
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const courseId = presetCourseId || selectedCourseId;
 
+  // Query specific course to get its category details
+  const { data: courseDetailData } = useQuery<any>(GET_COURSE_BY_ID, {
+    variables: { id: courseId },
+    skip: !courseId,
+  });
+  const course = courseDetailData?.course;
+
   const { data: coursesData, loading: loadingCourses } = useQuery<any>(GET_ALL_COURSES, {
     skip: !isDirectFlow,
   });
-  const availableCourses = (coursesData?.courses ?? []).filter((c: any) => c.isActive);
 
-  const { country: selectedCountry, setCountry, openCountryModal } = useCountrySelection();
+  const [enrollmentMode, setEnrollmentMode] = useState<'ONE_ON_ONE' | 'GROUP'>(
+    modeParam || 'ONE_ON_ONE'
+  );
 
-  const [enrollmentMode, setEnrollmentMode] = useState<'ONE_ON_ONE' | 'GROUP'>('ONE_ON_ONE');
+  // Sync mode and filter dropdown courses
+  const availableCourses = (coursesData?.courses ?? []).filter(
+    (c: any) => c.isActive && c.category === enrollmentMode
+  );
+
+  // Lock enrollmentMode to course's category when loaded
+  useEffect(() => {
+    if (course?.category) {
+      setEnrollmentMode(course.category);
+      if (course.category === 'GROUP') {
+        setCountry({ name: 'Pakistan', code: 'pk', region: 'PAKISTAN' });
+      }
+    }
+  }, [course, setCountry]);
 
   const handleModeChange = (mode: 'ONE_ON_ONE' | 'GROUP') => {
     setEnrollmentMode(mode);
+    setSelectedCourseId(''); // Reset selected course on toggle
     if (mode === 'GROUP') {
       setCountry({ name: 'Pakistan', code: 'pk', region: 'PAKISTAN' });
     } else {
@@ -173,7 +200,7 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
   }
 
   const packages = pricingData?.coursePricesForRegion ?? [];
-  const isLocal = packages[0]?.region === LOCAL_REGION;
+  const isLocal = packages[0]?.region === LOCAL_REGION && enrollmentMode === 'GROUP';
 
   return (
     <div className="bg-surface border border-border p-6 md:p-8 rounded-2xl shadow-md space-y-6 relative z-10">
@@ -189,30 +216,32 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
       </div>
 
       {/* Enrollment Mode Selector */}
-      <div className="flex rounded-xl bg-bg p-1 border border-border">
-        <button
-          type="button"
-          onClick={() => handleModeChange('ONE_ON_ONE')}
-          className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
-            enrollmentMode === 'ONE_ON_ONE'
-              ? 'bg-gold text-primary-dark shadow-sm'
-              : 'text-text-secondary hover:text-gold'
-          }`}
-        >
-          1-on-1 Classes
-        </button>
-        <button
-          type="button"
-          onClick={() => handleModeChange('GROUP')}
-          className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
-            enrollmentMode === 'GROUP'
-              ? 'bg-gold text-primary-dark shadow-sm'
-              : 'text-text-secondary hover:text-gold'
-          }`}
-        >
-          Group Classes
-        </button>
-      </div>
+      {!presetCourseId && (
+        <div className="flex rounded-xl bg-bg p-1 border border-border">
+          <button
+            type="button"
+            onClick={() => handleModeChange('ONE_ON_ONE')}
+            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
+              enrollmentMode === 'ONE_ON_ONE'
+                ? 'bg-gold text-primary-dark shadow-sm'
+                : 'text-text-secondary hover:text-gold'
+            }`}
+          >
+            1-on-1 Classes
+          </button>
+          <button
+            type="button"
+            onClick={() => handleModeChange('GROUP')}
+            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
+              enrollmentMode === 'GROUP'
+                ? 'bg-gold text-primary-dark shadow-sm'
+                : 'text-text-secondary hover:text-gold'
+            }`}
+          >
+            Group Classes
+          </button>
+        </div>
+      )}
 
       {isDirectFlow && (
         <CourseSelectField
@@ -244,14 +273,16 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
         </div>
       ) : (
         <>
-          <button
-            type="button"
-            onClick={() => openCountryModal(enrollmentMode)}
-            className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-gold transition-colors"
-          >
-            <Globe2 size={12} />
-            <span>{selectedCountry.name} — change country</span>
-          </button>
+          {enrollmentMode !== 'GROUP' && (
+            <button
+              type="button"
+              onClick={() => openCountryModal(enrollmentMode)}
+              className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-gold transition-colors"
+            >
+              <Globe2 size={12} />
+              <span>{selectedCountry.name} — change country</span>
+            </button>
+          )}
 
           {isLocal ? (
             <LocalEnrollmentForm isSubmitting={isEnrolling} onSubmit={handleLocalSubmit} />

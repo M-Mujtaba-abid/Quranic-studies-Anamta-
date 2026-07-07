@@ -47,7 +47,7 @@ export default function CourseCard({
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-shadow duration-300 hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.5)]"
     >
       {/* Thumbnail */}
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative aspect-video w-full overflow-hidden">
         <img
           src={image}
           alt={title}
