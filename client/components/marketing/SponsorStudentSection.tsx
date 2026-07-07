@@ -4,11 +4,23 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { HandHeart, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import Image from "next/image";
 
 export default function SponsorStudentSection() {
   return (
-    <section className="relative overflow-hidden bg-bg py-20 border-t border-border/40">
+    <section className="relative overflow-hidden bg-bg py-10 border-t border-border/40">
       {/* Dynamic ambient background aura */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <Image
+          src="/images/about/contact_bg.png"
+          alt=""
+          fill
+          className="object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-bg/20 via-bg/60 to-bg" />
+      </div>
+
+
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[600px] rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
 
       <div className="relative mx-auto max-w-4xl px-6 lg:px-10 text-center">
@@ -34,11 +46,15 @@ export default function SponsorStudentSection() {
             Many talented and passionate students are eager to learn the Quran but lack the financial means to cover tuition. By sponsoring a student's education, you can help fund their studies and keep their journey with the Quran alive. Every contribution makes a lasting difference.
           </p>
 
-          <Link href="/sponsor-a-student" className="inline-block">
-            <Button variant="gold" size="lg" className="px-8" rightIcon={<ArrowRight size={16} />}>
-              Sponsor a Student Now
-            </Button>
-          </Link>
+          <div className="mt-8">
+            <Link
+              href="/sponsor-a-student"
+              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gold px-8 py-3.5 font-display text-xs font-semibold text-primary-dark shadow-[0_4px_24px_rgba(212,175,55,0.35)] transition-all duration-300 hover:scale-[1.02]"
+            >
+              Sponsor a Student
+              <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>

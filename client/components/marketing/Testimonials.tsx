@@ -148,7 +148,8 @@ export default function Testimonials() {
 
   return (
     <section
-      className="relative overflow-hidden py-24"
+      id="testimonials"
+      className="relative overflow-hidden py-10"
       style={{
         background: `
           radial-gradient(ellipse 55% 45% at 12% 0%, rgba(197,168,128,0.14) 0%, transparent 60%),

@@ -31,7 +31,7 @@ export default function Home() {
       {/* <PricingPreview /> */}
       {/* <FAQ /> */}
       <CTABanner />
-      <SponsorCTA />
+      {/* <SponsorCTA /> */}
       <Footer />
     </main>
   );

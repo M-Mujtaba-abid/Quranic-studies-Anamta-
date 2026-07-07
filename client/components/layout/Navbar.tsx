@@ -11,8 +11,8 @@ const navLinks = [
   { label: "Enrolment", href: "/enrollement" },
   // { label: "Teachers", href: "/teachers" },
   // { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 export default function Navbar() {
