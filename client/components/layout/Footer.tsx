@@ -24,7 +24,7 @@ const footerLinks = {
     // { label: "Pricing", href: "/pricing" },
 
     { label: "Testimonials", href: "/#testimonials" },
-    // { label: "Blog", href: "/blog" },
+    { label: "Blog", href: "/blog" },
     { label: "Sponsor A Student", href: "/sponsor-a-student" },
     { label: "About Us", href: "/about" },
   ],
