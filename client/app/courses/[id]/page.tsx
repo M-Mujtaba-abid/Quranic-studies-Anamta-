@@ -29,7 +29,7 @@ export default function CourseDetailsPage() {
   // (including after a page reload — the selection is in-memory only, not persisted).
   useEffect(() => {
     if (!selectedCountry) {
-      openCountryModal();
+      openCountryModal('ONE_ON_ONE');
     }
   }, [selectedCountry, openCountryModal]);
 

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { X, Check } from 'lucide-react';
 import { PACKAGE_TIER_META } from '@/constants/regions';
 import type { CoursePackageOption } from './PackageCard';
+import { getCurrencySymbol } from '@/constants/countries';
 
 interface PackageDetailsModalProps {
   pkg: CoursePackageOption | null;
@@ -61,7 +62,7 @@ export function PackageDetailsModal({ pkg, isOpen, isSelected, onClose, onSelect
 
           <div className="flex items-center justify-between gap-3 pt-4 border-t border-border">
             <span className="text-2xl font-bold text-text">
-              {pkg.currency} {pkg.price}
+              {getCurrencySymbol(pkg.currency)} {pkg.price}
             </span>
             <button
               type="button"

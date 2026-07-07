@@ -1,17 +1,32 @@
 'use client';
 
 import React from 'react';
-import { Globe2, X } from 'lucide-react';
-import { COUNTRIES, type CountryOption } from '@/constants/countries';
+import { Globe2, X, RefreshCw } from 'lucide-react';
+import { mapCountryToRegion, type CountryOption } from '@/constants/countries';
+import { useQuery } from '@apollo/client/react';
+import { GET_COUNTRIES } from '@/graphql';
 
 interface CountrySelectModalProps {
   isOpen: boolean;
+  enrollmentMode: 'ONE_ON_ONE' | 'GROUP';
   onSelect: (country: CountryOption) => void;
   onClose?: () => void;
 }
 
-export function CountrySelectModal({ isOpen, onSelect, onClose }: CountrySelectModalProps) {
+export function CountrySelectModal({ isOpen, enrollmentMode, onSelect, onClose }: CountrySelectModalProps) {
+  const { data, loading } = useQuery<any>(GET_COUNTRIES, {
+    variables: { enrollmentMode },
+    skip: !isOpen,
+  });
+
   if (!isOpen) return null;
+
+  const rawCountries = data?.countries ?? [];
+  const mappedCountries: CountryOption[] = rawCountries.map((c: any) => ({
+    name: c.name,
+    code: c.code.toLowerCase(),
+    region: mapCountryToRegion(c.code, c.name),
+  }));
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -33,20 +48,28 @@ export function CountrySelectModal({ isOpen, onSelect, onClose }: CountrySelectM
             We use this to show you the correct enrollment options and pricing in your local currency.
           </p>
 
-          <div className="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto pr-1">
-            {COUNTRIES.map((country) => (
-              <button
-                key={country.code}
-                type="button"
-                onClick={() => onSelect(country)}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-border bg-bg text-sm text-text hover:border-gold hover:text-gold transition-all cursor-pointer text-left"
-              >
-                <span className="truncate">{country.name}</span>
-              </button>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center gap-2 py-8">
+              <RefreshCw className="h-5 w-5 text-gold animate-spin" />
+              <span className="text-xs text-text-secondary">Loading countries...</span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto pr-1">
+              {mappedCountries.map((country) => (
+                <button
+                  key={country.code}
+                  type="button"
+                  onClick={() => onSelect(country)}
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-border bg-bg text-sm text-text hover:border-gold hover:text-gold transition-all cursor-pointer text-left"
+                >
+                  <span className="truncate">{country.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+

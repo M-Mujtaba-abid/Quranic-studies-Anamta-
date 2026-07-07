@@ -55,6 +55,7 @@ type Course {
   description: String!
   isActive: Boolean!
   packages: [CoursePackage!]
+  pricing(country: String): [CoursePackage!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -295,6 +296,20 @@ type StudentsByCountry {
   totalStudents: Int!
 }
 
+type Country {
+  id: ID!
+  name: String!
+  code: String!
+  currency: String!
+  supportedModes: [EnrollmentMode!]!
+}
+
+"""Available enrollment modes: ONE_ON_ONE or GROUP"""
+enum EnrollmentMode {
+  ONE_ON_ONE
+  GROUP
+}
+
 type Query {
   healthCheck: String!
   myStudentProfile: Student!
@@ -328,6 +343,7 @@ type Query {
   monthlyRevenue(year: Int!): [MonthlyRevenue!]!
   monthlyEnrollments(year: Int!): [MonthlyEnrollment!]!
   studentsByCountry: [StudentsByCountry!]!
+  countries(enrollmentMode: EnrollmentMode!): [Country!]!
 }
 
 type Mutation {

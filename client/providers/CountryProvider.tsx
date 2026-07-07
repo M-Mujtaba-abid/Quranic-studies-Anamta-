@@ -10,8 +10,8 @@ import type { CountryOption } from '@/constants/countries';
 // session (e.g. /courses -> a course's details page).
 interface CountryContextValue {
   country: CountryOption | null;
-  setCountry: (country: CountryOption) => void;
-  openCountryModal: (onSelected?: (country: CountryOption) => void) => void;
+  setCountry: (country: CountryOption | null) => void;
+  openCountryModal: (mode: 'ONE_ON_ONE' | 'GROUP', onSelected?: (country: CountryOption) => void) => void;
 }
 
 const CountryContext = createContext<CountryContextValue | null>(null);
@@ -19,9 +19,11 @@ const CountryContext = createContext<CountryContextValue | null>(null);
 export function CountryProvider({ children }: { children: React.ReactNode }) {
   const [country, setCountry] = useState<CountryOption | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'ONE_ON_ONE' | 'GROUP'>('ONE_ON_ONE');
   const onSelectedRef = useRef<((country: CountryOption) => void) | undefined>(undefined);
 
-  const openCountryModal = useCallback((onSelected?: (country: CountryOption) => void) => {
+  const openCountryModal = useCallback((mode: 'ONE_ON_ONE' | 'GROUP', onSelected?: (country: CountryOption) => void) => {
+    setModalMode(mode);
     onSelectedRef.current = onSelected;
     setIsModalOpen(true);
   }, []);
@@ -38,6 +40,7 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
       {children}
       <CountrySelectModal
         isOpen={isModalOpen}
+        enrollmentMode={modalMode}
         onSelect={handleSelect}
         onClose={() => setIsModalOpen(false)}
       />

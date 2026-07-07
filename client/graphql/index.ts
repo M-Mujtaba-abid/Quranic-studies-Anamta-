@@ -29,4 +29,6 @@ export * from './queries/payment';
 export * from './queries/donation';
 export * from './queries/testimonial';
 export * from './queries/contact';
+export * from './queries/country';
+
 

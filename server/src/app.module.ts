@@ -20,6 +20,7 @@ import { DonationsModule } from './donations/donations.module';
 import { TestimonialsModule } from './testimonials/testimonials.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ConfigModule } from '@nestjs/config';
+import { CountriesModule } from './countries/countries.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ConfigModule } from '@nestjs/config';
     DonationsModule,
     TestimonialsModule,
     DashboardModule,
+    CountriesModule,
   ],
   controllers: [],
   providers: [DatabaseService, AppResolver],

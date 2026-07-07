@@ -27,3 +27,23 @@ export const GET_COURSE_PRICES_FOR_REGION = gql`
   }
   ${COURSE_PACKAGE_FIELDS}
 `;
+
+export const GET_ALL_COURSES_WITH_PRICING = gql`
+  query GetAllCoursesWithPricing($country: String) {
+    courses {
+      id
+      title
+      description
+      imageUrl
+      imageId
+      isActive
+      createdAt
+      updatedAt
+      pricing(country: $country) {
+        ...CoursePackageFields
+      }
+    }
+  }
+  ${COURSE_PACKAGE_FIELDS}
+`;
+

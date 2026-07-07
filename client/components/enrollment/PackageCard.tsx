@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Check, Info } from 'lucide-react';
 import { PACKAGE_TIER_META } from '@/constants/regions';
+import { getCurrencySymbol } from '@/constants/countries';
 
 export interface CoursePackageOption {
   id: string;
@@ -68,7 +69,7 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
 
 
       <div className="mt-auto pt-2 border-t border-border/60">
-        <span className="text-lg font-bold text-text">{pkg.currency} {pkg.price}</span>
+        <span className="text-lg font-bold text-text">{getCurrencySymbol(pkg.currency)} {pkg.price}</span>
       </div>
       <button
         type="button"

@@ -40,6 +40,14 @@ export class CoursesResolver {
     return await this.coursesService.findOne(id);
   }
 
+  @ResolveField(() => [CoursePackage], { name: 'pricing' })
+  async pricing(
+    @Parent() course: Course,
+    @Args('country', { nullable: true }) country?: string,
+  ) {
+    return await this.coursesService.getCoursePricesForRegion(course.id, country);
+  }
+
   @Query(() => [CoursePackage], {
     name: 'coursePricesForRegion',
   })
