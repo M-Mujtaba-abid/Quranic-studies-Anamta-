@@ -207,7 +207,7 @@ export default function Footer() {
               </h4>
               <ul className="flex flex-col gap-3">
                 {links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <Link
                       href={link.href}
                       className="group flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-200 hover:text-text"

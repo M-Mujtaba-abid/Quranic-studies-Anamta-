@@ -1,5 +1,5 @@
 'use client';
-
+// Trigger compile
 import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@apollo/client/react';
