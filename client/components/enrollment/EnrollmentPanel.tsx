@@ -67,10 +67,6 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
     setSelectedCourseId(''); // Reset selected course on toggle
     if (mode === 'GROUP') {
       setCountry({ name: 'Pakistan', code: 'pk', region: 'PAKISTAN' });
-    } else {
-      if (selectedCountry?.name === 'Pakistan') {
-        setCountry(null);
-      }
     }
   };
 
