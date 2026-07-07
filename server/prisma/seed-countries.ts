@@ -23,7 +23,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const countries = [
-    { name: 'Pakistan', code: 'PK', currency: 'PKR', supportedModes: [EnrollmentMode.GROUP] },
+    { name: 'Pakistan', code: 'PK', currency: 'PKR', supportedModes: [EnrollmentMode.GROUP, EnrollmentMode.ONE_ON_ONE] },
     { name: 'Australia', code: 'AU', currency: 'AUD', supportedModes: [EnrollmentMode.ONE_ON_ONE] },
     { name: 'Canada', code: 'CA', currency: 'CAD', supportedModes: [EnrollmentMode.ONE_ON_ONE] },
     { name: 'Europe', code: 'DE', currency: 'EUR', supportedModes: [EnrollmentMode.ONE_ON_ONE] },

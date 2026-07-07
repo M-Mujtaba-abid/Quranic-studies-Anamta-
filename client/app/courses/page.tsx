@@ -107,9 +107,13 @@ function CoursesDirectoryContent() {
             <button
               type="button"
               onClick={() => {
-                openCountryModal('ONE_ON_ONE', () => {
+                if (country) {
                   router.push(`/courses?mode=ONE_ON_ONE`);
-                });
+                } else {
+                  openCountryModal('ONE_ON_ONE', () => {
+                    router.push(`/courses?mode=ONE_ON_ONE`);
+                  });
+                }
               }}
               className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
                 activeCategory === 'ONE_ON_ONE'
@@ -121,7 +125,13 @@ function CoursesDirectoryContent() {
             </button>
             <button
               type="button"
-              onClick={openGroupAlertModal}
+              onClick={() => {
+                if (country?.name === 'Pakistan') {
+                  router.push(`/courses?mode=GROUP`);
+                } else {
+                  openGroupAlertModal();
+                }
+              }}
               className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
                 activeCategory === 'GROUP'
                   ? 'bg-gold text-primary-dark shadow-sm font-bold'
@@ -196,7 +206,7 @@ function CoursesDirectoryContent() {
                   )}
                   {/* Decorative badge overlay */}
                   <div className="absolute top-4 left-4 bg-primary-dark/80 backdrop-blur-md border border-gold/30 text-gold text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full">
-                    Online 1-on-1
+                    {course.category === 'GROUP' ? 'Online Group' : 'Online 1-on-1'}
                   </div>
                 </div>
 
