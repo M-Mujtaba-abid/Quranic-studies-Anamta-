@@ -10,7 +10,7 @@ import { Search, Globe2, ArrowRight, RefreshCw, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { LOCAL_REGION, pickDisplayPackage } from '@/constants/regions';
 import { useCountrySelection } from '@/providers/CountryProvider';
-import { getCurrencySymbol } from '@/constants/countries';
+import { getCurrencySymbol, LOCAL_COUNTRY } from '@/constants/countries';
 import { Suspense } from 'react';
 
 function CoursesDirectoryContent() {
@@ -19,7 +19,7 @@ function CoursesDirectoryContent() {
   const modeParam = searchParams.get('mode') as 'ONE_ON_ONE' | 'GROUP' | null;
   const activeCategory = modeParam || 'ONE_ON_ONE';
 
-  const { country, openCountryModal, openGroupAlertModal } = useCountrySelection();
+  const { country, setCountry, openCountryModal } = useCountrySelection();
 
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES_WITH_PRICING, {
     variables: { country: country?.name },
@@ -28,16 +28,14 @@ function CoursesDirectoryContent() {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Prompt for a country the moment someone lands here without one selected yet
+  // Automatically enforce Pakistan for Group Classes to bypass country modal
   useEffect(() => {
-    if (!country) {
-      if (activeCategory === 'GROUP') {
-        openGroupAlertModal();
-      } else {
-        openCountryModal('ONE_ON_ONE');
-      }
+    if (activeCategory === 'GROUP' && country?.name !== 'Pakistan') {
+      setCountry(LOCAL_COUNTRY);
+    } else if (!country && activeCategory !== 'GROUP') {
+      openCountryModal('ONE_ON_ONE');
     }
-  }, [country, activeCategory, openCountryModal, openGroupAlertModal]);
+  }, [country, activeCategory, openCountryModal, setCountry]);
 
   if (loading && !data) {
     return (
@@ -125,11 +123,8 @@ function CoursesDirectoryContent() {
             <button
               type="button"
               onClick={() => {
-                if (country?.name === 'Pakistan') {
-                  router.push(`/courses?mode=GROUP`);
-                } else {
-                  openGroupAlertModal();
-                }
+                setCountry(LOCAL_COUNTRY);
+                router.push(`/courses?mode=GROUP`);
               }}
               className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${activeCategory === 'GROUP'
                 ? 'bg-gold text-primary-dark shadow-sm font-bold'
