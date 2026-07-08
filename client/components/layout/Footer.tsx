@@ -7,6 +7,7 @@ import { useMutation } from "@apollo/client/react";
 import { toast } from "sonner";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { SUBSCRIBE_TO_NEWSLETTER } from "@/graphql";
+import { useCountrySelection } from "@/providers/CountryProvider";
 
 const footerLinks = {
   // Learn: [
@@ -89,6 +90,7 @@ const socials = [
 
 export default function Footer() {
   const [email, setEmail] = useState("");
+  const { openModeSelectionModal, openTrialModal } = useCountrySelection();
 
   const [subscribe, { loading }] = useMutation(SUBSCRIBE_TO_NEWSLETTER, {
     onCompleted: () => {
@@ -206,17 +208,42 @@ export default function Footer() {
                 {heading}
               </h4>
               <ul className="flex flex-col gap-3">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="group flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-200 hover:text-text"
-                    >
-                      <span className="h-[1px] w-0 bg-gold transition-all duration-300 group-hover:w-3" />
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {links.map((link) => {
+                  // "Courses" opens the Choose Class Type (1-on-1 / Group) selection
+                  // modal, matching the Navbar's "Courses" link behavior.
+                  // "Book a Free Trial Class" opens the separate Trial booking modal,
+                  // matching the Navbar's "Book a Free Trial Class" button — it must
+                  // NOT open the Courses selection modal.
+                  const clickHandler =
+                    link.label === "Courses"
+                      ? openModeSelectionModal
+                      : link.label === "Book a Free Trial Class"
+                        ? openTrialModal
+                        : null;
+
+                  return (
+                    <li key={link.label}>
+                      {clickHandler ? (
+                        <button
+                          type="button"
+                          onClick={clickHandler}
+                          className="group flex w-full items-center gap-1.5 text-left text-sm text-text-secondary transition-colors duration-200 hover:text-text cursor-pointer"
+                        >
+                          <span className="h-[1px] w-0 bg-gold transition-all duration-300 group-hover:w-3" />
+                          {link.label}
+                        </button>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className="group flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-200 hover:text-text"
+                        >
+                          <span className="h-[1px] w-0 bg-gold transition-all duration-300 group-hover:w-3" />
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

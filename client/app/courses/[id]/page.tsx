@@ -10,7 +10,8 @@ import { GET_COURSE_BY_ID } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
 import { useCountrySelection } from '@/providers/CountryProvider';
-import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Sparkles, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Star } from 'lucide-react';
+import { LOCAL_COUNTRY } from '@/constants/countries';
+import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Star, Users } from 'lucide-react';
 
 export default function CourseDetailsPage() {
   const params = useParams();
@@ -22,15 +23,19 @@ export default function CourseDetailsPage() {
   });
 
   // Country selection (shared across pages) drives which region's pricing EnrollmentPanel fetches
-  const { country: selectedCountry, openCountryModal } = useCountrySelection();
+  const { country: selectedCountry, setCountry, openCountryModal } = useCountrySelection();
 
   // Prompt for a country the moment someone lands on a course page without one selected yet
   // (including after a page reload — the selection is in-memory only, not persisted).
   useEffect(() => {
-    if (!selectedCountry) {
-      openCountryModal('ONE_ON_ONE');
+    if (!selectedCountry && data?.course) {
+      if (data.course.category === 'GROUP') {
+        setCountry(LOCAL_COUNTRY);
+      } else {
+        openCountryModal('ONE_ON_ONE');
+      }
     }
-  }, [selectedCountry, openCountryModal]);
+  }, [selectedCountry, openCountryModal, data, setCountry]);
 
   const formatDescription = (description: string) => {
     if (!description) return '';
@@ -117,8 +122,7 @@ export default function CourseDetailsPage() {
           {/* Left Column: Title & Info */}
           <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 backdrop-blur-sm">
-                <Sparkles size={12} className="text-gold animate-pulse" />
+              <div className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 backdrop-blur-sm">
                 <span className="text-[10px] font-bold tracking-widest text-gold uppercase">
                   {course.category === 'GROUP' ? 'Group Learning Course' : 'Personal 1-on-1 Course'}
                 </span>
@@ -139,20 +143,28 @@ export default function CourseDetailsPage() {
             {/* Quick Specs Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gold/10">
               <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
-                <Clock size={18} className="text-gold" />
-                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Duration</span>
-                <span className="text-sm font-medium text-text">30-45 mins</span>
-              </div>
-              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
-                <Calendar size={18} className="text-gold" />
-                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Schedule</span>
-                <span className="text-sm font-medium text-text">Flexible Days</span>
+                <Users size={18} className="text-gold" />
+                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Age</span>
+                <span className="text-sm font-medium text-text">Adults & Kids</span>
               </div>
               <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
                 <Compass size={18} className="text-gold" />
-                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Level</span>
-                <span className="text-sm font-medium text-text">All Levels</span>
+                <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Gender</span>
+                <span className="text-sm font-medium text-text">Brothers & Sisters</span>
               </div>
+              {course.category === 'GROUP' ? (
+                <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                  <Clock size={18} className="text-gold" />
+                  <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Support</span>
+                  <span className="text-sm font-medium text-text">24/7</span>
+                </div>
+              ) : (
+                <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                  <Calendar size={18} className="text-gold" />
+                  <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Schedule</span>
+                  <span className="text-sm font-medium text-text">Flexible Days & Timings</span>
+                </div>
+              )}
               <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
                 <Award size={18} className="text-gold" />
                 <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Certificate</span>
