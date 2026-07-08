@@ -60,7 +60,7 @@ export default function Features() {
           >
             <div className="relative h-[320px] sm:h-[420px]  rounded-2xl overflow-hidden border border-gold/20 shadow-2xl">
               <Image
-                src="/Web banner 2.jpg.jpeg"
+                src="/w1.jpeg"
                 alt="Student attending a live 1-on-1 Quran class online"
                 fill
                 className="object-cover object-center"
