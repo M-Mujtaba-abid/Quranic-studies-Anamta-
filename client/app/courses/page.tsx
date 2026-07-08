@@ -19,7 +19,12 @@ function CoursesDirectoryContent() {
   const modeParam = searchParams.get('mode') as 'ONE_ON_ONE' | 'GROUP' | null;
   const activeCategory = modeParam || 'ONE_ON_ONE';
 
-  const { country, setCountry, openCountryModal } = useCountrySelection();
+  const stripHtml = (html: string) => {
+    return html ? html.replace(/<[^>]*>/g, '') : '';
+  };
+
+  // const { country, openCountryModal, openGroupAlertModal } = useCountrySelection();
+  const { country, setCountry, openCountryModal,openGroupAlertModal } = useCountrySelection();
 
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES_WITH_PRICING, {
     variables: { country: country?.name },
@@ -210,7 +215,7 @@ function CoursesDirectoryContent() {
                       {course.title}
                     </h3>
                     <p className="text-[13px] text-text-secondary line-clamp-3 leading-relaxed">
-                      {course.description}
+                      {stripHtml(course.description)}
                     </p>
                   </div>
 

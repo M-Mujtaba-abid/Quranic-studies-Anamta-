@@ -37,6 +37,13 @@ export default function CourseDetailsPage() {
     }
   }, [selectedCountry, openCountryModal, data, setCountry]);
 
+  const formatDescription = (description: string) => {
+    if (!description) return '';
+    const hasHtml = /<[a-z][\s\S]*>/i.test(description);
+    if (hasHtml) return description;
+    return description.replace(/\n/g, '<br />');
+  };
+
   if (loading && !data) {
     return (
       <div className="min-h-screen bg-bg text-text">
@@ -127,9 +134,10 @@ export default function CourseDetailsPage() {
                 </span>
               </h1>
               
-              <p className="text-text-secondary text-base md:text-lg leading-relaxed font-light">
-                {course.description}
-              </p>
+              <div
+                className="text-text-secondary text-base md:text-lg leading-relaxed font-light tiptap"
+                dangerouslySetInnerHTML={{ __html: formatDescription(course.description) }}
+              />
             </div>
 
             {/* Quick Specs Grid */}

@@ -127,7 +127,7 @@ export default function GroupClassFeatures() {
           >
             <div className="relative h-[320px] sm:h-[420px] w-full rounded-2xl overflow-hidden border border-gold/20 shadow-2xl">
               <Image
-                src="/Web banner 1.jpg.jpeg"
+                src="/w2.jpeg"
                 alt="Students attending a live group Quran class online"
                 fill
                 // className="object-cover"

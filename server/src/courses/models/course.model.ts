@@ -28,8 +28,8 @@ export class CoursePackage {
   @Field(() => PackageTier)
   packageTier!: PackageTier;
 
-  @Field()
-  title!: string;
+  @Field({ nullable: true })
+  title?: string;
 
   @Field()
   description!: string;

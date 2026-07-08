@@ -4,7 +4,7 @@ export interface PackageFormValues {
   region: Region;
   packageTier: PackageTier;
   currency: string;
-  title: string;
+  title?: string | null;
   description: string;
   imageUrl: string;
   price: number;

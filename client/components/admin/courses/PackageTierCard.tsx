@@ -4,6 +4,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { ImageUploadField } from './ImageUploadField';
+import TiptapEditor from '@/lib/TiptapEditor';
 import type { CourseFormValues } from './CourseForm.types';
 import type { PackageTier, Region } from '@/constants/regions';
 
@@ -25,6 +26,7 @@ export function PackageTierCard({ index, region, tier, tierLabel, tierBlurb, cur
   } = useFormContext<CourseFormValues>();
 
   const imageUrl = watch(`packages.${index}.imageUrl`);
+  const packageDescription = watch(`packages.${index}.description`);
   const packageErrors = errors.packages?.[index];
 
   return (
@@ -54,11 +56,14 @@ export function PackageTierCard({ index, region, tier, tierLabel, tierBlurb, cur
         <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Description *
         </label>
-        <textarea
-          rows={2}
-          placeholder="What's included in this package..."
-          {...register(`packages.${index}.description`, { required: 'Description is required.' })}
-          className="w-full bg-bg border border-border rounded-xl p-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold placeholder:text-text-secondary/40"
+        <TiptapEditor
+          value={packageDescription || ''}
+          onChange={(value) =>
+            setValue(`packages.${index}.description`, value, {
+              shouldDirty: true,
+              shouldValidate: true,
+            })
+          }
         />
         {packageErrors?.description?.message && (
           <span className="text-xs text-red-500">{packageErrors.description.message}</span>
