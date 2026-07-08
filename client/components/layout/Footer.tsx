@@ -7,6 +7,7 @@ import { useMutation } from "@apollo/client/react";
 import { toast } from "sonner";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { SUBSCRIBE_TO_NEWSLETTER } from "@/graphql";
+import { useCountrySelection } from "@/providers/CountryProvider";
 
 const footerLinks = {
   // Learn: [
@@ -89,6 +90,7 @@ const socials = [
 
 export default function Footer() {
   const [email, setEmail] = useState("");
+  const { openModeSelectionModal } = useCountrySelection();
 
   const [subscribe, { loading }] = useMutation(SUBSCRIBE_TO_NEWSLETTER, {
     onCompleted: () => {
@@ -206,17 +208,37 @@ export default function Footer() {
                 {heading}
               </h4>
               <ul className="flex flex-col gap-3">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="group flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-200 hover:text-text"
-                    >
-                      <span className="h-[1px] w-0 bg-gold transition-all duration-300 group-hover:w-3" />
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {links.map((link) => {
+                  // "Courses" and "Book a Free Trial Class" both need to open the
+                  // centralized Choose Class Type (1-on-1 / Group) modal instead of
+                  // navigating directly to /courses, matching the Navbar behavior.
+                  const opensModal =
+                    link.label === "Courses" ||
+                    link.label === "Book a Free Trial Class";
+
+                  return (
+                    <li key={link.label}>
+                      {opensModal ? (
+                        <button
+                          type="button"
+                          onClick={openModeSelectionModal}
+                          className="group flex w-full items-center gap-1.5 text-left text-sm text-text-secondary transition-colors duration-200 hover:text-text cursor-pointer"
+                        >
+                          <span className="h-[1px] w-0 bg-gold transition-all duration-300 group-hover:w-3" />
+                          {link.label}
+                        </button>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className="group flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-200 hover:text-text"
+                        >
+                          <span className="h-[1px] w-0 bg-gold transition-all duration-300 group-hover:w-3" />
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
