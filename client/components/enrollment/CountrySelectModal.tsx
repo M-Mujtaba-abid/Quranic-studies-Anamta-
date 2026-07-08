@@ -28,7 +28,7 @@ export function CountrySelectModal({ isOpen, enrollmentMode, onSelect, onClose }
       code: c.code.toLowerCase(),
       region: mapCountryToRegion(c.code, c.name),
     }))
-    .sort((a, b) => {
+    .sort((a: CountryOption, b: CountryOption) => {
       if (a.name === 'Others') return 1;
       if (b.name === 'Others') return -1;
       return a.name.localeCompare(b.name);
