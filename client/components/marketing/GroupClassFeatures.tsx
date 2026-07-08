@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCountrySelection } from "@/providers/CountryProvider";
+import { LOCAL_COUNTRY } from "@/constants/countries";
 import Image from "next/image";
 import {
   Users,
@@ -43,6 +45,14 @@ const itemVariants = {
 };
 
 export default function GroupClassFeatures() {
+  const router = useRouter();
+  const { setCountry } = useCountrySelection();
+
+  const handleViewGroupCourses = () => {
+    setCountry(LOCAL_COUNTRY);
+    router.push("/courses?mode=GROUP");
+  };
+
   return (
     <section className="relative overflow-hidden bg-bg py-24">
       {/* background decoration */}
@@ -91,11 +101,20 @@ export default function GroupClassFeatures() {
               ))}
             </motion.div>
 
-            <Link href="/courses" className="inline-block">
-              <Button variant="gold" size="lg" rightIcon={<ArrowRight size={16} />}>
+            <div className="space-y-4">
+              <p className="text-sm font-semibold text-gold/90 flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-gold animate-pulse" />
+                Group classes are only available for Pakistani students.
+              </p>
+              <Button
+                variant="gold"
+                size="lg"
+                rightIcon={<ArrowRight size={16} />}
+                onClick={handleViewGroupCourses}
+              >
                 View Courses
               </Button>
-            </Link>
+            </div>
           </motion.div>
 
           {/* Right: Image */}
