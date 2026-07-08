@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client/react";
 import { toast } from "sonner";
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Clock, 
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
   Send,
   MessageSquare,
   Sparkles
@@ -108,7 +108,7 @@ export default function ContactPage() {
                   <div>
                     <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Email Us</h4>
                     <a href="mailto:support@anamtainstitute.com" className="text-sm text-text hover:text-gold transition-colors font-medium mt-1 block">
-                    anamtainstitute@gmail.com
+                      anamtainstitute@gmail.com
                     </a>
                   </div>
                 </div>
@@ -119,9 +119,9 @@ export default function ContactPage() {
                     <Phone size={18} />
                   </div>
                   <div>
-                    <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Call or WhatsApp</h4>
+                    <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">WHATSAPP MESSAGE & CALLS ONLY</h4>
                     <a href="https://wa.me/923001234567" target="_blank" rel="noreferrer" className="text-sm text-text hover:text-gold transition-colors font-medium mt-1 block">
-                     +92 333 0493239
+                      +92 333 0493239
                     </a>
                   </div>
                 </div>
