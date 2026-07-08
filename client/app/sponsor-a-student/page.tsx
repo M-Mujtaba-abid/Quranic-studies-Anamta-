@@ -113,13 +113,22 @@ export default function SponsorAStudentPage() {
             Sponsor a Student
           </span>
           <h1 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-text">
-            Support a Student&apos;s Quran Journey
+            Sponsor a Student
           </h1>
           <p className="text-text-secondary text-sm md:text-base">
-            Your Lillah, Sadaqah, or Zakat helps cover tuition for students who cannot afford it. Transfer your donation and submit the receipt below.
+            Because No One Should Be Kept Away From the Quran by a Price Tag
           </p>
           <p className="text-text-secondary text-sm md:text-base">
-            Anamta's visions is to provide best Islamic & specially Quranic Education to every soul seeking knowledge but many of them cannot cover tuition fee because of financial instability......
+            Anamta's vision is to make Quranic education accessible to every soul, regardless of where they come from or what they can afford. We believe the Quran belongs to everyone. Yet every day there are sincere hearts around us, students with genuine passion and real desire to learn, held back by nothing more than financial limitation. Your donation removes that barrier completely.
+          </p>
+          <p className="text-text-secondary text-sm md:text-base">
+            When you sponsor a student at Anamta Institute, every verse they memorize, every class they attend and every Surah they perfect carries a portion of your reward. This is your Sadaqah Jariyah breathing and growing long after you are gone. We accept Sadaqah Jariyah, Sadaqah Nafilah, Zakat and Fi Sabilillah contributions.
+          </p>
+          <p className="text-text-secondary text-sm md:text-base">
+            Your name may never be known to them, but Allah knows. And that is enough.
+          </p>
+          <p className="text-text-secondary text-sm md:text-base">
+            Sponsor a student today. Be the reason someone finds the Quran.
           </p>
         </div>
 
