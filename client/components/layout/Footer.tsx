@@ -90,7 +90,7 @@ const socials = [
 
 export default function Footer() {
   const [email, setEmail] = useState("");
-  const { openModeSelectionModal } = useCountrySelection();
+  const { openModeSelectionModal, openTrialModal } = useCountrySelection();
 
   const [subscribe, { loading }] = useMutation(SUBSCRIBE_TO_NEWSLETTER, {
     onCompleted: () => {
@@ -209,19 +209,24 @@ export default function Footer() {
               </h4>
               <ul className="flex flex-col gap-3">
                 {links.map((link) => {
-                  // "Courses" and "Book a Free Trial Class" both need to open the
-                  // centralized Choose Class Type (1-on-1 / Group) modal instead of
-                  // navigating directly to /courses, matching the Navbar behavior.
-                  const opensModal =
-                    link.label === "Courses" ||
-                    link.label === "Book a Free Trial Class";
+                  // "Courses" opens the Choose Class Type (1-on-1 / Group) selection
+                  // modal, matching the Navbar's "Courses" link behavior.
+                  // "Book a Free Trial Class" opens the separate Trial booking modal,
+                  // matching the Navbar's "Book a Free Trial Class" button — it must
+                  // NOT open the Courses selection modal.
+                  const clickHandler =
+                    link.label === "Courses"
+                      ? openModeSelectionModal
+                      : link.label === "Book a Free Trial Class"
+                        ? openTrialModal
+                        : null;
 
                   return (
                     <li key={link.label}>
-                      {opensModal ? (
+                      {clickHandler ? (
                         <button
                           type="button"
-                          onClick={openModeSelectionModal}
+                          onClick={clickHandler}
                           className="group flex w-full items-center gap-1.5 text-left text-sm text-text-secondary transition-colors duration-200 hover:text-text cursor-pointer"
                         >
                           <span className="h-[1px] w-0 bg-gold transition-all duration-300 group-hover:w-3" />
