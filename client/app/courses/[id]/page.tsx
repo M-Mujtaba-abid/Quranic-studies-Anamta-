@@ -10,6 +10,7 @@ import { GET_COURSE_BY_ID } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
 import { useCountrySelection } from '@/providers/CountryProvider';
+import { LOCAL_COUNTRY } from '@/constants/countries';
 import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Sparkles, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Star } from 'lucide-react';
 
 export default function CourseDetailsPage() {
@@ -22,15 +23,19 @@ export default function CourseDetailsPage() {
   });
 
   // Country selection (shared across pages) drives which region's pricing EnrollmentPanel fetches
-  const { country: selectedCountry, openCountryModal } = useCountrySelection();
+  const { country: selectedCountry, setCountry, openCountryModal } = useCountrySelection();
 
   // Prompt for a country the moment someone lands on a course page without one selected yet
   // (including after a page reload — the selection is in-memory only, not persisted).
   useEffect(() => {
-    if (!selectedCountry) {
-      openCountryModal('ONE_ON_ONE');
+    if (!selectedCountry && data?.course) {
+      if (data.course.category === 'GROUP') {
+        setCountry(LOCAL_COUNTRY);
+      } else {
+        openCountryModal('ONE_ON_ONE');
+      }
     }
-  }, [selectedCountry, openCountryModal]);
+  }, [selectedCountry, openCountryModal, data, setCountry]);
 
   if (loading && !data) {
     return (
