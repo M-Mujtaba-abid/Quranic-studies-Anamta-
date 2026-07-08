@@ -29,9 +29,19 @@ export class CreatePaymentSettingInput {
   jazzCashNumber!: string;
 
   @Field()
+  @IsNotEmpty({ message: 'JazzCash account title is required.' })
+  @IsString()
+  jazzCashTitle!: string;
+
+  @Field()
   @IsNotEmpty({ message: 'EasyPaisa number is required.' })
   @IsString()
   easyPaisaNumber!: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'EasyPaisa account title is required.' })
+  @IsString()
+  easyPaisaTitle!: string;
 
   @Field()
   @IsNotEmpty({ message: 'Instructions are required.' })

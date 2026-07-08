@@ -6,6 +6,8 @@ import { mapCountryToRegion, type CountryOption } from '@/constants/countries';
 import { useQuery } from '@apollo/client/react';
 import { GET_COUNTRIES } from '@/graphql';
 
+import { createPortal } from 'react-dom';
+
 interface CountrySelectModalProps {
   isOpen: boolean;
   enrollmentMode: 'ONE_ON_ONE' | 'GROUP';
@@ -14,12 +16,24 @@ interface CountrySelectModalProps {
 }
 
 export function CountrySelectModal({ isOpen, enrollmentMode, onSelect, onClose }: CountrySelectModalProps) {
+  const [mounted, setMounted] = React.useState(false);
   const { data, loading } = useQuery<any>(GET_COUNTRIES, {
     variables: { enrollmentMode },
     skip: !isOpen,
   });
 
+  React.useEffect(() => {
+    setMounted(true);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
+  if (!mounted) return null;
 
   const rawCountries = data?.countries ?? [];
   const mappedCountries: CountryOption[] = rawCountries
@@ -34,8 +48,8 @@ export function CountrySelectModal({ isOpen, enrollmentMode, onSelect, onClose }
       return a.name.localeCompare(b.name);
     });
 
-  return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
       <div className="bg-surface border border-border w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-scale-in">
         <div className="p-6 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -75,7 +89,8 @@ export function CountrySelectModal({ isOpen, enrollmentMode, onSelect, onClose }
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

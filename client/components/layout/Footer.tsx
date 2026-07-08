@@ -20,12 +20,12 @@ const footerLinks = {
   Institute: [
     // { label: "Our Teachers", href: "/teachers" },
     { label: "Courses", href: "/courses" },
-    { label: "book a free trial", href: "/courses" },
+    { label: "Book a Free Trial Class", href: "/courses" },
+    { label: "Testimonials", href: "/#testimonials" },
+    { label: "Sponsor a Student", href: "/sponsor-a-student" },
     // { label: "Pricing", href: "/pricing" },
 
-    { label: "Testimonials", href: "/#testimonials" },
     { label: "Blog", href: "/blog" },
-    { label: "Sponsor A Student", href: "/sponsor-a-student" },
     { label: "About Us", href: "/about" },
   ],
   Support: [

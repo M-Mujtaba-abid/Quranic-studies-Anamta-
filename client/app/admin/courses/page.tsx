@@ -9,6 +9,7 @@ import {
   UPDATE_COURSE_MUTATION,
   DELETE_COURSE_MUTATION,
 } from '@/graphql';
+import { showErrorToast } from '@/lib/toast-error';
 import { Button } from '@/components/ui/Button';
 import { CourseForm } from '@/components/admin/courses/CourseForm';
 import type { CourseSubmitInput } from '@/components/admin/courses/CourseForm.types';
@@ -43,7 +44,7 @@ export default function AdminCoursesPage() {
       refetch();
     },
     onError: (err) => {
-      toast.error('Failed to create course', { description: err.message });
+      showErrorToast('Failed to create course', err);
     }
   });
 
@@ -54,7 +55,7 @@ export default function AdminCoursesPage() {
       refetch();
     },
     onError: (err) => {
-      toast.error('Failed to update course', { description: err.message });
+      showErrorToast('Failed to update course', err);
     }
   });
 
@@ -64,7 +65,7 @@ export default function AdminCoursesPage() {
       refetch();
     },
     onError: (err) => {
-      toast.error('Failed to delete course', { description: err.message });
+      showErrorToast('Failed to delete course', err);
     }
   });
 

@@ -51,7 +51,7 @@ export default function CTABanner() {
               onClick={openTrialModal}
               className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gold px-8 py-3.5 font-display text-xs font-semibold text-primary-dark shadow-[0_4px_24px_rgba(212,175,55,0.35)] transition-all duration-300 hover:scale-[1.02] cursor-pointer"
             >
-              Book a free trial class
+              Book a Free Trial Class
               <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
             </button>
 

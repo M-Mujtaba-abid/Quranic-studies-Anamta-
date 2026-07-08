@@ -31,7 +31,9 @@ interface PaymentSettingForm {
   accountNumber: string;
   iban: string;
   jazzCashNumber: string;
+  jazzCashTitle: string;
   easyPaisaNumber: string;
+  easyPaisaTitle: string;
   instructions: string;
   isActive: boolean;
 }
@@ -42,7 +44,9 @@ const initialFormState: PaymentSettingForm = {
   accountNumber: '',
   iban: '',
   jazzCashNumber: '',
+  jazzCashTitle: '',
   easyPaisaNumber: '',
+  easyPaisaTitle: '',
   instructions: '',
   isActive: false
 };
@@ -116,7 +120,9 @@ export default function AdminPaymentSettings() {
       accountNumber: setting.accountNumber,
       iban: setting.iban,
       jazzCashNumber: setting.jazzCashNumber,
+      jazzCashTitle: setting.jazzCashTitle || '',
       easyPaisaNumber: setting.easyPaisaNumber,
+      easyPaisaTitle: setting.easyPaisaTitle || '',
       instructions: setting.instructions,
       isActive: setting.isActive
     });
@@ -147,7 +153,9 @@ export default function AdminPaymentSettings() {
       !formState.accountNumber.trim() || 
       !formState.iban.trim() || 
       !formState.jazzCashNumber.trim() || 
+      !formState.jazzCashTitle.trim() || 
       !formState.easyPaisaNumber.trim() || 
+      !formState.easyPaisaTitle.trim() || 
       !formState.instructions.trim()
     ) {
       toast.warning('Please fill out all required fields.');
@@ -160,7 +168,9 @@ export default function AdminPaymentSettings() {
       accountNumber: formState.accountNumber.trim(),
       iban: formState.iban.trim(),
       jazzCashNumber: formState.jazzCashNumber.trim(),
+      jazzCashTitle: formState.jazzCashTitle.trim(),
       easyPaisaNumber: formState.easyPaisaNumber.trim(),
+      easyPaisaTitle: formState.easyPaisaTitle.trim(),
       instructions: formState.instructions.trim(),
       isActive: formState.isActive
     };
@@ -304,9 +314,17 @@ export default function AdminPaymentSettings() {
                     <Wallet size={14} className="text-gold" />
                     <span>Mobile Wallets</span>
                   </div>
-                  <div className="text-xs space-y-1">
-                    <div>JazzCash: <strong className="text-text">{setting.jazzCashNumber}</strong></div>
-                    <div>EasyPaisa: <strong className="text-text">{setting.easyPaisaNumber}</strong></div>
+                  <div className="text-xs space-y-2">
+                    <div>
+                      <span className="text-text-secondary font-medium block">JazzCash</span>
+                      <div>Title: <strong className="text-text">{setting.jazzCashTitle}</strong></div>
+                      <div>No: <strong className="text-text">{setting.jazzCashNumber}</strong></div>
+                    </div>
+                    <div className="border-t border-border/20 pt-2">
+                      <span className="text-text-secondary font-medium block">EasyPaisa</span>
+                      <div>Title: <strong className="text-text">{setting.easyPaisaTitle}</strong></div>
+                      <div>No: <strong className="text-text">{setting.easyPaisaNumber}</strong></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -410,11 +428,29 @@ export default function AdminPaymentSettings() {
                     required
                   />
                   <Input
+                    label="JazzCash Account Title *"
+                    name="jazzCashTitle"
+                    value={formState.jazzCashTitle}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Anamta Institute"
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
                     label="EasyPaisa Number *"
                     name="easyPaisaNumber"
                     value={formState.easyPaisaNumber}
                     onChange={handleInputChange}
                     placeholder="03001234567"
+                    required
+                  />
+                  <Input
+                    label="EasyPaisa Account Title *"
+                    name="easyPaisaTitle"
+                    value={formState.easyPaisaTitle}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Anamta Institute"
                     required
                   />
                 </div>

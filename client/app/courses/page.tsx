@@ -92,10 +92,10 @@ function CoursesDirectoryContent() {
           <Image src="/images/about/contact_bg.png" alt="" fill priority className="object-cover" />
         </div>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center relative z-10 space-y-4">
-          <span className="text-xs font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/25">
+          <span className="text-[20px] font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1  rounded-full border border-gold/25">
             Course Directory
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold font-display tracking-tight text-text">
+          <h1 className="mt-5 text-4xl md:text-5xl font-bold font-display tracking-tight text-text">
             Learn Quran Online with <span className="bg-gradient-to-r from-gold to-gold-light text-transparent bg-clip-text">Tajweed & Tafsir</span>
           </h1>
           <p className="text-text-secondary max-w-2xl mx-auto text-[15px] leading-relaxed">
@@ -115,11 +115,10 @@ function CoursesDirectoryContent() {
                   });
                 }
               }}
-              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
-                activeCategory === 'ONE_ON_ONE'
-                  ? 'bg-gold text-primary-dark shadow-sm font-bold'
-                  : 'text-text-secondary hover:text-text'
-              }`}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${activeCategory === 'ONE_ON_ONE'
+                ? 'bg-gold text-primary-dark shadow-sm font-bold'
+                : 'text-text-secondary hover:text-text'
+                }`}
             >
               1-on-1 Classes
             </button>
@@ -132,11 +131,10 @@ function CoursesDirectoryContent() {
                   openGroupAlertModal();
                 }
               }}
-              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
-                activeCategory === 'GROUP'
-                  ? 'bg-gold text-primary-dark shadow-sm font-bold'
-                  : 'text-text-secondary hover:text-text'
-              }`}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${activeCategory === 'GROUP'
+                ? 'bg-gold text-primary-dark shadow-sm font-bold'
+                : 'text-text-secondary hover:text-text'
+                }`}
             >
               Group Classes
             </button>

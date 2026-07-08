@@ -18,7 +18,7 @@ export default function SectionHeading({
   return (
     <div className={`mb-12 ${center ? "text-center" : "text-left"}`}>
       {badge && (
-        <span className="mb-4 inline-block rounded-full border border-gold bg-surface px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-gold">
+        <span className="mb-4 inline-block rounded-full border border-gold bg-surface px-4 py-1.5 text-[20px] font-medium uppercase tracking-widest text-gold">
           {badge}
         </span>
       )}

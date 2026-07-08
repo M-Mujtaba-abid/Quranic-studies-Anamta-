@@ -122,7 +122,7 @@ export default function Navbar() {
             onClick={openTrialModal}
             className="block rounded-xl bg-primary border border-primary-light/30 px-5 py-2.5 font-display text-xs font-semibold text-text shadow-[0_4px_24px_rgba(33,87,115,0.4)] transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:text-gold cursor-pointer"
           >
-            Book a free trial class
+            Book a Free Trial Class
           </button>
         </div>
 
@@ -201,7 +201,7 @@ export default function Navbar() {
                   }}
                   className="rounded-xl border border-primary-light/20 bg-primary py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20 cursor-pointer"
                 >
-                  Start Learning
+                  Book a Free Trial Class
                 </button>
               </motion.li>
             </motion.ul>

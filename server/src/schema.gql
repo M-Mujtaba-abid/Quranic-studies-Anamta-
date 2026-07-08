@@ -194,7 +194,9 @@ type PaymentSetting {
   accountNumber: String!
   iban: String!
   jazzCashNumber: String!
+  jazzCashTitle: String!
   easyPaisaNumber: String!
+  easyPaisaTitle: String!
   instructions: String!
   isActive: Boolean!
   createdAt: DateTime!
@@ -539,7 +541,9 @@ input CreatePaymentSettingInput {
   accountNumber: String!
   iban: String!
   jazzCashNumber: String!
+  jazzCashTitle: String!
   easyPaisaNumber: String!
+  easyPaisaTitle: String!
   instructions: String!
   isActive: Boolean
 }
@@ -550,7 +554,9 @@ input UpdatePaymentSettingInput {
   accountNumber: String
   iban: String
   jazzCashNumber: String
+  jazzCashTitle: String
   easyPaisaNumber: String
+  easyPaisaTitle: String
   instructions: String
   isActive: Boolean
   id: ID!

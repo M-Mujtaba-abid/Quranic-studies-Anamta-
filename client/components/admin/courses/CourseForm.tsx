@@ -173,9 +173,14 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
     const packages = values.packages.map((pkg) => {
       const defaultTitle = PACKAGE_TIER_META[pkg.packageTier as keyof typeof PACKAGE_TIER_META]?.label || pkg.packageTier;
       const title = pkg.title.trim() || defaultTitle;
+      // Fallback package image to main course image if it was left empty
+      const imageUrl = pkg.imageUrl?.trim() || values.imageUrl;
+      // Trim description
+      const description = pkg.description?.trim() || '';
+
       return pkg.region === LOCAL_REGION && values.category === 'GROUP'
         ? { ...pkg, title: values.title, description: values.description, imageUrl: values.imageUrl }
-        : { ...pkg, title };
+        : { ...pkg, title, description, imageUrl };
     });
 
     const grouped = new Map<Region, PackageFormValues[]>();
@@ -210,6 +215,20 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
         if (entries.length > 0 && entries.length < PACKAGE_TIERS.length) {
           toast.error(`${REGION_META[region].label} pricing is incomplete — fill all 3 tiers or clear the region.`);
           return;
+        }
+      }
+
+      // Validate descriptions for active regions' packages
+      for (const pkg of packages) {
+        const regionEntries = grouped.get(pkg.region) ?? [];
+        if (regionEntries.length > 0) {
+          if (!pkg.description || !pkg.description.trim()) {
+            const regionLabel = REGION_META[pkg.region]?.label || pkg.region;
+            const tierLabel = PACKAGE_TIER_META[pkg.packageTier as keyof typeof PACKAGE_TIER_META]?.label || pkg.packageTier;
+            toast.error(`Description is required for ${regionLabel} - ${tierLabel} package.`);
+            setActiveRegion(pkg.region);
+            return;
+          }
         }
       }
     }
