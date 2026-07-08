@@ -17,6 +17,7 @@ import {
   type Region,
 } from '@/constants/regions';
 import type { CourseFormValues, CourseSubmitInput, PackageFormValues } from './CourseForm.types';
+import TiptapEditor from '@/lib/TiptapEditor';
 
 const emptyPackage = (
   region: Region,
@@ -253,20 +254,20 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
     : REGION_META[activeRegion].currency;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-surface border border-border w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden animate-scale-in">
-        <div className="p-6 border-b border-border flex items-center justify-between">
+    <div className="absolute inset-0 -m-4 md:-m-8 bg-bg/95 backdrop-blur-md z-30 flex flex-col animate-fade-in">
+      <div className="flex-1 bg-surface border-l border-border w-full flex flex-col overflow-hidden">
+        <div className="p-6 border-b border-border flex items-center justify-between bg-surface-dark/50 sticky top-0 backdrop-blur-md z-10">
           <h3 className="font-display font-bold text-lg text-text">
             {isEditMode ? 'Edit Course Program' : 'Create New Course'}
           </h3>
-          <button onClick={onClose} className="p-1 rounded border border-border text-text-secondary hover:text-gold">
+          <button onClick={onClose} className="p-1.5 rounded border border-border text-text-secondary hover:text-gold cursor-pointer" type="button">
             <X size={18} />
           </button>
         </div>
 
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(submit)}>
-            <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+          <form onSubmit={handleSubmit(submit)} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+            <div className="flex-1 p-6 space-y-6 overflow-y-auto scrollbar-hide">
               {/* Basic Info */}
               <div className="space-y-4">
                 {/* Course Category Selector Toggle */}
@@ -309,11 +310,14 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
                   <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
                     Description *
                   </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Provide a detailed overview of the syllabus and target audience..."
-                    {...register('description', { required: 'Description is required.' })}
-                    className="w-full bg-bg border border-border rounded-xl p-3 text-sm text-text focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold placeholder:text-text-secondary/40"
+                  <TiptapEditor
+                    value={watch("description")}
+                    onChange={(value) =>
+                      setValue("description", value, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      })
+                    }
                   />
                   {errors.description?.message && (
                     <span className="text-xs text-red-500">{errors.description.message}</span>
@@ -387,11 +391,10 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
                         key={region}
                         type="button"
                         onClick={() => setActiveRegion(region)}
-                        className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-t-lg text-xs font-semibold border-b-2 transition-all cursor-pointer ${
-                          activeRegion === region
-                            ? 'border-gold text-gold'
-                            : 'border-transparent text-text-secondary hover:text-text'
-                        }`}
+                        className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-t-lg text-xs font-semibold border-b-2 transition-all cursor-pointer ${activeRegion === region
+                          ? 'border-gold text-gold'
+                          : 'border-transparent text-text-secondary hover:text-text'
+                          }`}
                       >
                         {REGION_META[region].label}
                         {configured && <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />}
@@ -481,7 +484,7 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
               </div>
             </div>
 
-            <div className="p-6 border-t border-border flex items-center justify-end gap-3 bg-surface-light/25">
+            <div className="p-6 border-t border-border flex items-center justify-end gap-3 bg-surface-dark/50 sticky bottom-0 backdrop-blur-md z-10 mr-15">
               <Button type="button" variant="outline" size="sm" onClick={onClose}>
                 Cancel
               </Button>

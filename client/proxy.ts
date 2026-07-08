@@ -7,8 +7,6 @@ function decodeJwt(token: string): any {
     if (parts.length !== 3) return null;
     const base64Url = parts[1];
     let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    // Restore base64 padding — JWT segments are unpadded and some base64 decoders
-    // (unlike browser atob) require length to be a multiple of 4.
     while (base64.length % 4 !== 0) {
       base64 += '=';
     }
@@ -20,49 +18,47 @@ function decodeJwt(token: string): any {
     );
     return JSON.parse(jsonPayload);
   } catch (err) {
-    console.error('[proxy] Failed to decode JWT:', err);
     return null;
   }
 }
 
-// Admin routes reachable without an active session
-const PUBLIC_ADMIN_PATHS = [
-  '/admin/login',
-  '/admin/register',
-  '/admin/forgot-password',
-  '/admin/reset-password',
-];
-
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect all /admin routes except the public auth-adjacent ones
-  if (pathname.startsWith('/admin') && !PUBLIC_ADMIN_PATHS.includes(pathname)) {
-    const token = request.cookies.get('token')?.value;
+  // Protect all /admin routes matched by the config (excludes login, register, etc.)
+  const token = request.cookies.get('token')?.value;
 
-    if (!token) {
-      const loginUrl = new URL('/admin/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  if (!token) {
+    const loginUrl = new URL('/admin/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
 
-    const payload = decodeJwt(token);
+  const payload = decodeJwt(token);
 
-    if (!payload || payload.role !== 'ADMIN') {
-      const loginUrl = new URL('/admin/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      loginUrl.searchParams.set('error', 'unauthorized');
+  if (!payload || payload.role !== 'ADMIN') {
+    const loginUrl = new URL('/admin/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    loginUrl.searchParams.set('error', 'unauthorized');
 
-      const response = NextResponse.redirect(loginUrl);
-      // Clear token since it is invalid or unauthorized
-      response.cookies.delete('token');
-      return response;
-    }
+    const response = NextResponse.redirect(loginUrl);
+    // Clear token since it is invalid or unauthorized
+    response.cookies.delete('token');
+    return response;
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: [
+    /*
+     * Match all admin routes except the public ones:
+     * - /admin/login
+     * - /admin/register
+     * - /admin/forgot-password
+     * - /admin/reset-password
+     */
+    '/admin/((?!login|register|forgot-password|reset-password).*)',
+  ],
 };

@@ -35,6 +35,13 @@ export function PackageDetailsModal({ pkg, isOpen, isSelected, onClose, onSelect
   if (!isOpen || !pkg) return null;
   if (!mounted) return null;
 
+  const formatDescription = (description: string) => {
+    if (!description) return '';
+    const hasHtml = /<[a-z][\s\S]*>/i.test(description);
+    if (hasHtml) return description;
+    return description.replace(/\n/g, '<br />');
+  };
+
   const tierMeta = PACKAGE_TIER_META[pkg.packageTier as keyof typeof PACKAGE_TIER_META];
 
   return createPortal(
@@ -71,9 +78,10 @@ export function PackageDetailsModal({ pkg, isOpen, isSelected, onClose, onSelect
             <h3 className="text-lg sm:text-xl font-bold font-display text-text mt-1">{pkg.title}</h3>
           </div>
 
-          <p className="text-xs sm:text-sm text-text-secondary leading-relaxed whitespace-pre-line">
-            {pkg.description}
-          </p>
+          <div
+            className="text-sm text-text-secondary leading-relaxed tiptap"
+            dangerouslySetInnerHTML={{ __html: formatDescription(pkg.description) }}
+          />
 
           <div className="flex items-center justify-between gap-3 pt-4 border-t border-border">
             <span className="text-xl sm:text-2xl font-bold text-text">
@@ -82,11 +90,10 @@ export function PackageDetailsModal({ pkg, isOpen, isSelected, onClose, onSelect
             <button
               type="button"
               onClick={onSelect}
-              className={`flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0 ${
-                isSelected
+              className={`flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0 ${isSelected
                   ? 'bg-gold/10 border border-gold text-gold'
                   : 'bg-gold text-primary-dark hover:bg-gold-light'
-              }`}
+                }`}
             >
               {isSelected && <Check size={16} />}
               {isSelected ? 'Selected' : 'Select This Package'}

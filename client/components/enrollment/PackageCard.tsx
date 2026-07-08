@@ -27,6 +27,10 @@ interface PackageCardProps {
 export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: PackageCardProps) {
   const tierMeta = PACKAGE_TIER_META[pkg.packageTier as keyof typeof PACKAGE_TIER_META];
 
+  const stripHtml = (html: string) => {
+    return html ? html.replace(/<[^>]*>/g, '') : '';
+  };
+
   return (
     <div
       role="button"
@@ -38,9 +42,9 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
           onSelect();
         }
       }}
-      className={`relative flex flex-col text-left rounded-2xl border p-4 gap-3 transition-all cursor-pointer ${isSelected
-        ? 'border-gold bg-gold/5 shadow-md shadow-gold/10'
-        : 'border-border bg-bg hover:border-gold/40'
+      className={`group flex flex-col p-4 rounded-2xl border transition-all duration-300 relative text-left h-[300px] cursor-pointer ${isSelected
+        ? 'bg-surface border-gold shadow-[0_0_20px_rgba(197,168,128,0.06)]'
+        : 'bg-surface/50 border-border hover:bg-surface hover:border-border/85'
         }`}
     >
       {isSelected && (
@@ -64,7 +68,7 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
           {tierMeta?.label ?? pkg.packageTier}
         </span>
         <h4 className="text-sm font-bold text-text">{pkg.title}</h4>
-        <p className="text-xs text-text-secondary line-clamp-2">{pkg.description}</p>
+        <p className="text-xs text-text-secondary line-clamp-2">{stripHtml(pkg.description)}</p>
       </div>
 
 

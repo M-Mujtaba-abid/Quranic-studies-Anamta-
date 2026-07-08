@@ -24,7 +24,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import Image from 'next/image';
-
+import TiptapEditor from '@/lib/TiptapEditor';
 export default function AdminCoursesPage() {
   // Query all courses
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES, {
@@ -180,7 +180,7 @@ export default function AdminCoursesPage() {
   console.log("courses me ye arha he ", courses)
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 relative min-h-[80vh]">
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface border border-border p-6 rounded-2xl shadow-sm">
         <div>
