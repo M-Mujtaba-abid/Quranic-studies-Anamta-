@@ -109,7 +109,7 @@ export default function SponsorAStudentPage() {
 
       <div className="max-w-5xl mx-auto px-6 lg:px-10 mt-8 space-y-8 relative z-10">
         <div className="max-w-xl mx-auto text-center space-y-2">
-          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[10px] font-bold uppercase tracking-wider">
+          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[20px] font-bold uppercase tracking-wider">
             Sponsor a Student
           </span>
           <h1 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-text">
@@ -117,6 +117,9 @@ export default function SponsorAStudentPage() {
           </h1>
           <p className="text-text-secondary text-sm md:text-base">
             Your Lillah, Sadaqah, or Zakat helps cover tuition for students who cannot afford it. Transfer your donation and submit the receipt below.
+          </p>
+          <p className="text-text-secondary text-sm md:text-base">
+            Anamta's visions is to provide best Islamic & specially Quranic Education to every soul seeking knowledge but many of them cannot cover tuition fee because of financial instability......
           </p>
         </div>
 

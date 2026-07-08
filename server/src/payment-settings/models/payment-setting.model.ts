@@ -21,7 +21,13 @@ export class PaymentSetting {
   jazzCashNumber!: string;
 
   @Field()
+  jazzCashTitle!: string;
+
+  @Field()
   easyPaisaNumber!: string;
+
+  @Field()
+  easyPaisaTitle!: string;
 
   @Field()
   instructions!: string;

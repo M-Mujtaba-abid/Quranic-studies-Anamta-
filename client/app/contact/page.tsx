@@ -79,7 +79,7 @@ export default function ContactPage() {
       <main className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 pt-16">
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[10px] font-bold uppercase tracking-wider">
+          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[20px] font-bold uppercase tracking-wider">
             Get In Touch
           </span>
           <h1 className="text-4xl font-bold font-display tracking-tight text-text">
@@ -119,7 +119,8 @@ export default function ContactPage() {
                     <Phone size={18} />
                   </div>
                   <div>
-                    <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">WHATSAPP MESSAGE & CALLS ONLY</h4>
+                    <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">                    <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">WHATSAPP MESSAGE & CALLS ONLY</h4>
+                    </h4>
                     <a href="https://wa.me/923001234567" target="_blank" rel="noreferrer" className="text-sm text-text hover:text-gold transition-colors font-medium mt-1 block">
                       +92 333 0493239
                     </a>
@@ -147,7 +148,7 @@ export default function ContactPage() {
                   <div>
                     <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Availability</h4>
                     <p className="text-sm text-text font-medium mt-1">
-                      Monday – Saturday (8:00 AM – 10:00 PM PKT)
+                      24/7
                     </p>
                   </div>
                 </div>
@@ -157,7 +158,7 @@ export default function ContactPage() {
             {/* Quick Note glass box */}
             <div className="glass p-6 rounded-2xl border border-gold/20 flex gap-4 items-start">
               <div className="text-gold flex-shrink-0 mt-0.5">
-                <Sparkles size={18} />
+                {/* <Sparkles size={18} /> */}
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
                 <strong>For Registered Students:</strong> If you are seeking immediate schedules re-coordination, please mention your Enrollment ID in the message subject to expedite your request.

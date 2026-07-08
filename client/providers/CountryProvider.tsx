@@ -169,7 +169,7 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
                 onClick={proceedAsPakistanGroup}
                 className="flex-1 py-2.5 px-4 rounded-xl bg-gold text-primary-dark text-xs font-semibold hover:bg-gold-light transition-all cursor-pointer"
               >
-                Proceed as Pakistan Student
+                Proceed as Pakistani Student
               </button>
             </div>
           </div>

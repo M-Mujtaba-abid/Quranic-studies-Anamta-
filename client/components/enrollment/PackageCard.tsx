@@ -39,8 +39,8 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
         }
       }}
       className={`relative flex flex-col text-left rounded-2xl border p-4 gap-3 transition-all cursor-pointer ${isSelected
-          ? 'border-gold bg-gold/5 shadow-md shadow-gold/10'
-          : 'border-border bg-bg hover:border-gold/40'
+        ? 'border-gold bg-gold/5 shadow-md shadow-gold/10'
+        : 'border-border bg-bg hover:border-gold/40'
         }`}
     >
       {isSelected && (
@@ -77,9 +77,9 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
           e.stopPropagation();
           onViewDetails();
         }}
-        className="self-start flex items-center gap-1 text-[11px] font-semibold text-text-secondary hover:text-gold transition-colors cursor-pointer"
+        className="w-full mt-2 py-2 px-4 rounded-xl border border-gold/30 hover:border-gold text-gold hover:bg-gold/5 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-300 cursor-pointer"
       >
-        <Info size={12} />
+        {/* <Info size={13} /> */}
         View Details
       </button>
 

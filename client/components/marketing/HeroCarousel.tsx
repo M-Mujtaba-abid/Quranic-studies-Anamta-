@@ -149,7 +149,7 @@ export default function HeroCarousel() {
       <div className="relative z-10 flex h-full flex-col">
         <AyatRotator />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-5 pt-6 sm:justify-center sm:px-6 lg:px-12">
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-start pt-1.5 sm:justify-center sm:pt-6 px-5 sm:px-6 lg:px-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={active.id}
@@ -224,7 +224,7 @@ export default function HeroCarousel() {
                     onClick={openTrialModal}
                     className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-3 py-2 text-center text-xs font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 sm:text-sm cursor-pointer"
                   >
-                    Book a free trial class
+                    Book a Free Trial Class
                   </button>
                 </div>
                 {/* <Link

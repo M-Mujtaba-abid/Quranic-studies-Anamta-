@@ -152,7 +152,9 @@ model PaymentSetting {
   accountNumber   String
   iban            String
   jazzCashNumber  String
+  jazzCashTitle   String   @default("")
   easyPaisaNumber String
+  easyPaisaTitle  String   @default("")
   instructions    String
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())

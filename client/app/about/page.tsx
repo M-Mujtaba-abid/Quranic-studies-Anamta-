@@ -284,7 +284,7 @@ function FounderStory() {
           className="space-y-6 pt-8 lg:pt-0"
         >
           <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold">
-            <Sparkles size={12} />
+            {/* <Sparkles size={12} /> */}
             Meet the Founder
           </span>
 
@@ -370,7 +370,7 @@ function LeaderStory() {
           className="space-y-6 pt-8 lg:pt-0"
         >
           <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-gold">
-            <Sparkles size={12} />
+            {/* <Sparkles size={12} /> */}
             Meet our Team Leader
           </span>
 
@@ -495,7 +495,7 @@ export default function AboutUs() {
           transition={{ duration: 0.6 }}
           className="relative z-10 max-w-4xl mx-auto text-center space-y-6"
         >
-          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[10px] font-bold uppercase tracking-wider">
+          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[20px] font-bold uppercase tracking-wider">
             Our Noble Mission
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold font-display tracking-tight leading-tight">

@@ -10,7 +10,9 @@ interface PaymentSetting {
   accountNumber?: string | null;
   iban?: string | null;
   jazzCashNumber?: string | null;
+  jazzCashTitle?: string | null;
   easyPaisaNumber?: string | null;
+  easyPaisaTitle?: string | null;
   instructions?: string | null;
 }
 
@@ -74,12 +76,15 @@ export function BankDetailsCard({ paymentSetting, loading }: BankDetailsCardProp
         {(paymentSetting.easyPaisaNumber || paymentSetting.jazzCashNumber) && (
           <div className="bg-bg/50 border border-border/40 p-3.5 rounded-xl space-y-2">
             <span className="font-semibold text-text uppercase tracking-wider text-[10px] text-gold">Mobile Wallets</span>
-            <div className="space-y-2 text-text-secondary text-[11px]">
+            <div className="space-y-2 text-text-secondary text-[15px]">
               {paymentSetting.easyPaisaNumber && (
                 <div className="flex items-center justify-between border-b border-border/20 pb-1.5">
                   <div>
                     <span className="block font-medium text-text">EasyPaisa</span>
-                    <span>{paymentSetting.easyPaisaNumber}</span>
+                    {paymentSetting.easyPaisaTitle && (
+                      <span className="block text-[12px] text-text-secondary/80 mt-0.5">Title: {paymentSetting.easyPaisaTitle}</span>
+                    )}
+                    <span>No: {paymentSetting.easyPaisaNumber}</span>
                   </div>
                   <button
                     onClick={() => handleCopy(paymentSetting.easyPaisaNumber || '', 'easypaisa')}
@@ -93,7 +98,10 @@ export function BankDetailsCard({ paymentSetting, loading }: BankDetailsCardProp
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="block font-medium text-text">JazzCash</span>
-                    <span>{paymentSetting.jazzCashNumber}</span>
+                    {paymentSetting.jazzCashTitle && (
+                      <span className="block text-[12px] text-text-secondary/80 mt-0.5">Title: {paymentSetting.jazzCashTitle}</span>
+                    )}
+                    <span>No: {paymentSetting.jazzCashNumber}</span>
                   </div>
                   <button
                     onClick={() => handleCopy(paymentSetting.jazzCashNumber || '', 'jazzcash')}

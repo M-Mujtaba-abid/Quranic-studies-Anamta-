@@ -9,7 +9,9 @@ export const GET_ACTIVE_PAYMENT_SETTING = gql`
       accountNumber
       iban
       jazzCashNumber
+      jazzCashTitle
       easyPaisaNumber
+      easyPaisaTitle
       instructions
       isActive
     }
@@ -25,7 +27,9 @@ export const GET_ALL_PAYMENT_SETTINGS = gql`
       accountNumber
       iban
       jazzCashNumber
+      jazzCashTitle
       easyPaisaNumber
+      easyPaisaTitle
       instructions
       isActive
     }

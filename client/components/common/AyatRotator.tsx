@@ -26,9 +26,87 @@ const getHijriDate = () => {
       month: 'long',
       year: 'numeric'
     });
-    return formatter.format(new Date()); 
+    let result = formatter.format(new Date()); 
+
+    // Hybrid fallback correction:
+    // If the browser lacks full ICU support, it might fallback to Gregorian month names 
+    // (January-December) and era names (like BC or AD) instead of Islamic ones.
+    const gregorianMonths = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const hijriMonths = [
+      'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
+      'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban",
+      'Ramadan', 'Shawwal', 'Dhu al-Qadah', 'Dhu al-Hijjah'
+    ];
+
+    let replaced = false;
+    for (let i = 0; i < 12; i++) {
+      const regex = new RegExp(gregorianMonths[i], 'i');
+      if (regex.test(result)) {
+        result = result.replace(regex, hijriMonths[i]);
+        replaced = true;
+        break;
+      }
+    }
+
+    // Clean up BC/AD era markers and force AH if a fallback occurred
+    if (replaced || /\b(BC|AD|CE|BCE)\b/i.test(result)) {
+      result = result.replace(/\b(BC|AD|CE|BCE)\b/gi, 'AH');
+      if (!result.includes('AH') && !result.includes('ah')) {
+        result += ' AH';
+      }
+    }
+
+    return result;
   } catch (error) {
-    return new Date().toLocaleDateString();
+    // If formatting fails entirely, perform a simple manual calculation
+    try {
+      const date = new Date();
+      let gY = date.getFullYear();
+      let gM = date.getMonth();
+      let gD = date.getDate();
+      if (gM < 2) {
+        gY -= 1;
+        gM += 12;
+      }
+      const a = Math.floor(gY / 100);
+      const b = 2 - a + Math.floor(a / 4);
+      const jd = Math.floor(365.25 * (gY + 4716)) + Math.floor(30.6001 * (gM + 2)) + gD + b - 1524;
+      const relativeDays = jd - 1948440 + 1;
+      const cycle = 10631;
+      const cycleYears = 30;
+      const cyclesCount = Math.floor(relativeDays / cycle);
+      let remainingDays = relativeDays % cycle;
+      const leapYears = [false, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, true, false, true, false, false, true, false, false, true, false, true, false, false, true];
+      let hY = cyclesCount * cycleYears;
+      for (let year = 0; year < 30; year++) {
+        const yearDays = leapYears[year] ? 355 : 354;
+        if (remainingDays < yearDays) break;
+        remainingDays -= yearDays;
+        hY++;
+      }
+      hY += 1;
+      const monthDays = [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29];
+      let hM = 0;
+      for (let m = 0; m < 12; m++) {
+        let daysInMonth = monthDays[m];
+        if (m === 11 && leapYears[(hY - 1) % 30]) daysInMonth = 30;
+        if (remainingDays < daysInMonth) break;
+        remainingDays -= daysInMonth;
+        hM++;
+      }
+      const hD = Math.floor(remainingDays) + 1;
+      const hijriMonths = [
+        'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
+        'Jumada al-Awwal', 'Jumada al-Thani', 'Rajab', "Sha'ban",
+        'Ramadan', 'Shawwal', 'Dhu al-Qadah', 'Dhu al-Hijjah'
+      ];
+      return `${hijriMonths[hM]} ${hD}, ${hY} AH`;
+    } catch (e) {
+      return 'Muharram 23, 1448 AH'; // absolute fallback
+    }
   }
 };
 
