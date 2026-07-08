@@ -23,8 +23,8 @@ function CoursesDirectoryContent() {
     return html ? html.replace(/<[^>]*>/g, '') : '';
   };
 
-  const { country, openCountryModal, openGroupAlertModal } = useCountrySelection();
-  const { country, setCountry, openCountryModal } = useCountrySelection();
+  // const { country, openCountryModal, openGroupAlertModal } = useCountrySelection();
+  const { country, setCountry, openCountryModal,openGroupAlertModal } = useCountrySelection();
 
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES_WITH_PRICING, {
     variables: { country: country?.name },
