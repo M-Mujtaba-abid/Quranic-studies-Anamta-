@@ -24,7 +24,6 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import Image from 'next/image';
-import { clonePageVaryPathWithNewSearchParams } from 'next/dist/client/components/segment-cache/vary-path';
 
 export default function AdminCoursesPage() {
   // Query all courses

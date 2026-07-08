@@ -1,5 +1,5 @@
 import { Field, Float, InputType } from '@nestjs/graphql';
-import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString, Min, IsOptional } from 'class-validator';
 import { Region, PackageTier } from '@prisma/client';
 
 @InputType()
@@ -17,10 +17,10 @@ export class CreateCoursePackageInput {
   @IsEnum(PackageTier, { message: 'A valid package tier is required.' })
   packageTier!: PackageTier;
 
-  @Field()
-  @IsNotEmpty({ message: 'Package title is required.' })
+  @Field({ nullable: true })
+  @IsOptional()
   @IsString()
-  title!: string;
+  title?: string;
 
   @Field()
   @IsNotEmpty({ message: 'Package description is required.' })

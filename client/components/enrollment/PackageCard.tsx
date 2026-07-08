@@ -11,7 +11,7 @@ export interface CoursePackageOption {
   region: string;
   currency: string;
   packageTier: 'BASIC' | 'INTENSIVE' | 'PREMIUM' | 'CUSTOM' | 'NONE';
-  title: string;
+  title?: string | null;
   description: string;
   imageUrl: string;
   price: number;
@@ -51,7 +51,7 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
 
       <div className="relative h-28 w-full rounded-xl overflow-hidden bg-surface border border-border">
         {pkg.imageUrl ? (
-          <Image src={pkg.imageUrl} alt={pkg.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+          <Image src={pkg.imageUrl} alt={pkg.title || ''} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
         ) : (
           <div className="h-full w-full flex items-center justify-center text-text-secondary/40 text-xs">
             No image

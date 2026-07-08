@@ -44,7 +44,7 @@ export function PackageDetailsModal({ pkg, isOpen, isSelected, onClose, onSelect
           {pkg.imageUrl ? (
             <Image
               src={pkg.imageUrl}
-              alt={pkg.title}
+              alt={pkg.title || ''}
               fill
               className="object-cover"
               sizes="(max-width: 640px) 100vw, 512px"
