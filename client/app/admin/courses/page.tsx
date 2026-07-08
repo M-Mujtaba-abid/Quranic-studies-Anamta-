@@ -24,6 +24,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import Image from 'next/image';
+import { clonePageVaryPathWithNewSearchParams } from 'next/dist/client/components/segment-cache/vary-path';
 
 export default function AdminCoursesPage() {
   // Query all courses
@@ -177,6 +178,7 @@ export default function AdminCoursesPage() {
   }
 
   const courses = data?.courses || [];
+  console.log("courses me ye arha he ", courses)
 
   return (
     <div className="space-y-6 pb-12">
@@ -211,6 +213,7 @@ export default function AdminCoursesPage() {
                 <tr className="bg-surface-light/45 text-text-secondary font-medium border-b border-border">
                   <th className="p-4 pl-6">Thumbnail</th>
                   <th className="p-4">Title & Description</th>
+                  <th className="p-4">Class Type</th>
                   <th className="p-4">Local Price (PKR)</th>
                   <th className="p-4">Regions Priced</th>
                   <th className="p-4 text-center">Status</th>
@@ -247,6 +250,10 @@ export default function AdminCoursesPage() {
                       <td className="p-4 max-w-sm">
                         <div className="font-bold text-text text-sm truncate">{course.title}</div>
                         <div className="text-xs text-text-secondary line-clamp-1 mt-0.5">{course.description}</div>
+                      </td>
+                      {/* class type  */}
+                      <td className="p-4 font-bold text-gold">
+                        <span className="text-xs text-text-secondary">{course.category}</span>
                       </td>
                       <td className="p-4 font-bold text-gold">
                         {localPackage ? `PKR ${localPackage.price}` : (
