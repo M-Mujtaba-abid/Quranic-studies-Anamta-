@@ -248,7 +248,9 @@ export default function AdminCoursesPage() {
                       </td>
                       <td className="p-4 max-w-sm">
                         <div className="font-bold text-text text-sm truncate">{course.title}</div>
-                        <div className="text-xs text-text-secondary line-clamp-1 mt-0.5">{course.description}</div>
+                        <div className="text-xs text-text-secondary line-clamp-1 mt-0.5">
+                          {course.description?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()}
+                        </div>
                       </td>
                       {/* class type  */}
                       <td className="p-4 font-bold text-gold">
