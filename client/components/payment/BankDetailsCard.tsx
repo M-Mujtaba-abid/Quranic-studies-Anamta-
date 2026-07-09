@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Check, Copy } from 'lucide-react';
+import { Check, Copy, Building2, Smartphone } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface PaymentSetting {
@@ -43,72 +43,135 @@ export function BankDetailsCard({ paymentSetting, loading }: BankDetailsCardProp
   }
 
   return (
-    <div className="space-y-4 text-xs">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+
+        {/* ── Bank Account ── */}
         {(paymentSetting.bankName || paymentSetting.accountNumber) && (
-          <div className="bg-bg/50 border border-border/40 p-3.5 rounded-xl space-y-2 relative">
-            <span className="font-semibold text-text uppercase tracking-wider text-[10px] text-gold">Bank Account</span>
-            <div className="space-y-1 text-text-secondary text-[11px]">
-              <p><span className="font-medium text-text">Bank:</span> {paymentSetting.bankName}</p>
-              <p><span className="font-medium text-text">Title:</span> {paymentSetting.accountTitle}</p>
-              <div className="flex items-center gap-1.5">
-                <span><span className="font-medium text-text">A/C:</span> {paymentSetting.accountNumber}</span>
-                <button
-                  onClick={() => handleCopy(paymentSetting.accountNumber || '', 'acct')}
-                  className="hover:text-gold transition-colors cursor-pointer"
-                >
-                  {copiedField === 'acct' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
-                </button>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span><span className="font-medium text-text">IBAN:</span> {paymentSetting.iban}</span>
-                <button
-                  onClick={() => handleCopy(paymentSetting.iban || '', 'iban')}
-                  className="hover:text-gold transition-colors cursor-pointer"
-                >
-                  {copiedField === 'iban' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
-                </button>
-              </div>
+          <div className="bg-bg/60 border border-border/50 rounded-2xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border/40 bg-gold/5">
+              <Building2 size={12} className="text-gold shrink-0" />
+              <span className="font-semibold text-gold uppercase tracking-widest text-[10px]">Bank Account</span>
+            </div>
+
+            {/* Rows — label fixed width, value takes remaining space, no wrap */}
+            <div className="divide-y divide-border/30">
+              {paymentSetting.bankName && (
+                <div className="flex items-center px-4 py-2.5 gap-2">
+                  <span className="text-[10px] text-text-secondary shrink-0 w-14">Bank</span>
+                  <span className="text-[11px] font-medium text-text truncate">{paymentSetting.bankName}</span>
+                </div>
+              )}
+
+              {paymentSetting.accountTitle && (
+                <div className="flex items-center px-4 py-2.5 gap-2">
+                  <span className="text-[10px] text-text-secondary shrink-0 w-14">Name</span>
+                  <span className="text-[11px] font-medium text-text truncate">{paymentSetting.accountTitle}</span>
+                </div>
+              )}
+
+              {paymentSetting.accountNumber && (
+                <div className="flex items-center px-4 py-2.5 gap-2">
+                  <span className="text-[10px] text-text-secondary shrink-0 w-14">A/C No.</span>
+                  <span className="text-[11px] font-mono font-semibold text-text tracking-wide flex-1 min-w-0 truncate">{paymentSetting.accountNumber}</span>
+                  <button
+                    onClick={() => handleCopy(paymentSetting.accountNumber || '', 'acct')}
+                    className="p-1 rounded-md hover:bg-gold/10 hover:text-gold transition-all cursor-pointer text-text-secondary shrink-0"
+                  >
+                    {copiedField === 'acct' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
+                  </button>
+                </div>
+              )}
+
+              {paymentSetting.iban && (
+                <div className="flex items-center px-4 py-2.5 gap-2">
+                  <span className="text-[10px] text-text-secondary shrink-0 w-14">IBAN</span>
+                  <span className="text-[10px] font-mono font-semibold text-text tracking-wide flex-1 min-w-0 truncate">{paymentSetting.iban}</span>
+                  <button
+                    onClick={() => handleCopy(paymentSetting.iban || '', 'iban')}
+                    className="p-1 rounded-md hover:bg-gold/10 hover:text-gold transition-all cursor-pointer text-text-secondary shrink-0"
+                  >
+                    {copiedField === 'iban' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
+                  </button>
+                </div>
+              )}
+
+              {/* Swift Code — hardcoded, shown only when IBAN is present */}
+              {paymentSetting.iban && (
+                <div className="flex items-center px-4 py-2.5 gap-2">
+                  <span className="text-[10px] text-text-secondary shrink-0 w-14">Swift</span>
+                  <span className="text-[10px] font-mono font-semibold text-text tracking-wide flex-1 min-w-0 truncate">MEZNPKKA</span>
+                  <button
+                    onClick={() => handleCopy('MEZNPKKA', 'swift')}
+                    className="p-1 rounded-md hover:bg-gold/10 hover:text-gold transition-all cursor-pointer text-text-secondary shrink-0"
+                  >
+                    {copiedField === 'swift' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
+                  </button>
+                </div>
+              )}
+
             </div>
           </div>
         )}
 
+        {/* ── Mobile Wallets ── */}
         {(paymentSetting.easyPaisaNumber || paymentSetting.jazzCashNumber) && (
-          <div className="bg-bg/50 border border-border/40 p-3.5 rounded-xl space-y-2">
-            <span className="font-semibold text-text uppercase tracking-wider text-[10px] text-gold">Mobile Wallets</span>
-            <div className="space-y-2 text-text-secondary text-[15px]">
+          <div className="bg-bg/60 border border-border/50 rounded-2xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border/40 bg-gold/5">
+              <Smartphone size={12} className="text-gold shrink-0" />
+              <span className="font-semibold text-gold uppercase tracking-widest text-[10px]">Mobile Wallets</span>
+            </div>
+
+            <div className="divide-y divide-border/30">
+              {/* EasyPaisa */}
               {paymentSetting.easyPaisaNumber && (
-                <div className="flex items-center justify-between border-b border-border/20 pb-1.5">
-                  <div>
-                    <span className="block font-medium text-text">EasyPaisa</span>
-                    {paymentSetting.easyPaisaTitle && (
-                      <span className="block text-[12px] text-text-secondary/80 mt-0.5">Title: {paymentSetting.easyPaisaTitle}</span>
-                    )}
-                    <span>No: {paymentSetting.easyPaisaNumber}</span>
+                <div className="px-4 py-2.5 space-y-1.5">
+                  <span className="text-[10px] font-semibold text-gold/80 uppercase tracking-wider">EasyPaisa</span>
+
+                  {paymentSetting.easyPaisaTitle && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-text-secondary shrink-0 w-14">Name</span>
+                      <span className="text-[11px] font-medium text-text truncate">{paymentSetting.easyPaisaTitle}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-text-secondary shrink-0 w-14">Number</span>
+                    <span className="text-[11px] font-mono font-semibold text-text tracking-wide flex-1 min-w-0 truncate">{paymentSetting.easyPaisaNumber}</span>
+                    <button
+                      onClick={() => handleCopy(paymentSetting.easyPaisaNumber || '', 'easypaisa')}
+                      className="p-1 rounded-md hover:bg-gold/10 hover:text-gold transition-all cursor-pointer text-text-secondary shrink-0"
+                    >
+                      {copiedField === 'easypaisa' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleCopy(paymentSetting.easyPaisaNumber || '', 'easypaisa')}
-                    className="p-1 hover:text-gold transition-colors cursor-pointer"
-                  >
-                    {copiedField === 'easypaisa' ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
-                  </button>
                 </div>
               )}
+
+              {/* JazzCash */}
               {paymentSetting.jazzCashNumber && (
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="block font-medium text-text">JazzCash</span>
-                    {paymentSetting.jazzCashTitle && (
-                      <span className="block text-[12px] text-text-secondary/80 mt-0.5">Title: {paymentSetting.jazzCashTitle}</span>
-                    )}
-                    <span>No: {paymentSetting.jazzCashNumber}</span>
+                <div className="px-4 py-2.5 space-y-1.5">
+                  <span className="text-[10px] font-semibold text-gold/80 uppercase tracking-wider">JazzCash</span>
+
+                  {paymentSetting.jazzCashTitle && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-text-secondary shrink-0 w-14">Name</span>
+                      <span className="text-[11px] font-medium text-text truncate">{paymentSetting.jazzCashTitle}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-text-secondary shrink-0 w-14">Number</span>
+                    <span className="text-[11px] font-mono font-semibold text-text tracking-wide flex-1 min-w-0 truncate">{paymentSetting.jazzCashNumber}</span>
+                    <button
+                      onClick={() => handleCopy(paymentSetting.jazzCashNumber || '', 'jazzcash')}
+                      className="p-1 rounded-md hover:bg-gold/10 hover:text-gold transition-all cursor-pointer text-text-secondary shrink-0"
+                    >
+                      {copiedField === 'jazzcash' ? <Check size={11} className="text-emerald-500" /> : <Copy size={11} />}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleCopy(paymentSetting.jazzCashNumber || '', 'jazzcash')}
-                    className="p-1 hover:text-gold transition-colors cursor-pointer"
-                  >
-                    {copiedField === 'jazzcash' ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
-                  </button>
                 </div>
               )}
             </div>
@@ -117,11 +180,14 @@ export function BankDetailsCard({ paymentSetting, loading }: BankDetailsCardProp
       </div>
 
       {paymentSetting.instructions && (
-        <div className="bg-primary/5 border border-primary/10 p-3 rounded-xl">
-          <span className="block font-semibold text-text text-[10px] uppercase tracking-wider mb-1">Instructions:</span>
+        <div className="bg-primary/5 border border-primary/10 p-4 rounded-2xl">
+          <span className="block font-semibold text-text text-[10px] uppercase tracking-widest mb-2">Instructions</span>
           <p className="text-[11px] leading-relaxed text-text-secondary whitespace-pre-wrap">{paymentSetting.instructions}</p>
         </div>
       )}
+
+      <div className="w-full h-[1px] bg-border"></div>
+      <p className="text-[14px] font-mono font-semibold text-emerald-500 text-center tracking-wide flex-1 min-w-0 truncate">Verified Account <span className="">✓</span></p>
     </div>
   );
 }

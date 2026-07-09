@@ -107,30 +107,35 @@ export default function SponsorAStudentPage() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-[30vh] left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto px-6 lg:px-10 mt-8 space-y-8 relative z-10">
-        <div className="max-w-xl mx-auto text-center space-y-2">
-          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[20px] font-bold uppercase tracking-wider">
-            Sponsor a Student
-          </span>
-          <h1 className="text-3xl md:text-4xl font-bold font-display tracking-tight text-text">
-            Sponsor a Student
-          </h1>
-          <p className="text-text-secondary text-sm md:text-base">
+      <div className="max-w-4xl mx-auto px-6 lg:px-10 mt-8 space-y-8 relative z-10">
+        {/* ── Intro Section ── */}
+        <div className="max-w-2xl mx-auto space-y-5">
+          {/* Badge */}
+          <div className="flex justify-center">
+            <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[20px] font-bold uppercase tracking-wider">
+              Sponsor a Student
+            </span>
+          </div>
+
+          {/* Tagline — centered, short so it looks good centered */}
+          <p className="text-text text-sm md:text-base font-semibold text-center leading-snug">
             Because No One Should Be Kept Away From the Quran by a Price Tag
           </p>
-          <p className="text-text-secondary text-sm md:text-base">
-            Anamta's vision is to make Quranic education accessible to every soul, regardless of where they come from or what they can afford. We believe the Quran belongs to everyone. Yet every day there are sincere hearts around us, students with genuine passion and real desire to learn, held back by nothing more than financial limitation. Your donation removes that barrier completely.
-          </p>
-          <p className="text-text-secondary text-sm md:text-base">
-            When you sponsor a student at Anamta Institute, every verse they memorize, every class they attend and every Surah they perfect carries a portion of your reward. This is your Sadaqah Jariyah breathing and growing long after you are gone. We accept Sadaqah Jariyah, Sadaqah Nafilah, Zakat and Fi Sabilillah contributions.
-          </p>
-          <p className="text-text-secondary text-sm md:text-base">
-            Your name may never be known to them, but Allah knows. And that is enough.
-          </p>
-          <p className="text-text-secondary text-sm md:text-base">
-            Sponsor a student today. Be the reason someone finds the Quran.
-          </p>
+
+          {/* Body paragraphs — left-aligned for readability */}
+          <div className="space-y-3 text-text-secondary text-sm md:text-[15px] leading-relaxed">
+            <p>
+              At Anamta Institute, we believe Quranic education should be accessible to everyone, regardless of their financial circumstances. Your support removes the barrier that prevents sincere students from learning the Quran.
+            </p>
+            <p>
+              By sponsoring a student, you earn ongoing rewards as they learn, memorize, and practice the Quran — making it a lasting <strong className="text-text">Sadaqah Jariyah</strong>. We gratefully accept <strong className="text-text">Sadaqah Jariyah, Sadaqah Nafilah, Zakat,</strong> and <strong className="text-text">Fi Sabilillah</strong> contributions.
+            </p>
+            <p>
+              <strong className="text-text">Sponsor a student today</strong> and help someone begin their journey with the Quran.
+            </p>
+          </div>
         </div>
+
 
         {donationSuccess ? (
           <div className="max-w-xl mx-auto relative z-10 space-y-6 rounded-2xl border border-border bg-surface p-8 text-left shadow-md animate-fade-in">

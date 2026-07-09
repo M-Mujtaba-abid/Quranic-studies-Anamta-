@@ -2,9 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { CreateCourseInput } from '../dto/create-course.input';
 import { UpdateCourseInput } from '../dto/update.course.input';
-import { Course, CoursePackage, Region } from '@prisma/client';
+import { Course, CoursePackage, Region, Prisma } from '@prisma/client';
 
-type CourseWithPackages = Course & { packages: CoursePackage[] };
+type CourseWithPackages = Prisma.CourseGetPayload<{ include: { packages: true } }>;
+
+/** Map a CreateCoursePackageInput array to the shape Prisma expects.
+ *  `title` is optional in both our DTO and the DB schema (String?), but the
+ *  generated Prisma client type sometimes infers it as required depending on
+ *  the client version. We build the object explicitly and cast to satisfy TS.
+ */
+function toPrismaPackages(
+  packages: CreateCourseInput['packages'],
+): Prisma.CoursePackageCreateWithoutCourseInput[] {
+  return packages.map((pkg) => {
+    const base = {
+      region: pkg.region,
+      currency: pkg.currency,
+      packageTier: pkg.packageTier,
+      description: pkg.description,
+      imageUrl: pkg.imageUrl,
+      price: pkg.price,
+      title: pkg.title ?? '',
+    } satisfies Prisma.CoursePackageCreateWithoutCourseInput;
+    return base;
+  });
+}
+
 
 @Injectable()
 export class CourseRepository {
@@ -17,7 +40,7 @@ export class CourseRepository {
       data: {
         ...courseData,
         packages: {
-          create: packages,
+          create: toPrismaPackages(packages),
         },
       },
       include: { packages: true },
@@ -54,7 +77,7 @@ export class CourseRepository {
       where: { id },
       data: {
         ...data,
-        ...(packages && { packages: { create: packages } }),
+        ...(packages && { packages: { create: toPrismaPackages(packages) } }),
       },
       include: { packages: true },
     });
