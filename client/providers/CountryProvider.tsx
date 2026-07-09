@@ -193,9 +193,10 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
                 <X size={16} />
               </button>
             </div>
-            <p className="text-sm text-text-secondary leading-relaxed">
-              Trial classes are only available for 1-1 classes, not for group classes.
+            <p className="text-sm text-gold leading-relaxed">
+              Trial classes are only available for 1-1 classes, <span className='font-bold'>not for group classes.</span>
             </p>
+
             <div className="space-y-3">
               <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
                 Select Your Country
