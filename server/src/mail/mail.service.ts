@@ -1,22 +1,40 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService implements OnModuleInit {
   private transporter: nodemailer.Transporter;
+  private readonly logger = new Logger(MailService.name);
 
   constructor(
     @Inject(ConfigService) private readonly configService: ConfigService,
   ) {}
 
   onModuleInit() {
+    const user = this.configService.get<string>('GMAIL_USER');
+    const pass = this.configService.get<string>('GMAIL_APP_PASSWORD');
+
+    if (!user || !pass) {
+      this.logger.error(
+        `Missing mail credentials in the environment — GMAIL_USER is ${user ? 'set' : 'MISSING'}, GMAIL_APP_PASSWORD is ${pass ? 'set' : 'MISSING'}. Emails will fail until both are set.`,
+      );
+    }
+
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
-      auth: {
-        user: this.configService.get<string>('GMAIL_USER'),
-        pass: this.configService.get<string>('GMAIL_APP_PASSWORD'),
-      },
+      auth: { user, pass },
+    });
+
+    // Verifies the SMTP connection/auth at startup so a bad app password or blocked
+    // connection shows up in the logs immediately, instead of only surfacing later as a
+    // swallowed .catch() on the first real email send.
+    this.transporter.verify((error) => {
+      if (error) {
+        this.logger.error('Gmail SMTP verification failed — emails will NOT be sent.', error);
+      } else {
+        this.logger.log('Gmail SMTP connection verified — ready to send emails.');
+      }
     });
   }
 
