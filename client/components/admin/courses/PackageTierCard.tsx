@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { ImageUploadField } from './ImageUploadField';
 import TiptapEditor from '@/lib/TiptapEditor';
@@ -22,11 +22,11 @@ export function PackageTierCard({ index, region, tier, tierLabel, tierBlurb, cur
     register,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useFormContext<CourseFormValues>();
 
   const imageUrl = watch(`packages.${index}.imageUrl`);
-  const packageDescription = watch(`packages.${index}.description`);
   const packageErrors = errors.packages?.[index];
 
   return (
@@ -56,14 +56,22 @@ export function PackageTierCard({ index, region, tier, tierLabel, tierBlurb, cur
         <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
           Description *
         </label>
-        <TiptapEditor
-          value={packageDescription || ''}
-          onChange={(value) =>
-            setValue(`packages.${index}.description`, value, {
-              shouldDirty: true,
-              shouldValidate: true,
-            })
-          }
+        <Controller
+          name={`packages.${index}.description`}
+          control={control}
+          rules={{
+            required: 'Description is required.',
+            validate: (value) => {
+              const text = (value || '').replace(/<[^>]*>/g, '').trim();
+              return text.length > 0 || 'Description is required.';
+            },
+          }}
+          render={({ field }) => (
+            <TiptapEditor
+              value={field.value || ''}
+              onChange={field.onChange}
+            />
+          )}
         />
         {packageErrors?.description?.message && (
           <span className="text-xs text-red-500">{packageErrors.description.message}</span>
