@@ -8,7 +8,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { Role } from '@prisma/client';
+import { Role, PaymentStatus } from '@prisma/client';
 import { Enrollment } from '../enrollments/models/enrollment.model';
 
 @Resolver(() => Payment)
@@ -72,6 +72,20 @@ export class PaymentResolver {
     adminNote?: string,
   ) {
     return await this.service.reject(id, adminNote);
+  }
+
+  @Mutation(() => Payment)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async updatePaymentStatus(
+    @Args('id', { type: () => ID })
+    id: string,
+    @Args('status', { type: () => PaymentStatus })
+    status: PaymentStatus,
+    @Args('adminNote', { type: () => String, nullable: true })
+    adminNote?: string,
+  ) {
+    return await this.service.updateStatus(id, status, adminNote);
   }
 
   @Mutation(() => Payment)

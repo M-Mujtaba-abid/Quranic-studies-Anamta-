@@ -19,6 +19,15 @@ export const REJECT_PAYMENT_MUTATION = gql`
   ${PAYMENT_FIELDS}
 `;
 
+export const UPDATE_PAYMENT_STATUS_MUTATION = gql`
+  mutation UpdatePaymentStatus($id: ID!, $status: PaymentStatus!, $adminNote: String) {
+    updatePaymentStatus(id: $id, status: $status, adminNote: $adminNote) {
+      ...PaymentFields
+    }
+  }
+  ${PAYMENT_FIELDS}
+`;
+
 export const CREATE_PAYMENT_MUTATION = gql`
   mutation CreatePayment($createPaymentInput: CreatePaymentInput!) {
     createPayment(createPaymentInput: $createPaymentInput) {
