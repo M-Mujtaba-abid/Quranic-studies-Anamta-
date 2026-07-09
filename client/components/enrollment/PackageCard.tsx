@@ -67,7 +67,7 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
       </div>
 
       <div className="space-y-1">
-        <span className="text-[17px] font-bold  tracking-widest text-gold">
+        <span className="text-[17px] font-bold  tracking-widest text-gold uppercase">
           {tierMeta?.label ?? pkg.packageTier} Plan
         </span>
         <h4 className="text-sm font-bold text-text">{pkg.title}</h4>
