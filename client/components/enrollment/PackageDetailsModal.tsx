@@ -72,8 +72,8 @@ export function PackageDetailsModal({ pkg, isOpen, isSelected, onClose, onSelect
 
         <div className="p-5 sm:p-6 space-y-3 sm:space-y-4 overflow-y-auto">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gold">
-              {tierMeta?.label ?? pkg.packageTier}
+            <span className="text-sm font-bold uppercase tracking-widest text-gold">
+              {tierMeta?.label ?? pkg.packageTier} Plan
             </span>
             <h3 className="text-lg sm:text-xl font-bold font-display text-text mt-1">{pkg.title}</h3>
           </div>
