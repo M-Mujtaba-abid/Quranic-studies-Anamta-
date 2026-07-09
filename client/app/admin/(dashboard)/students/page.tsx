@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client/react';
 import { GET_ALL_STUDENTS } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { PACKAGE_TIER_META } from '@/constants/regions';
 import { 
   Users, 
   Search, 
@@ -39,6 +40,14 @@ export default function AdminStudentsPage() {
 
     return fullName.includes(query) || email.includes(query) || phone.includes(query);
   });
+
+  const getMostRecentEnrollment = (student: any) => {
+    const enrollments = student.enrollments || [];
+    if (enrollments.length === 0) return null;
+    return [...enrollments].sort(
+      (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )[0];
+  };
 
   return (
     <div className="space-y-6">
@@ -104,6 +113,7 @@ export default function AdminStudentsPage() {
                     <th className="py-3 px-4">Location</th>
                     <th className="py-3 px-4">Status</th>
                     <th className="py-3 px-4">Enrollments</th>
+                    <th className="py-3 px-4">Course / Package</th>
                     <th className="py-3 px-4">Joined</th>
                     <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
@@ -149,6 +159,36 @@ export default function AdminStudentsPage() {
                         <span className="px-2 py-0.5 rounded bg-primary/20 border border-primary/30 text-xs">
                           {student.enrollments?.length || 0} Courses
                         </span>
+                      </td>
+                      <td className="py-3.5 px-4 max-w-[220px]">
+                        {(() => {
+                          const enrollments = student.enrollments || [];
+                          const latest = getMostRecentEnrollment(student);
+                          if (!latest) {
+                            return <span className="italic text-text-secondary/50">No enrollment yet</span>;
+                          }
+                          const tierMeta = PACKAGE_TIER_META[latest.packageTier as keyof typeof PACKAGE_TIER_META];
+                          const extraCount = enrollments.length - 1;
+                          return (
+                            <div className="space-y-1">
+                              <span className="block font-medium text-text truncate" title={latest.course?.title}>
+                                {latest.course?.title || 'Untitled course'}
+                              </span>
+                              <div className="flex items-center gap-1.5">
+                                {tierMeta && (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 text-[10px] font-bold uppercase tracking-wide">
+                                    {tierMeta.label}
+                                  </span>
+                                )}
+                                {extraCount > 0 && (
+                                  <span className="text-[10px] text-text-secondary font-medium">
+                                    +{extraCount} more
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td className="py-3.5 px-4 text-text-secondary">
                         <div className="flex items-center gap-1">
