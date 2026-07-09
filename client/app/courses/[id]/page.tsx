@@ -1,5 +1,5 @@
 'use client';
-// Trigger compile
+
 import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@apollo/client/react';
@@ -9,24 +9,22 @@ import Link from 'next/link';
 import { GET_COURSE_BY_ID } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
+// import { ExpandableDescription } from ''; // Path adjust kar lein
+import { ExpandableDescription } from '../../courses/ExpandableDescription'
 import { useCountrySelection } from '@/providers/CountryProvider';
 import { LOCAL_COUNTRY } from '@/constants/countries';
-import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Star, Users } from 'lucide-react';
+import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Users } from 'lucide-react';
 
 export default function CourseDetailsPage() {
   const params = useParams();
   const id = params.id as string;
 
-  // Course details
   const { data, loading, error } = useQuery<any>(GET_COURSE_BY_ID, {
     variables: { id },
   });
 
-  // Country selection (shared across pages) drives which region's pricing EnrollmentPanel fetches
   const { country: selectedCountry, setCountry, openCountryModal } = useCountrySelection();
 
-  // Prompt for a country the moment someone lands on a course page without one selected yet
-  // (including after a page reload — the selection is in-memory only, not persisted).
   useEffect(() => {
     if (!selectedCountry && data?.course) {
       if (data.course.category === 'GROUP') {
@@ -55,14 +53,7 @@ export default function CourseDetailsPage() {
           <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}>
             <RefreshCw className="h-10 w-10 text-gold" />
           </motion.div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.25 }}
-            className="text-text-secondary font-medium"
-          >
-            Loading course info...
-          </motion.p>
+          <motion.p className="text-text-secondary font-medium">Loading course info...</motion.p>
         </motion.div>
       </div>
     );
@@ -91,81 +82,106 @@ export default function CourseDetailsPage() {
 
   return (
     <div className="relative min-h-screen bg-bg text-text pb-24 overflow-hidden">
-      {/* Background patterns and decorative glows */}
+      {/* Decorative BG Glows */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <Image
-          src="/images/about/contact_bg.png"
-          alt=""
-          fill
-          priority
-          className="object-cover opacity-25"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg/10 via-bg/80 to-bg" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px]" />
+        <div className="absolute top-[60vh] left-[-200px] w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute top-[40vh] left-[-200px] w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 mt-6 relative z-10 space-y-8">
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 mt-8 relative z-10 space-y-12">
-        {/* Breadcrumb Back Link */}
-        <Link 
-          href="/courses" 
+        {/* Back Link */}
+        <Link
+          href="/courses"
           className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-gold transition-all duration-300 hover:translate-x-[-4px]"
         >
           <ArrowLeft size={16} />
           <span className="font-semibold tracking-wide font-display text-xs uppercase">Back to Courses</span>
         </Link>
 
-        {/* Hero Area: Big Banner & Image */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* Left Column: Title & Info */}
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
+        {/* 1. TOP BANNER IMAGE */}
+        <div className="relative w-full h-[280px] md:h-[420px] rounded-2xl overflow-hidden bg-surface border border-gold/15 shadow-xl">
+          {course.imageUrl ? (
+            <Image
+              src={course.imageUrl}
+              alt={course.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <div className="h-full w-full flex flex-col items-center justify-center text-text-secondary bg-surface-light">
+              <ShieldCheck size={64} className="text-gold/30" />
+              <span className="font-display text-sm font-semibold tracking-wider text-gold/60">Anamta Syllabus</span>
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/20 to-transparent" />
+
+          {/* Badge inside banner */}
+          <div className="absolute bottom-6 left-6 bg-surface/70 backdrop-blur-md px-4 py-2 rounded-xl border border-gold/20 flex items-center gap-3">
+            <Globe2 size={16} className="text-gold" />
+            <span className="text-xs font-semibold text-text uppercase tracking-wider">
+              {course.category === 'GROUP' ? 'Group Learning' : 'Live 1-on-1'}
+            </span>
+          </div>
+        </div>
+
+        {/* 2. COURSE TITLE SECTION */}
+        <div className="pt-4 border-b border-border/40 pb-6 space-y-3">
+          <div className="inline-flex items-center rounded-full border border-gold/20 bg-gold/5 px-3 py-1">
+            <span className="text-[10px] font-bold tracking-widest text-gold uppercase">
+              {course.category === 'GROUP' ? 'Group Learning Course' : 'Personal 1-on-1 Course'}
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold font-display tracking-tight text-text leading-tight">
+            <span className="bg-gradient-to-r from-text via-text-secondary to-gold-light bg-clip-text text-transparent">
+              {course.title}
+            </span>
+          </h1>
+        </div>
+
+        {/* 3. SPLIT SECTION: Left (Description) & Right (Syllabus) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          {/* LEFT SIDE: Description & Specs */}
+          <div className="lg:col-span-7 space-y-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 backdrop-blur-sm">
-                <span className="text-[10px] font-bold tracking-widest text-gold uppercase">
-                  {course.category === 'GROUP' ? 'Group Learning Course' : 'Personal 1-on-1 Course'}
-                </span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display tracking-tight text-text leading-[1.1] pb-1">
-                <span className="bg-gradient-to-r from-text via-text-secondary to-gold-light bg-clip-text text-transparent">
-                  {course.title}
-                </span>
-              </h1>
-              
-              <div
-                className="text-text-secondary text-base md:text-lg leading-relaxed font-light tiptap"
-                dangerouslySetInnerHTML={{ __html: formatDescription(course.description) }}
+              <h3 className="text-lg font-bold font-display text-text uppercase tracking-wider text-gold/90">
+                About this Course
+              </h3>
+              {/* Expandable description helper with auto scroll-back */}
+              <ExpandableDescription
+                description={course.description}
+                formatFn={formatDescription}
               />
             </div>
 
             {/* Quick Specs Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gold/10">
-              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border/30">
+              <div className="bg-surface/40 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1">
                 <Users size={18} className="text-gold" />
                 <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Age</span>
                 <span className="text-sm font-medium text-text">Adults & Kids</span>
               </div>
-              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+              <div className="bg-surface/40 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1">
                 <Compass size={18} className="text-gold" />
                 <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Gender</span>
                 <span className="text-sm font-medium text-text">Brothers & Sisters</span>
               </div>
               {course.category === 'GROUP' ? (
-                <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                <div className="bg-surface/40 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1">
                   <Clock size={18} className="text-gold" />
                   <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Support</span>
-                  <span className="text-sm font-medium text-text">24/7</span>
+                  <span className="text-sm font-medium text-text">24/7 Support</span>
                 </div>
               ) : (
-                <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+                <div className="bg-surface/40 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1">
                   <Calendar size={18} className="text-gold" />
                   <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Schedule</span>
-                  <span className="text-sm font-medium text-text">Flexible Days & Timings</span>
+                  <span className="text-sm font-medium text-text">Flexible Days</span>
                 </div>
               )}
-              <div className="bg-surface/50 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1 hover:border-gold/20 transition-colors">
+              <div className="bg-surface/40 border border-border/40 p-4 rounded-xl backdrop-blur-sm flex flex-col gap-1">
                 <Award size={18} className="text-gold" />
                 <span className="text-[10px] text-text-secondary uppercase tracking-wider font-semibold mt-1">Certificate</span>
                 <span className="text-sm font-medium text-text">Ijazah / Cert.</span>
@@ -173,81 +189,40 @@ export default function CourseDetailsPage() {
             </div>
           </div>
 
-          {/* Right Column: Prominent Image */}
-          <div className="lg:col-span-5 flex items-center justify-center">
-            <div className="relative w-full h-[320px] md:h-[400px] rounded-2xl overflow-hidden bg-surface border-2 border-gold/20 shadow-[0_20px_50px_rgba(201,162,39,0.15)] group transition-transform hover:scale-[1.01] duration-500">
-              {course.imageUrl ? (
-                <Image
-                  src={course.imageUrl}
-                  alt={course.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 1024px) 100vw, 500px"
-                  priority
-                />
-              ) : (
-                <div className="h-full w-full flex flex-col items-center justify-center text-text-secondary gap-3 bg-surface-light">
-                  <ShieldCheck size={64} className="text-gold/30 animate-pulse" />
-                  <span className="font-display text-sm font-semibold tracking-wider text-gold/60">Anamta Syllabus</span>
+          {/* RIGHT SIDE: Course Syllabus & Curriculum */}
+          <div className="lg:col-span-5">
+            {course?.features && course.features.length > 0 && (
+              <div className="bg-surface/30 border border-border p-6 rounded-2xl shadow-sm space-y-4 backdrop-blur-sm hover:border-gold/15 transition-all">
+                <h3 className="text-lg font-bold font-display text-text border-b border-border/40 pb-3 flex items-center gap-2">
+                  <BookOpen className="text-gold" size={18} />
+                  Syllabus & Curriculum
+                </h3>
+
+                <div className="space-y-3 max-h-auto overflow-y-auto pr-1 custom-scrollbar">
+                  {course.features.map((feature: string, idx: number) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 bg-surface-light/30 rounded-xl border border-border/20">
+                      <CheckCircle2 className="h-4 w-4 text-gold shrink-0 mt-0.5" />
+                      <span className="text-text font-medium text-xs md:text-sm leading-snug">{feature}</span>
+                    </div>
+                  ))}
                 </div>
-              )}
-              {/* Glass overlay details */}
-              <div className="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent opacity-80" />
-              <div className="absolute bottom-4 left-4 right-4 bg-surface/60 backdrop-blur-md p-4 rounded-xl border border-gold/15 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Globe2 size={16} className="text-gold shrink-0" />
-                  <span className="text-xs font-medium text-text">Learn Worldwide</span>
-                </div>
-                <span className="text-[10px] font-bold text-gold uppercase bg-gold/10 px-2 py-0.5 rounded border border-gold/25">Live One-on-One</span>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Content Details & Enrollment Section */}
-        {course?.features && course.features.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start pt-4">
-            {/* Left Column: Syllabus & Outlines */}
-            <div className="lg:col-span-7 space-y-8">
-              <div className="bg-surface/40 border border-border p-6 md:p-8 rounded-2xl shadow-sm space-y-6 backdrop-blur-sm hover:border-gold/15 transition-all">
-                <h3 className="text-xl md:text-2xl font-bold font-display text-text border-b border-border/60 pb-3 flex items-center gap-3">
-                  <BookOpen className="text-gold" size={22} />
-                  Course Syllabus & Curriculum
-                </h3>
-
-                <div className="space-y-6 text-[15px] leading-relaxed text-text-secondary">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    {course.features.map((feature: string, idx: number) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-surface-light/45 rounded-xl border border-border/30 hover:border-gold/10 transition-colors">
-                        <CheckCircle2 className="h-5 w-5 text-gold shrink-0 mt-0.5" />
-                        <span className="text-text font-medium text-sm leading-snug">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Sticky Enrollment Form */}
-            <div className="lg:col-span-5 lg:sticky lg:top-24">
-              <div className="relative">
-                {/* Outer decorative back-shadow */}
-                <div className="absolute inset-0 bg-gradient-to-r from-gold/15 to-primary/10 rounded-2xl blur-xl opacity-50 pointer-events-none" />
-                <div className="relative">
-                  <EnrollmentPanel presetCourseId={id} />
-                </div>
-              </div>
-            </div>
+        {/* 4. BOTTOM: ENROLLMENT FORM */}
+        <div className="pt-12 border-t border-border/40 relative max-w-3xl mx-auto w-full">
+          <div className="absolute inset-0 bg-gradient-to-r from-gold/10 to-primary/5 rounded-2xl blur-2xl opacity-40 pointer-events-none" />
+          <div className="relative z-10 text-center space-y-2 mb-6">
+            <h2 className="text-2xl font-bold font-display text-text">Ready to Start Learning?</h2>
+            <p className="text-sm text-text-secondary">Fill out the quick enrollment details below to secure your spot.</p>
           </div>
-        ) : (
-          <div className="max-w-2xl mx-auto pt-4 relative">
-            {/* Outer decorative back-shadow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-gold/15 to-primary/10 rounded-2xl blur-xl opacity-50 pointer-events-none" />
-            <div className="relative">
-              <EnrollmentPanel presetCourseId={id} />
-            </div>
+          <div className="relative z-10 bg-surface/20 rounded-2xl shadow-xl border border-border/50">
+            <EnrollmentPanel presetCourseId={id} />
           </div>
-        )}
+        </div>
+
       </div>
     </div>
   );

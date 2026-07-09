@@ -33,14 +33,15 @@ function CoursesDirectoryContent() {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Automatically enforce Pakistan for Group Classes to bypass country modal
   useEffect(() => {
-    if (activeCategory === 'GROUP' && country?.name !== 'Pakistan') {
-      setCountry(LOCAL_COUNTRY);
-    } else if (!country && activeCategory !== 'GROUP') {
+    if (activeCategory === 'GROUP') {
+      if (country?.name !== 'Pakistan') {
+        openGroupAlertModal();
+      }
+    } else if (!country) {
       openCountryModal('ONE_ON_ONE');
     }
-  }, [country, activeCategory, openCountryModal, setCountry]);
+  }, [country, activeCategory, openCountryModal, openGroupAlertModal]);
 
   if (loading && !data) {
     return (
@@ -98,15 +99,15 @@ function CoursesDirectoryContent() {
           <span className="text-[20px] font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1  rounded-full border border-gold/25">
             Course Directory
           </span>
-          <h1 className="mt-5 text-4xl md:text-5xl font-bold font-display tracking-tight text-text">
-            Learn Quran Online with <span className="bg-gradient-to-r from-gold to-gold-light text-transparent bg-clip-text">Tajweed & Tafsir</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold font-display tracking-tight text-text leading-none pt-2">
+            Explore Our Programs
           </h1>
-          <p className="text-text-secondary max-w-2xl mx-auto text-[15px] leading-relaxed">
-            Select one of our structured learning programs designed for kids and adults. Connect with certified teachers for personalized one-on-one sessions.
+          <p className="text-text-secondary text-sm md:text-base max-w-xl mx-auto">
+            Choose the pathway that best fits your goals, schedule, and learning style.
           </p>
 
-          {/* Directory Category selector tabs */}
-          <div className="flex rounded-xl bg-surface border border-border p-1 max-w-md w-full mx-auto mt-6">
+          {/* Selector Tabs */}
+          <div className="flex w-full max-w-xs mx-auto rounded-xl bg-bg p-1 border border-border mt-4">
             <button
               type="button"
               onClick={() => {
@@ -128,8 +129,11 @@ function CoursesDirectoryContent() {
             <button
               type="button"
               onClick={() => {
-                setCountry(LOCAL_COUNTRY);
-                router.push(`/courses?mode=GROUP`);
+                if (country?.name === 'Pakistan') {
+                  router.push(`/courses?mode=GROUP`);
+                } else {
+                  openGroupAlertModal();
+                }
               }}
               className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${activeCategory === 'GROUP'
                 ? 'bg-gold text-primary-dark shadow-sm font-bold'

@@ -197,7 +197,7 @@ export default function Navbar() {
                 <button
                   onClick={() => {
                     setOpen(false);
-                    openModeSelectionModal();
+                    openTrialModal();
                   }}
                   className="rounded-xl border border-primary-light/20 bg-primary py-3 text-center font-display text-xs font-semibold text-text shadow-lg shadow-primary/20 cursor-pointer"
                 >

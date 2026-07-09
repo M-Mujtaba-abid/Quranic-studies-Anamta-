@@ -197,11 +197,11 @@ function PaymentContent() {
       <div className="absolute top-[50vh] left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
       <main className="max-w-4xl mx-auto px-6 lg:px-10 mt-12 space-y-8 relative z-10">
-        
+
         {/* Header Title */}
         <div className="text-center space-y-2 max-w-lg mx-auto">
-          <span className="text-[10px] font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/20">
-            Student Flow
+          <span className="text-[20px] font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/20">
+            Payment Gateway
           </span>
           <h1 className="text-3xl font-bold font-display tracking-tight text-text">
             Submit Payment Receipt
@@ -265,7 +265,7 @@ function PaymentContent() {
                 Please make sure the ID is typed correctly, or look up another one.
               </p>
             </div>
-            
+
             <form onSubmit={handleLookup} className="space-y-4 pt-4 border-t border-border/50 text-left">
               <Input
                 label="Search Another Enrollment"
@@ -285,10 +285,10 @@ function PaymentContent() {
         {/* 4. MAIN ENROLLMENT DETAILS & ACTIONS */}
         {enrollmentId && !loadingEnrollment && enrollment && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
+
             {/* Left Side: Summary Card */}
             <div className="lg:col-span-5 space-y-6">
-              
+
               {/* Enrollment Info */}
               <div className="bg-surface border border-border p-6 rounded-2xl shadow-md space-y-5">
                 <div className="flex items-center gap-2 border-b border-border/50 pb-3">
@@ -297,7 +297,7 @@ function PaymentContent() {
                     Enrollment Summary
                   </h3>
                 </div>
-                
+
                 <div className="space-y-3.5 text-xs text-text-secondary">
                   <div>
                     <span className="block text-[10px] font-semibold text-text uppercase tracking-wider">Course</span>
@@ -386,7 +386,7 @@ function PaymentContent() {
 
             {/* Right Side: Payment Form or Status */}
             <div className="lg:col-span-7 space-y-6">
-              
+
               {/* Payment Status checks */}
               {enrollment.payment && enrollment.payment.status === 'PAID' && (
                 <div className="bg-surface border border-emerald-500/20 p-8 rounded-2xl shadow-md text-center space-y-5">
@@ -445,7 +445,7 @@ function PaymentContent() {
               {/* Submission Form (Render if no payment exists OR if payment is REJECTED) */}
               {(!enrollment.payment || enrollment.payment.status === 'REJECTED') && (
                 <div className="space-y-6">
-                  
+
                   {/* Rejection Alert */}
                   {enrollment.payment && enrollment.payment.status === 'REJECTED' && (
                     <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl flex items-start gap-3">
@@ -518,11 +518,10 @@ function PaymentContent() {
                                 key={method}
                                 type="button"
                                 onClick={() => setPaymentMethod(method)}
-                                className={`py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer text-center ${
-                                  isSelected
+                                className={`py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer text-center ${isSelected
                                     ? 'bg-gold border-gold text-primary-dark shadow-sm'
                                     : 'bg-bg border-border text-text-secondary hover:border-gold/30'
-                                }`}
+                                  }`}
                               >
                                 {method.replace('_', ' ')}
                               </button>

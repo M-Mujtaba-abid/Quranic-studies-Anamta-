@@ -26,12 +26,13 @@ const emptyPackage = (
 ): PackageFormValues => ({
   region,
   packageTier,
-  currency: (region === LOCAL_REGION && category === 'ONE_ON_ONE') ? 'USD' : REGION_META[region].currency,
+  currency: REGION_META[region].currency,
   title: '',
   description: '',
   imageUrl: '',
   price: 0,
 });
+
 
 const buildDefaultValues = (initialCourse?: any): CourseFormValues => {
   if (initialCourse) {
@@ -134,9 +135,7 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
       return;
     }
 
-    const activeCurrency = (targetRegion === LOCAL_REGION && currentCategory === 'ONE_ON_ONE')
-      ? 'USD'
-      : REGION_META[targetRegion].currency;
+    const activeCurrency = REGION_META[targetRegion].currency;
 
     PACKAGE_TIERS.forEach((tier) => {
       const sourceIndex = othersIndices.find((i) => fields[i].packageTier === tier);
@@ -249,9 +248,7 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
   };
 
   const imageUrl = watch('imageUrl');
-  const activeCurrency = (activeRegion === LOCAL_REGION && currentCategory === 'ONE_ON_ONE')
-    ? 'USD'
-    : REGION_META[activeRegion].currency;
+  const activeCurrency = REGION_META[activeRegion].currency;
 
   return (
     <div className="absolute inset-0 -m-4 md:-m-8 bg-bg/95 backdrop-blur-md z-30 flex flex-col animate-fade-in">
@@ -375,7 +372,7 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
                   <p className="text-[11px] text-text-secondary">
                     {currentCategory === 'GROUP'
                       ? 'Group classes are only available in Pakistan at a single local price.'
-                      : '1-on-1 classes support all regions (priced in USD for Pakistan & others).'}
+                      : '1-on-1 classes support all regions (priced in PKR for Pakistan, and regional currencies/USD for others).'}
                   </p>
                 </div>
 

@@ -149,7 +149,7 @@ export default function HeroCarousel() {
       <div className="relative z-10 flex h-full flex-col">
         <AyatRotator />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-start pt-1.5 sm:justify-center sm:pt-6 px-5 sm:px-6 lg:px-12">
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-start pt-1.5 sm:items-start sm:justify-center sm:pt-6 px-5 sm:px-6 lg:px-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={active.id}
@@ -157,14 +157,14 @@ export default function HeroCarousel() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-2xl"
+              className="max-w-2xl w-full text-center sm:text-left"
             >
               {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mb-4 sm:mb-6"
+                className="mb-4 flex justify-center sm:justify-start sm:mb-6"
               >
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-medium tracking-wide text-sand backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs"
@@ -180,7 +180,7 @@ export default function HeroCarousel() {
 
               {/* Heading */}
               <h1
-                className="max-w-[15ch] font-display text-[1.55rem] font-semibold leading-[1.08] text-text sm:max-w-none sm:text-4xl sm:leading-[1.18] md:text-5xl lg:text-[3.4rem]"
+                className="mx-auto max-w-[15ch] font-display text-[1.55rem] font-semibold leading-[1.08] text-text sm:mx-0 sm:max-w-none sm:text-4xl sm:leading-[1.18] md:text-5xl lg:text-[3.4rem]"
               >
                 {active.title.split(active.highlight)[0]}
                 <span className="relative inline-block text-gold">
@@ -211,9 +211,9 @@ export default function HeroCarousel() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="mt-5 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap"
+                className="mt-5 flex flex-col items-center gap-3 sm:mt-8 sm:items-start sm:flex-row sm:flex-wrap"
               >
-                <div className="flex gap-2">
+                <div className="flex w-full justify-center gap-2 sm:w-auto sm:justify-start">
                   <button
                     onClick={openModeSelectionModal}
                     className="w-full rounded-full bg-gradient-to-r from-gold to-gold-light px-3 py-2 text-center text-xs font-semibold text-primary-dark shadow-[0_4px_20px_-2px_rgba(201,162,39,0.45)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_28px_-2px_rgba(201,162,39,0.65)] sm:w-auto sm:px-8 sm:py-3.5 sm:text-sm cursor-pointer"
@@ -250,7 +250,7 @@ export default function HeroCarousel() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.55 }}
-                className="mt-6 flex flex-wrap items-start gap-3 sm:mt-10 sm:gap-6"
+                className="mt-6 flex flex-wrap justify-center items-start gap-3 sm:justify-start sm:mt-10 sm:gap-6"
               >
                 {active.stats.map((stat, i) => (
                   <div key={i} className="flex min-w-[72px] flex-col">

@@ -122,7 +122,7 @@ export default function BlogPage() {
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.author.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       const matchesCategory =
         selectedCategory === "All" || article.category === selectedCategory;
 
@@ -151,10 +151,10 @@ export default function BlogPage() {
       <div className="absolute -right-40 bottom-[20%] h-[500px] w-[500px] rounded-full bg-gold/5 blur-[150px] pointer-events-none" />
 
       {/* Hero Header Section */}
-      <section className="relative pt-24 pb-12 px-5 sm:px-6 lg:px-10 overflow-hidden">
+      <section className="relative pt-12 pb-12 px-5 sm:px-6 lg:px-10 overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[10px] font-bold uppercase tracking-wider">
-            <Sparkles size={12} className="inline mr-1" />
+          <span className="inline-flex px-3.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-[20px] font-bold uppercase tracking-wider">
+            {/* <Sparkles size={12} className="inline mr-1" /> */}
             Insights & Wisdom
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold font-display tracking-tight leading-tight">
@@ -175,11 +175,10 @@ export default function BlogPage() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${
-                  selectedCategory === category
-                    ? "bg-gradient-to-r from-gold to-gold-light text-primary-dark shadow-md"
-                    : "bg-surface hover:bg-surface-dark border border-border text-text-secondary hover:text-text"
-                }`}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer ${selectedCategory === category
+                  ? "bg-gradient-to-r from-gold to-gold-light text-primary-dark shadow-md"
+                  : "bg-surface hover:bg-surface-dark border border-border text-text-secondary hover:text-text"
+                  }`}
               >
                 {category}
               </button>
@@ -223,7 +222,7 @@ export default function BlogPage() {
                 {/* Visual Cover Gradient */}
                 <div className={`relative h-44 w-full bg-gradient-to-br ${cardGradients[article.category] || "from-neutral-900 to-neutral-800"} p-6 flex flex-col justify-between overflow-hidden`}>
                   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none" />
-                  
+
                   {/* Category Tag */}
                   <span className="self-start px-2.5 py-1 rounded-md bg-black/40 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gold">
                     {article.category}
@@ -314,7 +313,7 @@ export default function BlogPage() {
                 <h2 className="font-display font-bold text-2xl sm:text-3xl text-text leading-tight pr-8">
                   {activeArticle.title}
                 </h2>
-                
+
                 {/* Author Info */}
                 <div className="flex items-center gap-2 pt-2">
                   <div className="h-9 w-9 rounded-full bg-gold/10 border border-gold/30 text-gold flex items-center justify-center font-display font-bold text-xs uppercase">

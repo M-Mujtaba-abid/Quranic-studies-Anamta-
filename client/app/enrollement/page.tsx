@@ -29,7 +29,7 @@ export default function EnrollementPage() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-[30vh] left-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-xl mx-auto px-6 lg:px-10 mt-8 space-y-8 relative z-10">
+      <div className="max-w-3xl mx-auto px-6 lg:px-10 mt-8 space-y-8 relative z-10">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-gold transition-colors">
           <ArrowLeft size={16} />
           <span>Back to Home</span>

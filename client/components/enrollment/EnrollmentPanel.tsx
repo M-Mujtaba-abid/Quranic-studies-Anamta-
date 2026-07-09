@@ -29,6 +29,9 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
   const searchParams = useSearchParams();
   const modeParam = searchParams.get('mode') as 'ONE_ON_ONE' | 'GROUP' | null;
 
+  const isTrial = searchParams.get('trial') === 'true';
+  const [showTrialWarning, setShowTrialWarning] = useState(false);
+
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const courseId = presetCourseId || selectedCourseId;
 
@@ -44,7 +47,7 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
   });
 
   const [enrollmentMode, setEnrollmentMode] = useState<'ONE_ON_ONE' | 'GROUP'>(
-    modeParam || 'ONE_ON_ONE'
+    isTrial ? 'ONE_ON_ONE' : (modeParam || 'ONE_ON_ONE')
   );
 
   // Sync mode and filter dropdown courses
@@ -202,7 +205,7 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
     <div className="bg-surface border border-border p-6 md:p-8 rounded-2xl shadow-md space-y-6 relative z-10">
       <div className="space-y-1">
         <h3 className="text-lg font-bold font-display text-text">
-          {isDirectFlow ? 'Enroll Now' : isLocal ? 'Register Now' : 'Book a free trial class'}
+          {isDirectFlow ? 'Enroll Now' : isLocal ? 'Register Now' : 'Book a Free Trial Class'}
         </h3>
         <p className="text-xs text-text-secondary">
           {selectedCountry
@@ -213,31 +216,46 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
 
       {/* Enrollment Mode Selector */}
       {!presetCourseId && (
-        <div className="flex rounded-xl bg-bg p-1 border border-border">
-          <button
-            type="button"
-            onClick={() => handleModeChange('ONE_ON_ONE')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
-              enrollmentMode === 'ONE_ON_ONE'
-                ? 'bg-gold text-primary-dark shadow-sm'
-                : 'text-text-secondary hover:text-gold'
-            }`}
-          >
-            1-on-1 Classes
-          </button>
-          <button
-            type="button"
-            onClick={() => handleModeChange('GROUP')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
-              enrollmentMode === 'GROUP'
-                ? 'bg-gold text-primary-dark shadow-sm'
-                : 'text-text-secondary hover:text-gold'
-            }`}
-          >
-            Group Classes
-          </button>
+        <div className="space-y-2">
+          <div className="flex rounded-xl bg-bg p-1 border border-border">
+            <button
+              type="button"
+              onClick={() => {
+                handleModeChange('ONE_ON_ONE');
+                setShowTrialWarning(false);
+              }}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${enrollmentMode === 'ONE_ON_ONE'
+                  ? 'bg-gold text-primary-dark shadow-sm'
+                  : 'text-text-secondary hover:text-gold'
+                }`}
+            >
+              1-on-1 Classes
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (isTrial) {
+                  setShowTrialWarning(true);
+                } else {
+                  handleModeChange('GROUP');
+                }
+              }}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${isTrial ? 'opacity-50 cursor-not-allowed' : ''} ${enrollmentMode === 'GROUP'
+                  ? 'bg-gold text-primary-dark shadow-sm'
+                  : 'text-text-secondary hover:text-gold'
+                }`}
+            >
+              Group Classes
+            </button>
+          </div>
+          {showTrialWarning && (
+            <p className="text-xs text-red-500 font-semibold mt-1">
+              Free trials are only available for 1-on-1 classes.
+            </p>
+          )}
         </div>
       )}
+
 
       {isDirectFlow && (
         <CourseSelectField

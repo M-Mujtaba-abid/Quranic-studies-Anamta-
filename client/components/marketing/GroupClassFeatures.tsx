@@ -46,11 +46,14 @@ const itemVariants = {
 
 export default function GroupClassFeatures() {
   const router = useRouter();
-  const { setCountry } = useCountrySelection();
+  const { country, openGroupAlertModal } = useCountrySelection();
 
   const handleViewGroupCourses = () => {
-    setCountry(LOCAL_COUNTRY);
-    router.push("/courses?mode=GROUP");
+    if (country?.name === 'Pakistan') {
+      router.push("/courses?mode=GROUP");
+    } else {
+      openGroupAlertModal();
+    }
   };
 
   return (
