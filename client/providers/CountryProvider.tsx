@@ -159,7 +159,12 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setIsGroupAlertOpen(false)}
+                onClick={() => {
+                  setIsGroupAlertOpen(false);
+                  if (typeof window !== 'undefined' && window.location.search.includes('mode=GROUP')) {
+                    router.push('/courses?mode=ONE_ON_ONE');
+                  }
+                }}
                 className="flex-1 py-2.5 px-4 rounded-xl border border-border text-xs font-semibold text-text-secondary hover:text-text cursor-pointer"
               >
                 Cancel
