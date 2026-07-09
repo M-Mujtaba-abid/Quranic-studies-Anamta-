@@ -13,7 +13,6 @@
     "@apollo/experimental-nextjs-app-support": "^0.14.5",
     "@hookform/resolvers": "^5.4.0",
     "@radix-ui/react-select": "^2.3.2",
-    "@tailwindcss/typography": "^0.5.20",
     "@tiptap/react": "^3.27.3",
     "@tiptap/starter-kit": "^3.27.3",
     "class-variance-authority": "^0.7.1",
@@ -38,6 +37,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
