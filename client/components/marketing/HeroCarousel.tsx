@@ -149,7 +149,7 @@ export default function HeroCarousel() {
       <div className="relative z-10 flex h-full flex-col">
         <AyatRotator />
 
-        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-start pt-1.5 sm:items-start sm:justify-center sm:pt-6 px-5 sm:px-6 lg:px-12">
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center pt-1.5 sm:items-start sm:justify-center sm:pt-6 px-5 sm:px-6 lg:px-12">
           <AnimatePresence mode="wait">
             <motion.div
               key={active.id}
@@ -276,8 +276,12 @@ export default function HeroCarousel() {
           </AnimatePresence>
         </div>
 
-        {/* ── Bottom control row: prev / dots / next + counter — in normal flow so it can never overlap the text above ── */}
-        <div className="flex w-full items-center justify-between gap-4 px-5 pb-4 pt-4 sm:px-8 sm:pb-8">
+        {/* ── Bottom control row: prev / dots / next + counter — in normal flow so it can never overlap the text above ──
+            On mobile the counter sits inline with the arrows (not on justify-between's far right) so it never
+            collides with the fixed WhatsApp button at bottom-right; on sm:+ it moves back to the far right. */}
+        <div
+          className="flex w-full items-center gap-4 px-5 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:justify-between sm:px-8 sm:pt-4 sm:pb-8"
+        >
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={scrollPrev}
@@ -322,11 +326,22 @@ export default function HeroCarousel() {
             >
               <ChevronRight size={16} />
             </button>
+
+            {/* Slide counter — mobile only, inline with the arrows */}
+            <div className="flex items-center gap-1 ml-1 sm:hidden">
+              <span className="font-display text-base font-medium text-gold">
+                0{selectedIndex + 1}
+              </span>
+              <span className="text-[10px] text-text-secondary/50">/</span>
+              <span className="text-[11px] text-text-secondary">
+                0{slides.length}
+              </span>
+            </div>
           </div>
 
-          {/* Slide counter */}
-          <div className="flex items-center gap-1">
-            <span className="font-display text-base font-medium text-gold sm:text-lg">
+          {/* Slide counter — sm:+ only, far right as before (WhatsApp button has more clearance at this size) */}
+          <div className="hidden items-center gap-1 sm:flex">
+            <span className="font-display text-lg font-medium text-gold">
               0{selectedIndex + 1}
             </span>
             <span className="text-[10px] text-text-secondary/50">/</span>
