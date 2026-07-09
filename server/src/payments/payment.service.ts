@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreatePaymentInput } from './dto/create-payment.input';
 import { UpdatePaymentInput } from './dto/update-payment.input';
 import { PaymentRepository } from './repositories/payment.repository';
 import cloudinary from '../upload/cloudinary.config';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from '../mail/mail.service';
+import { PaymentStatus } from '@prisma/client';
 
 @Injectable()
 export class PaymentService {
@@ -179,6 +180,54 @@ export class PaymentService {
       ).catch(err => console.error('Failed to send admin payment rejection notification:', err));
 
       // Notifies Student
+      this.mailService.sendPaymentStatusUpdateNotification(
+        enrollment.student.email,
+        enrollment.student,
+        enrollment.course,
+        {
+          amount: Number(payment.amount),
+          status: payment.status,
+          adminNote: payment.adminNote,
+        }
+      ).catch(err => console.error('Failed to send student payment status update notification:', err));
+    }
+
+    return payment;
+  }
+
+  // Lets an admin correct a payment that already has a final status (e.g. an accidental
+  // approval/rejection). Reuses the same notification templates as approve()/reject() for
+  // PAID/REJECTED, and additionally keeps the enrollment status in sync since this can move a
+  // payment *away* from PAID as well as into it.
+  async updateStatus(id: string, status: PaymentStatus, adminNote?: string) {
+    const existing = await this.findOne(id);
+
+    if (status === 'REJECTED' && !adminNote?.trim() && !existing.adminNote) {
+      throw new BadRequestException('A rejection reason is required.');
+    }
+
+    const payment = await this.repository.setStatus(id, status, adminNote);
+
+    // Resetting to Under Review has no dedicated email template — it's a quiet correction.
+    if (status === 'UNDER_REVIEW') {
+      return payment;
+    }
+
+    const enrollment = await this.repository.findEnrollmentWithDetails(payment.enrollmentId);
+    if (enrollment) {
+      const adminEmail = this.configService.get<string>('ADMIN_EMAIL') || 'anamtainstitute@gmail.com';
+
+      this.mailService.sendPaymentStatusNotification(
+        adminEmail,
+        enrollment.student,
+        enrollment.course,
+        {
+          amount: Number(payment.amount),
+          status: payment.status,
+          adminNote: payment.adminNote,
+        }
+      ).catch(err => console.error('Failed to send admin payment status update notification:', err));
+
       this.mailService.sendPaymentStatusUpdateNotification(
         enrollment.student.email,
         enrollment.student,

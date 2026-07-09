@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { CreatePaymentInput } from '../dto/create-payment.input';
 import { UpdatePaymentInput } from '../dto/update-payment.input';
-import { Payment } from '@prisma/client';
+import { Payment, PaymentStatus, EnrollmentStatus } from '@prisma/client';
 
 @Injectable()
 export class PaymentRepository {
@@ -116,6 +116,32 @@ export class PaymentRepository {
         status: 'REJECTED',
         ...(adminNote !== undefined ? { adminNote } : {}),
       },
+    });
+  }
+
+  // Corrects a payment that already has a final status (used by the admin "Edit status" flow) —
+  // unlike approve()/reject(), this also syncs the enrollment status back in line so a reversed
+  // decision doesn't leave the enrollment stuck on a stale APPROVED/PENDING state.
+  async setStatus(id: string, status: PaymentStatus, adminNote?: string): Promise<Payment> {
+    return await this.database.$transaction(async (tx) => {
+      const payment = await tx.payment.update({
+        where: { id },
+        data: {
+          status,
+          paidAt: status === 'PAID' ? new Date() : null,
+          ...(adminNote !== undefined ? { adminNote } : {}),
+        },
+      });
+
+      const enrollmentStatus: EnrollmentStatus =
+        status === 'PAID' ? 'APPROVED' : status === 'REJECTED' ? 'REJECTED' : 'PENDING';
+
+      await tx.enrollment.update({
+        where: { id: payment.enrollmentId },
+        data: { status: enrollmentStatus },
+      });
+
+      return payment;
     });
   }
 }
