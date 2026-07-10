@@ -9,7 +9,7 @@ export class MailService implements OnModuleInit {
 
   constructor(
     @Inject(ConfigService) private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   onModuleInit() {
     const user = this.configService.get<string>('GMAIL_USER');
@@ -40,7 +40,7 @@ export class MailService implements OnModuleInit {
 
   async sendPasswordResetEmail(email: string, token: string) {
     const user = this.configService.get<string>('GMAIL_USER');
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const frontendUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:3000';
     const resetUrl = `${frontendUrl}/admin/reset-password?token=${token}`;
 
     const mailOptions = {
@@ -387,7 +387,7 @@ export class MailService implements OnModuleInit {
     payment: { amount: number; status: string; adminNote?: string | null; enrollmentId?: string }
   ) {
     const sender = this.configService.get<string>('GMAIL_USER');
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const frontendUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:3000';
     const isApproved = payment.status === 'PAID';
     const statusText = isApproved ? 'APPROVED' : 'REJECTED';
     const themeColor = isApproved ? '#2e7d32' : '#c62828';
@@ -483,7 +483,7 @@ export class MailService implements OnModuleInit {
     if (subscriberEmails.length === 0) return;
 
     const sender = this.configService.get<string>('GMAIL_USER');
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const frontendUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:3000';
     const courseUrl = `${frontendUrl}/courses/${course.id}`;
 
     const mailOptions = {
