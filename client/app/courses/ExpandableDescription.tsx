@@ -111,7 +111,7 @@ export function ExpandableDescription({ description, formatFn }: ExpandableDescr
     return (
         <div ref={containerRef} className="space-y-4 flex flex-col items-start">
             <div
-                className={`text-text-secondary text-base md:text-lg leading-relaxed font-light tiptap transition-all duration-300 relative overflow-hidden ${!isExpanded && isLongDescription ? 'max-h-[160px]' : 'max-h-full'
+                className={`text-text-secondary text-base md:text-lg leading-relaxed font-light tiptap transition-all duration-300 relative overflow-hidden ${!isExpanded && isLongDescription ? 'max-h-[160px]' : 'max-h-[9999px]'
                     }`}
             >
                 <div dangerouslySetInnerHTML={{ __html: formattedHtml }} />
