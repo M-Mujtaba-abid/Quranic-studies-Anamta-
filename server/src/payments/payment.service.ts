@@ -151,6 +151,7 @@ export class PaymentService {
           amount: Number(payment.amount),
           status: payment.status,
           adminNote: payment.adminNote,
+          enrollmentId: payment.enrollmentId,
         }
       ).catch(err => console.error('Failed to send student payment status update notification:', err));
     }
@@ -166,6 +167,8 @@ export class PaymentService {
     const enrollment = await this.repository.findEnrollmentWithDetails(payment.enrollmentId);
     if (enrollment) {
       const adminEmail = this.configService.get<string>('ADMIN_EMAIL') || 'anamtainstitute@gmail.com';
+
+      console.log(`[PaymentService.reject] Payment ${payment.id} rejected — sending rejection email to ${enrollment.student.email} (reason: ${payment.adminNote || 'none'})`);
 
       // Notifies Admin
       this.mailService.sendPaymentStatusNotification(
@@ -188,6 +191,7 @@ export class PaymentService {
           amount: Number(payment.amount),
           status: payment.status,
           adminNote: payment.adminNote,
+          enrollmentId: payment.enrollmentId,
         }
       ).catch(err => console.error('Failed to send student payment status update notification:', err));
     }
@@ -217,6 +221,10 @@ export class PaymentService {
     if (enrollment) {
       const adminEmail = this.configService.get<string>('ADMIN_EMAIL') || 'anamtainstitute@gmail.com';
 
+      if (status === 'REJECTED') {
+        console.log(`[PaymentService.updateStatus] Payment ${payment.id} corrected to REJECTED — sending rejection email to ${enrollment.student.email} (reason: ${payment.adminNote || 'none'})`);
+      }
+
       this.mailService.sendPaymentStatusNotification(
         adminEmail,
         enrollment.student,
@@ -236,6 +244,7 @@ export class PaymentService {
           amount: Number(payment.amount),
           status: payment.status,
           adminNote: payment.adminNote,
+          enrollmentId: payment.enrollmentId,
         }
       ).catch(err => console.error('Failed to send student payment status update notification:', err));
     }
