@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Quote, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Quote, X, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useQuery, useMutation } from "@apollo/client/react";
@@ -88,6 +88,70 @@ const FemaleAvatar = () => (
     <ellipse cx="50" cy="35" rx="14" ry="16" fill="url(#femaleSkin)" />
   </svg>
 );
+
+// Roughly the character count where a review stops fitting in 3 clamped lines at this
+// card's width — same heuristic ExpandableDescription uses, just tuned for this card size.
+const LONG_REVIEW_THRESHOLD = 150;
+
+// One testimonial card, with its own isolated expand/collapse state — collapsed reviews
+// use native line-clamp (clean ellipsis, fixes the old hard-clip-via-overflow bug) with a
+// gold "View More" toggle in the same visual pattern as ExpandableDescription. The toggle
+// is desktop-only (sm:+); on mobile the review just stays cleanly clamped with no button.
+function TestimonialCard({ testimonial: t }: { testimonial: any }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isLongReview = t.description.length > LONG_REVIEW_THRESHOLD;
+
+  return (
+    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-gold/30 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.5)] glow-gold-hover">
+      <div className="mb-6 min-w-0">
+        {/* Header layout for Quote and Stars alignment */}
+        <div className="flex items-center justify-between mb-4">
+          <Quote size={28} className="text-gold/10 transform -scale-x-100" />
+          <div className="flex gap-0.5">
+            {Array.from({ length: t.rating }).map((_, i) => (
+              <Star key={i} size={12} className="fill-gold text-gold" />
+            ))}
+          </div>
+        </div>
+
+        {/* Review Paragraph */}
+        <p className={`w-full text-[13px] leading-relaxed text-text-secondary italic break-words ${!isExpanded ? "line-clamp-3" : ""}`}>
+          "{t.description}"
+        </p>
+
+        {/* Expand/collapse — desktop only; mobile keeps simple clamped truncation */}
+        {isLongReview && (
+          <button
+            type="button"
+            onClick={() => setIsExpanded((v) => !v)}
+            className="hidden sm:inline-flex items-center gap-1 mt-2 text-[11px] font-bold tracking-wide text-gold uppercase hover:text-gold-light transition-colors cursor-pointer"
+          >
+            {isExpanded ? (
+              <>Show Less <ChevronUp size={12} /></>
+            ) : (
+              <>View More <ChevronDown size={12} /></>
+            )}
+          </button>
+        )}
+      </div>
+
+      {/* Bottom Fixed Meta Info Area */}
+      <div>
+        {/* Author Details */}
+        <div className="flex items-center gap-3 border-t border-border pt-4">
+          {t.gender === "MALE" ? <MaleAvatar /> : <FemaleAvatar />}
+          <div>
+            <p className="text-sm font-semibold text-text group-hover:text-gold transition-colors duration-200">{t.name}</p>
+            <CountryFlag country={t.country} className="mt-1 h-3.5 w-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* Micro bottom layout strip using the core colors */}
+      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-gold transition-all duration-500 ease-[0.22,1,0.36,1] group-hover:w-full" />
+    </div>
+  );
+}
 
 export default function Testimonials() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -188,45 +252,15 @@ export default function Testimonials() {
         {displayTestimonials.length > 0 ? (
           <div className="relative">
             <div className="overflow-hidden -mx-3" ref={emblaRef}>
-              <div className="flex">
+              {/* items-start (not the flex default of stretch) so expanding one card's
+                  text doesn't force every other card in the row to grow with it. */}
+              <div className="flex items-start">
                 {displayTestimonials.map((t: any) => (
                   <div
                     key={t.id}
                     className="min-w-0 flex-[0_0_88%] px-3 sm:flex-[0_0_50%] lg:flex-[0_0_34%]"
                   >
-                    <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-gold/30 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.5)] glow-gold-hover">
-                      <div>
-                        {/* Header layout for Quote and Stars alignment */}
-                        <div className="flex items-center justify-between mb-4">
-                          <Quote size={28} className="text-gold/10 transform -scale-x-100" />
-                          <div className="flex gap-0.5">
-                            {Array.from({ length: t.rating }).map((_, i) => (
-                              <Star key={i} size={12} className="fill-gold text-gold" />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Review Paragraph */}
-                        <p className="mb-6 text-[13px] leading-relaxed text-text-secondary italic">
-                          "{t.description}"
-                        </p>
-                      </div>
-
-                      {/* Bottom Fixed Meta Info Area */}
-                      <div>
-                        {/* Author Details */}
-                        <div className="flex items-center gap-3 border-t border-border pt-4">
-                          {t.gender === "MALE" ? <MaleAvatar /> : <FemaleAvatar />}
-                          <div>
-                            <p className="text-sm font-semibold text-text group-hover:text-gold transition-colors duration-200">{t.name}</p>
-                            <CountryFlag country={t.country} className="mt-1 h-3.5 w-5" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Micro bottom layout strip using the core colors */}
-                      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-gold transition-all duration-500 ease-[0.22,1,0.36,1] group-hover:w-full" />
-                    </div>
+                    <TestimonialCard testimonial={t} />
                   </div>
                 ))}
               </div>
