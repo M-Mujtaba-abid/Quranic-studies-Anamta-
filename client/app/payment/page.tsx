@@ -199,14 +199,14 @@ function PaymentContent() {
       <main className="max-w-4xl mx-auto px-6 lg:px-10 mt-12 space-y-8 relative z-10">
 
         {/* Header Title */}
-        <div className="text-center space-y-2 max-w-lg mx-auto">
-          <span className="text-[20px] font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/20">
+        <div className="text-center max-w-lg mx-auto">
+          <span className="inline-block mb-5 text-[20px] font-bold tracking-widest text-gold uppercase bg-gold/10 px-3 py-1 rounded-full border border-gold/20">
             Payment Gateway
           </span>
           <h1 className="text-3xl font-bold font-display tracking-tight text-text">
             Submit Payment Receipt
           </h1>
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-text-secondary mt-2">
             Provide your enrollment details and upload your transfer screenshot to confirm your registration.
           </p>
         </div>
