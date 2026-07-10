@@ -27,8 +27,11 @@ interface PackageCardProps {
 export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: PackageCardProps) {
   const tierMeta = PACKAGE_TIER_META[pkg.packageTier as keyof typeof PACKAGE_TIER_META];
 
-  const stripHtml = (html: string) => {
-    return html ? html.replace(/<[^>]*>/g, '') : '';
+  const formatDescription = (description: string) => {
+    if (!description) return '';
+    const hasHtml = /<[a-z][\s\S]*>/i.test(description);
+    if (hasHtml) return description;
+    return description.replace(/\n/g, '<br />');
   };
 
   return (
@@ -64,11 +67,14 @@ export function PackageCard({ pkg, isSelected, onSelect, onViewDetails }: Packag
       </div>
 
       <div className="space-y-1">
-        <span className="text-[17px] font-bold  tracking-widest text-gold">
+        <span className="text-[17px] font-bold  tracking-widest text-gold uppercase">
           {tierMeta?.label ?? pkg.packageTier} Plan
         </span>
         <h4 className="text-sm font-bold text-text">{pkg.title}</h4>
-        <p className="text-xs text-text-secondary line-clamp-2">{stripHtml(pkg.description)}</p>
+        <div
+          className="text-xs text-text-secondary line-clamp-2 tiptap"
+          dangerouslySetInnerHTML={{ __html: formatDescription(pkg.description) }}
+        />
       </div>
 
 

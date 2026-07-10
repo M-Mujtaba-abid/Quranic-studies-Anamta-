@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
-import { 
-  GET_ALL_PAYMENTS, 
-  APPROVE_PAYMENT_MUTATION, 
-  REJECT_PAYMENT_MUTATION 
+import {
+  GET_ALL_PAYMENTS,
+  APPROVE_PAYMENT_MUTATION,
+  REJECT_PAYMENT_MUTATION,
+  UPDATE_PAYMENT_STATUS_MUTATION
 } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -42,6 +43,11 @@ export default function AdminPaymentsPage() {
   // Lightbox Receipt Modal
   const [previewScreenshotUrl, setPreviewScreenshotUrl] = useState<string | null>(null);
 
+  // Edit / Change Status Modal state
+  const [editingPayment, setEditingPayment] = useState<any>(null);
+  const [newStatus, setNewStatus] = useState<'UNDER_REVIEW' | 'PAID' | 'REJECTED' | null>(null);
+  const [editAdminNote, setEditAdminNote] = useState('');
+
   // Mutations
   const [approvePayment, { loading: approving }] = useMutation<any, any>(APPROVE_PAYMENT_MUTATION, {
     onCompleted: () => {
@@ -62,6 +68,17 @@ export default function AdminPaymentsPage() {
     },
     onError: (err) => {
       toast.error('Failed to reject payment', { description: err.message });
+    }
+  });
+
+  const [updatePaymentStatus, { loading: updatingStatus }] = useMutation<any, any>(UPDATE_PAYMENT_STATUS_MUTATION, {
+    onCompleted: () => {
+      toast.success('Payment status updated successfully');
+      closeEditModal();
+      refetch();
+    },
+    onError: (err) => {
+      toast.error('Failed to update payment status', { description: err.message });
     }
   });
 
@@ -114,6 +131,36 @@ export default function AdminPaymentsPage() {
         }
       });
     }
+  };
+
+  const openEditModal = (payment: any) => {
+    setEditingPayment(payment);
+    setNewStatus(payment.status);
+    setEditAdminNote(payment.adminNote || '');
+  };
+
+  const closeEditModal = () => {
+    setEditingPayment(null);
+    setNewStatus(null);
+    setEditAdminNote('');
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPayment || !newStatus) return;
+
+    if (newStatus === 'REJECTED' && !editAdminNote.trim()) {
+      toast.warning('Please enter a rejection reason in the notes field.');
+      return;
+    }
+
+    await updatePaymentStatus({
+      variables: {
+        id: editingPayment.id,
+        status: newStatus,
+        adminNote: editAdminNote.trim() || undefined
+      }
+    });
   };
 
   const getStatusBadge = (status: string) => {
@@ -291,16 +338,24 @@ export default function AdminPaymentsPage() {
                           </>
                         )}
                         {payment.status !== 'UNDER_REVIEW' && (
-                          <button
-                            onClick={() => {
-                              setSelectedPayment(payment);
-                              setActionType(null); // Just view details/notes
-                              setAdminNote(payment.adminNote || '');
-                            }}
-                            className="bg-primary/20 hover:bg-primary/30 border border-primary-light/20 text-text font-semibold text-[10px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors"
-                          >
-                            Logs
-                          </button>
+                          <>
+                            <button
+                              onClick={() => openEditModal(payment)}
+                              className="bg-gold hover:bg-gold-light text-primary-dark font-semibold text-[10px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors shadow-sm"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedPayment(payment);
+                                setActionType(null); // Just view details/notes
+                                setAdminNote(payment.adminNote || '');
+                              }}
+                              className="bg-primary/20 hover:bg-primary/30 border border-primary-light/20 text-text font-semibold text-[10px] px-2.5 py-1.5 rounded-lg cursor-pointer transition-colors"
+                            >
+                              Logs
+                            </button>
+                          </>
                         )}
                       </td>
                     </tr>
@@ -421,6 +476,150 @@ export default function AdminPaymentsPage() {
                     Dismiss
                   </Button>
                 )}
+              </div>
+
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit / Change Status Modal */}
+      {editingPayment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-surface border border-border w-full max-w-md rounded-2xl overflow-hidden shadow-2xl animate-fade-in">
+
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-bg/50">
+              <h3 className="text-sm font-bold font-display text-text">Update Payment Status</h3>
+              <button
+                onClick={closeEditModal}
+                className="p-1 rounded-lg border border-border/80 text-text-secondary hover:text-text transition-all cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleEditSubmit} className="p-6 space-y-4 text-xs">
+
+              {/* Payment Info */}
+              <div className="bg-bg/40 border border-border/40 p-3.5 rounded-xl space-y-1.5">
+                <p className="text-text-secondary"><span className="text-text font-medium">Student:</span> {editingPayment.enrollment?.student?.firstName} {editingPayment.enrollment?.student?.lastName}</p>
+                <p className="text-text-secondary"><span className="text-text font-medium">Course:</span> {editingPayment.enrollment?.course?.title}</p>
+                <p className="text-text-secondary"><span className="text-text font-medium">Transferred:</span> PKR {editingPayment.amount} via {editingPayment.paymentMethod.replace('_', ' ')}</p>
+                {editingPayment.transactionId && (
+                  <p className="text-text-secondary"><span className="text-text font-medium">Reference Code:</span> {editingPayment.transactionId}</p>
+                )}
+              </div>
+
+              {/* Current Status */}
+              <p className="text-text-secondary">
+                <span className="text-text font-medium">Current status:</span>{' '}
+                {editingPayment.status === 'PAID' ? 'Paid' : editingPayment.status === 'REJECTED' ? 'Rejected' : 'Under Review'}
+              </p>
+
+              {/* New Status Selector */}
+              <div className="space-y-1.5">
+                <label className="block text-text-secondary font-medium">New Status</label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setNewStatus('UNDER_REVIEW')}
+                    className={`flex-1 px-3 py-2 rounded-lg font-semibold border transition-colors cursor-pointer ${
+                      newStatus === 'UNDER_REVIEW'
+                        ? 'bg-yellow-500/15 border-yellow-500 text-yellow-500'
+                        : 'bg-bg border-border text-text-secondary hover:border-yellow-500/50'
+                    }`}
+                    disabled={updatingStatus}
+                  >
+                    Pending
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewStatus('PAID')}
+                    className={`flex-1 px-3 py-2 rounded-lg font-semibold border transition-colors cursor-pointer ${
+                      newStatus === 'PAID'
+                        ? 'bg-emerald-500/15 border-emerald-500 text-emerald-500'
+                        : 'bg-bg border-border text-text-secondary hover:border-emerald-500/50'
+                    }`}
+                    disabled={updatingStatus}
+                  >
+                    Approved
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewStatus('REJECTED')}
+                    className={`flex-1 px-3 py-2 rounded-lg font-semibold border transition-colors cursor-pointer ${
+                      newStatus === 'REJECTED'
+                        ? 'bg-red-500/15 border-red-500 text-red-500'
+                        : 'bg-bg border-border text-text-secondary hover:border-red-500/50'
+                    }`}
+                    disabled={updatingStatus}
+                  >
+                    Rejected
+                  </button>
+                </div>
+              </div>
+
+              {/* Contextual instructions per selected status */}
+              {newStatus === 'PAID' && (
+                <p className="text-emerald-500/90 font-medium">
+                  This will grant the student access to the course and mark this payment as PAID. An approval email will be sent. Continue?
+                </p>
+              )}
+
+              {newStatus === 'UNDER_REVIEW' && (
+                <p className="text-yellow-500/90 font-medium">
+                  This will reset the payment back to Under Review. No email will be sent to the student.
+                </p>
+              )}
+
+              {newStatus === 'REJECTED' && (
+                <>
+                  <p className="text-red-500/90 font-medium">
+                    Rejecting this payment will notify the student with the reason below.
+                  </p>
+                  <div className="space-y-1.5">
+                    <label className="block text-text-secondary font-medium">Rejection Reason *</label>
+                    <textarea
+                      value={editAdminNote}
+                      onChange={(e) => setEditAdminNote(e.target.value)}
+                      placeholder="Specify why the transfer receipt is invalid..."
+                      className="w-full h-24 bg-surface border border-border rounded-lg py-2 px-3 text-text focus:outline-none focus:border-gold resize-none"
+                      required
+                      disabled={updatingStatus}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-2 pt-4 border-t border-border mt-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={closeEditModal}
+                  disabled={updatingStatus}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  type="submit"
+                  variant="gold"
+                  size="sm"
+                  isLoading={updatingStatus}
+                  className={
+                    newStatus === 'PAID'
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white font-semibold'
+                      : newStatus === 'REJECTED'
+                      ? 'bg-red-600 hover:bg-red-700 text-white font-semibold'
+                      : ''
+                  }
+                >
+                  {newStatus === 'PAID' ? 'Confirm Approval' : newStatus === 'REJECTED' ? 'Confirm Rejection' : 'Reset to Pending'}
+                </Button>
               </div>
 
             </form>

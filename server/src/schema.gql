@@ -372,6 +372,7 @@ type Mutation {
   createPayment(createPaymentInput: CreatePaymentInput!): Payment!
   approvePayment(id: ID!, adminNote: String): Payment!
   rejectPayment(id: ID!, adminNote: String): Payment!
+  updatePaymentStatus(id: ID!, status: PaymentStatus!, adminNote: String): Payment!
   updatePayment(updatePaymentInput: UpdatePaymentInput!): Payment!
   deletePayment(id: ID!): Payment!
   createPaymentSetting(createPaymentSettingInput: CreatePaymentSettingInput!): PaymentSetting!

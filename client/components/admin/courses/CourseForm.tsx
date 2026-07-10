@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { X, Copy, Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -83,8 +83,12 @@ interface CourseFormProps {
 }
 
 export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, onClose, onSubmit }: CourseFormProps) {
-  const methods = useForm<CourseFormValues>({ defaultValues: buildDefaultValues() });
-  const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = methods;
+  const methods = useForm<CourseFormValues>({
+    defaultValues: buildDefaultValues(),
+    // Region tabs unmount package fields; keep values when editors are not mounted.
+    shouldUnregister: false,
+  });
+  const { register, handleSubmit, watch, setValue, getValues, reset, control, formState: { errors } } = methods;
   const { fields, append, remove, update } = useFieldArray({ control: methods.control, name: 'packages' });
 
   const [activeRegion, setActiveRegion] = useState<Region>(LOCAL_REGION);
@@ -140,9 +144,10 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
     PACKAGE_TIERS.forEach((tier) => {
       const sourceIndex = othersIndices.find((i) => fields[i].packageTier === tier);
       if (sourceIndex === undefined) return;
-      const source = fields[sourceIndex];
+      const source = getValues(`packages.${sourceIndex}`);
 
       const targetIndex = regionIndices(targetRegion).find((i) => fields[i].packageTier === tier);
+      const targetPackage = targetIndex !== undefined ? getValues(`packages.${targetIndex}`) : undefined;
       const nextValue: PackageFormValues = {
         region: targetRegion,
         packageTier: tier,
@@ -150,7 +155,7 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
         title: source.title,
         description: source.description,
         imageUrl: source.imageUrl,
-        price: targetIndex !== undefined ? fields[targetIndex].price : 0,
+        price: targetPackage?.price ?? 0,
       };
 
       if (targetIndex !== undefined) {
@@ -307,14 +312,19 @@ export function CourseForm({ isOpen, isEditMode, initialCourse, isSubmitting, on
                   <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider">
                     Description *
                   </label>
-                  <TiptapEditor
-                    value={watch("description")}
-                    onChange={(value) =>
-                      setValue("description", value, {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                      })
-                    }
+                  <Controller
+                    name="description"
+                    control={control}
+                    rules={{
+                      required: 'Description is required.',
+                      validate: (value) => {
+                        const text = (value || '').replace(/<[^>]*>/g, '').trim();
+                        return text.length > 0 || 'Description is required.';
+                      },
+                    }}
+                    render={({ field }) => (
+                      <TiptapEditor value={field.value || ''} onChange={field.onChange} />
+                    )}
                   />
                   {errors.description?.message && (
                     <span className="text-xs text-red-500">{errors.description.message}</span>

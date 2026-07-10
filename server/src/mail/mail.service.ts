@@ -1,22 +1,40 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService implements OnModuleInit {
   private transporter: nodemailer.Transporter;
+  private readonly logger = new Logger(MailService.name);
 
   constructor(
     @Inject(ConfigService) private readonly configService: ConfigService,
   ) {}
 
   onModuleInit() {
+    const user = this.configService.get<string>('GMAIL_USER');
+    const pass = this.configService.get<string>('GMAIL_APP_PASSWORD');
+
+    if (!user || !pass) {
+      this.logger.error(
+        `Missing mail credentials in the environment — GMAIL_USER is ${user ? 'set' : 'MISSING'}, GMAIL_APP_PASSWORD is ${pass ? 'set' : 'MISSING'}. Emails will fail until both are set.`,
+      );
+    }
+
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
-      auth: {
-        user: this.configService.get<string>('GMAIL_USER'),
-        pass: this.configService.get<string>('GMAIL_APP_PASSWORD'),
-      },
+      auth: { user, pass },
+    });
+
+    // Verifies the SMTP connection/auth at startup so a bad app password or blocked
+    // connection shows up in the logs immediately, instead of only surfacing later as a
+    // swallowed .catch() on the first real email send.
+    this.transporter.verify((error) => {
+      if (error) {
+        this.logger.error('Gmail SMTP verification failed — emails will NOT be sent.', error);
+      } else {
+        this.logger.log('Gmail SMTP connection verified — ready to send emails.');
+      }
     });
   }
 
@@ -366,12 +384,14 @@ export class MailService implements OnModuleInit {
     studentEmail: string,
     student: { firstName: string; lastName: string },
     course: { title: string },
-    payment: { amount: number; status: string; adminNote?: string | null }
+    payment: { amount: number; status: string; adminNote?: string | null; enrollmentId?: string }
   ) {
     const sender = this.configService.get<string>('GMAIL_USER');
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
     const isApproved = payment.status === 'PAID';
     const statusText = isApproved ? 'APPROVED' : 'REJECTED';
     const themeColor = isApproved ? '#2e7d32' : '#c62828';
+    const resubmitUrl = `${frontendUrl}/payment?enrollmentId=${payment.enrollmentId}`;
 
     const mailOptions = {
       from: `"Anamta Institute" <${sender}>`,
@@ -409,6 +429,9 @@ export class MailService implements OnModuleInit {
           <p><strong>Your enrollment is now APPROVED and fully active!</strong> Our academic coordinator will contact you shortly with class links and login details.</p>
           ` : `
           <p>Unfortunately, we were unable to verify your payment. Please review the note above and submit a new payment proof, or contact support at <a href="mailto:anamtainstitute@gmail.com">anamtainstitute@gmail.com</a> if you think this is a mistake.</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resubmitUrl}" style="background-color: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Resubmit Payment</a>
+          </div>
           `}
 
           <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 12px; border-top: 1px solid #eee; padding-top: 15px;">
@@ -460,7 +483,8 @@ export class MailService implements OnModuleInit {
     if (subscriberEmails.length === 0) return;
 
     const sender = this.configService.get<string>('GMAIL_USER');
-    const courseUrl = `http://localhost:3000/courses/${course.id}`;
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const courseUrl = `${frontendUrl}/courses/${course.id}`;
 
     const mailOptions = {
       from: `"Anamta Institute" <${sender}>`,
