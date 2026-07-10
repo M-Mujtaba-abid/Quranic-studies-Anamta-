@@ -11,6 +11,7 @@ import {
 } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { showErrorToast } from '@/lib/toast-error';
 import {
   Mail,
   Check,
@@ -59,7 +60,7 @@ export default function AdminContactMessages() {
       refetch();
     },
     onError: (err) => {
-      toast.error('Failed to mark message as read', { description: err.message });
+      showErrorToast('Failed to mark message as read', err);
     }
   });
 
@@ -71,7 +72,7 @@ export default function AdminContactMessages() {
       refetch();
     },
     onError: (err) => {
-      toast.error('Failed to send reply email', { description: err.message });
+      showErrorToast('Failed to send reply email', err);
     }
   });
 
@@ -81,7 +82,7 @@ export default function AdminContactMessages() {
       refetch();
     },
     onError: (err) => {
-      toast.error('Failed to delete message', { description: err.message });
+      showErrorToast('Failed to delete message', err);
     }
   });
 

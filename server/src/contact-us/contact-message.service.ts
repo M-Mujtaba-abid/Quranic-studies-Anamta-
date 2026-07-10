@@ -34,13 +34,13 @@ export class ContactMessageService {
   async reply(id: string, replyContent: string) {
     const message = await this.findOne(id);
     
-    // Send reply email asynchronously
-    this.mailService.sendContactReplyEmail(
+    // Send reply email and await it so errors are caught by the GraphQL resolver
+    await this.mailService.sendContactReplyEmail(
       message.email,
       message.name,
       message.subject,
       replyContent
-    ).catch(err => console.error(`Failed to send contact reply email to ${message.email}:`, err));
+    );
 
     // Automatically mark as read when replied
     return await this.repository.markAsRead(id);
