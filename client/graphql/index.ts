@@ -18,6 +18,7 @@ export * from './mutations/testimonial';
 export * from './mutations/contact';
 export * from './mutations/payment-setting';
 export * from './mutations/newsletter';
+export * from './mutations/student';
 
 // Queries
 export * from './queries/dashboard';
