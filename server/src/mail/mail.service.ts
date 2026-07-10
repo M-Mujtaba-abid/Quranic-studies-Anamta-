@@ -483,7 +483,8 @@ export class MailService implements OnModuleInit {
     if (subscriberEmails.length === 0) return;
 
     const sender = this.configService.get<string>('GMAIL_USER');
-    const courseUrl = `http://localhost:3000/courses/${course.id}`;
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const courseUrl = `${frontendUrl}/courses/${course.id}`;
 
     const mailOptions = {
       from: `"Anamta Institute" <${sender}>`,
