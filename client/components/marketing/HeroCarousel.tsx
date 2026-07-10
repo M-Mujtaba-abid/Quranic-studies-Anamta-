@@ -183,16 +183,16 @@ export default function HeroCarousel() {
                 className="mx-auto max-w-[15ch] font-display text-[1.55rem] font-semibold leading-[1.08] text-text sm:mx-0 sm:max-w-none sm:text-4xl sm:leading-[1.18] md:text-5xl lg:text-[3.4rem]"
               >
                 {active.title.split(active.highlight)[0]}
-                <span className="relative inline-block text-gold">
+                <motion.span
+                  key={`highlight-${active.id}`}
+                  initial={{ backgroundSize: "0% 2px" }}
+                  animate={{ backgroundSize: "100% 2px" }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="text-gold bg-gradient-to-r from-gold to-gold-light bg-no-repeat bg-left-bottom"
+                  style={{ boxDecorationBreak: "clone", WebkitBoxDecorationBreak: "clone" }}
+                >
                   {active.highlight}
-                  <motion.span
-                    key={`underline-${active.id}`}
-                    className="absolute -bottom-0.5 left-0 h-[2px] bg-gradient-to-r from-gold to-gold-light"
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                  />
-                </span>
+                </motion.span>
                 {active.title.split(active.highlight)[1]}
               </h1>
 
