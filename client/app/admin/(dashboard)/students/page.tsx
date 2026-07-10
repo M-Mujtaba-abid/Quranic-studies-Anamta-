@@ -1,30 +1,51 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client/react';
-import { GET_ALL_STUDENTS } from '@/graphql';
+import { useQuery, useMutation } from '@apollo/client/react';
+import { GET_ALL_STUDENTS, DELETE_STUDENT_MUTATION } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { PACKAGE_TIER_META } from '@/constants/regions';
-import { 
-  Users, 
-  Search, 
-  RefreshCw, 
-  Eye, 
-  MapPin, 
-  Calendar, 
+import { showErrorToast } from '@/lib/toast-error';
+import { toast } from 'sonner';
+import {
+  Users,
+  Search,
+  RefreshCw,
+  Eye,
+  MapPin,
+  Calendar,
   BookOpen,
   Mail,
   Phone,
   User,
   CheckCircle,
-  XCircle
+  XCircle,
+  Copy,
+  Trash2
 } from 'lucide-react';
 
 export default function AdminStudentsPage() {
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_STUDENTS, {
     fetchPolicy: 'network-only'
   });
+
+  const [deleteStudent, { loading: isDeleting }] = useMutation(DELETE_STUDENT_MUTATION, {
+    onCompleted: () => {
+      toast.success('Student deleted successfully');
+      setSelectedStudent(null);
+      refetch();
+    },
+    onError: (err) => {
+      showErrorToast('Failed to delete student', err);
+    }
+  });
+
+  const handleDeleteStudent = async (id: string) => {
+    if (confirm('Are you sure you want to delete this student? Deleting the student will also permanently remove all their enrollments, payments, and other records. This action cannot be undone.')) {
+      await deleteStudent({ variables: { id } });
+    }
+  };
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -51,16 +72,16 @@ export default function AdminStudentsPage() {
 
   return (
     <div className="space-y-6">
-      
+
       {/* Page Title */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border/40 pb-4">
         <div>
           <h1 className="text-2xl font-bold font-display tracking-tight text-text">Students</h1>
           <p className="text-xs text-text-secondary">View and manage registered student profiles and their records.</p>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => refetch()}
           leftIcon={<RefreshCw size={14} className={loading ? 'animate-spin' : ''} />}
         >
@@ -226,7 +247,7 @@ export default function AdminStudentsPage() {
                 <User className="text-gold h-5 w-5" />
                 <h3 className="text-base font-bold font-display text-text">Student Profile</h3>
               </div>
-              <button 
+              <button
                 onClick={() => setSelectedStudent(null)}
                 className="p-1.5 rounded-lg border border-border/80 text-text-secondary hover:text-text hover:bg-bg transition-all cursor-pointer"
               >
@@ -236,7 +257,7 @@ export default function AdminStudentsPage() {
 
             {/* Modal Body */}
             <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-              
+
               {/* Core Details Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-bg/40 p-4 rounded-xl border border-border/40 text-xs">
                 <div className="space-y-1">
@@ -264,6 +285,23 @@ export default function AdminStudentsPage() {
                   <span className="text-text">
                     {selectedStudent.isActive ? 'Active' : 'Inactive'} • Joined {new Date(selectedStudent.createdAt).toLocaleDateString()}
                   </span>
+                </div>
+                <div className="space-y-1 sm:col-span-2 border-t border-border/20 pt-3 mt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <span className="block text-[10px] font-semibold text-text-secondary uppercase tracking-wider mb-0.5">Student ID</span>
+                    <code className="text-gold font-mono text-xs select-all break-all">{selectedStudent.id}</code>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(selectedStudent.id);
+                      toast.success('Student ID copied to clipboard');
+                    }}
+                    className="self-start sm:self-center px-2.5 py-1.5 rounded-lg border border-border text-text-secondary hover:text-gold hover:bg-bg transition-all cursor-pointer flex items-center gap-1.5 text-[11px]"
+                    title="Copy Student ID"
+                  >
+                    <Copy size={12} />
+                    <span>Copy Student ID</span>
+                  </button>
                 </div>
               </div>
 
@@ -303,16 +341,26 @@ export default function AdminStudentsPage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-text-secondary font-mono bg-bg border border-border px-1.5 py-0.5 rounded truncate max-w-[120px]" title={enrollment.id}>
-                            ID: {enrollment.id}
-                          </span>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                            enrollment.status === 'APPROVED' 
-                              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'
-                              : enrollment.status === 'PENDING'
+                          <div className="flex items-center gap-1 bg-bg border border-border px-1.5 py-0.5 rounded text-[10px] font-mono text-text-secondary">
+                            <span className="truncate max-w-[120px]" title={enrollment.id}>ID: {enrollment.id}</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(enrollment.id);
+                                toast.success('Enrollment ID copied to clipboard');
+                              }}
+                              className="text-text-secondary hover:text-gold transition-colors cursor-pointer ml-1"
+                              title="Copy Enrollment ID"
+                            >
+                              <Copy size={10} />
+                            </button>
+                          </div>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${enrollment.status === 'APPROVED'
+                            ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'
+                            : enrollment.status === 'PENDING'
                               ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
                               : 'bg-red-500/10 border-red-500/20 text-red-500'
-                          }`}>
+                            }`}>
                             {enrollment.status}
                           </span>
                         </div>
@@ -322,6 +370,26 @@ export default function AdminStudentsPage() {
                 )}
               </div>
 
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-border flex justify-between items-center bg-bg/50">
+              {/* <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setSelectedStudent(null)}
+              >
+                Close
+              </Button> */}
+              <button
+                type="button"
+                onClick={() => handleDeleteStudent(selectedStudent.id)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 text-xs font-semibold flex items-center gap-1.5 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Trash2 size={14} />
+                {isDeleting ? 'Deleting...' : 'Delete Student'}
+              </button>
             </div>
           </div>
         </div>
