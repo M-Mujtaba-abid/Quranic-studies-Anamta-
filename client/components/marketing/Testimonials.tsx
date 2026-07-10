@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Quote, X, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, Quote, X, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useQuery, useMutation } from "@apollo/client/react";
@@ -15,8 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { GET_APPROVED_TESTIMONIALS, SUBMIT_TESTIMONIAL } from "@/graphql";
 import { CountryFlag } from "../common/CountryFlag";
 // Minimal silhouette-style avatars — no facial features, just clean shapes
-const MaleAvatar = () => (
-  <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
+const MaleAvatar = ({ className = "h-10 w-10" }: { className?: string }) => (
+  <svg viewBox="0 0 100 100" className={`${className} rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none`}>
     <defs>
       <linearGradient id="maleSkin" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stopColor="#e8c9a0" />
@@ -51,8 +51,8 @@ const MaleAvatar = () => (
   </svg>
 );
 
-const FemaleAvatar = () => (
-  <svg viewBox="0 0 100 100" className="h-10 w-10 rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none">
+const FemaleAvatar = ({ className = "h-10 w-10" }: { className?: string }) => (
+  <svg viewBox="0 0 100 100" className={`${className} rounded-full bg-surface border border-gold/30 p-0.5 flex-shrink-0 select-none`}>
     <defs>
       <linearGradient id="femaleSkin" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stopColor="#f0d4ac" />
@@ -93,12 +93,10 @@ const FemaleAvatar = () => (
 // card's width — same heuristic ExpandableDescription uses, just tuned for this card size.
 const LONG_REVIEW_THRESHOLD = 150;
 
-// One testimonial card, with its own isolated expand/collapse state — collapsed reviews
-// use native line-clamp (clean ellipsis, fixes the old hard-clip-via-overflow bug) with a
-// gold "View More" toggle in the same visual pattern as ExpandableDescription. The toggle
-// is desktop-only (sm:+); on mobile the review just stays cleanly clamped with no button.
-function TestimonialCard({ testimonial: t }: { testimonial: any }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+// One testimonial card. The review always stays clamped to 3 lines at a fixed card
+// height — full text (Trustpilot/G2-style) opens in a modal via onReadMore instead of
+// expanding the card in place, so every card in the carousel row stays the same height.
+function TestimonialCard({ testimonial: t, onReadMore }: { testimonial: any; onReadMore: (t: any) => void }) {
   const isLongReview = t.description.length > LONG_REVIEW_THRESHOLD;
 
   return (
@@ -115,22 +113,17 @@ function TestimonialCard({ testimonial: t }: { testimonial: any }) {
         </div>
 
         {/* Review Paragraph */}
-        <p className={`w-full text-[13px] leading-relaxed text-text-secondary italic break-words ${!isExpanded ? "line-clamp-3" : ""}`}>
+        <p className="w-full text-[13px] leading-relaxed text-text-secondary italic break-words line-clamp-3">
           "{t.description}"
         </p>
 
-        {/* Expand/collapse — desktop only; mobile keeps simple clamped truncation */}
         {isLongReview && (
           <button
             type="button"
-            onClick={() => setIsExpanded((v) => !v)}
-            className="hidden sm:inline-flex items-center gap-1 mt-2 text-[11px] font-bold tracking-wide text-gold uppercase hover:text-gold-light transition-colors cursor-pointer"
+            onClick={() => onReadMore(t)}
+            className="inline-flex items-center gap-1 mt-2 text-[11px] font-bold tracking-wide text-gold uppercase hover:text-gold-light transition-colors cursor-pointer"
           >
-            {isExpanded ? (
-              <>Show Less <ChevronUp size={12} /></>
-            ) : (
-              <>View More <ChevronDown size={12} /></>
-            )}
+            Read More <ChevronDown size={12} />
           </button>
         )}
       </div>
@@ -155,6 +148,7 @@ function TestimonialCard({ testimonial: t }: { testimonial: any }) {
 
 export default function Testimonials() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState<any | null>(null);
   const [name, setName] = useState("");
   const [gender, setGender] = useState<"MALE" | "FEMALE">("MALE");
   const [country, setCountry] = useState("");
@@ -171,6 +165,17 @@ export default function Testimonials() {
   );
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  // Pause autoplay while the "read more" modal is open so slides don't shift underneath it
+  useEffect(() => {
+    const autoplay: any = emblaApi?.plugins()?.autoplay;
+    if (!autoplay) return;
+    if (activeTestimonial) {
+      autoplay.stop();
+    } else {
+      autoplay.play();
+    }
+  }, [activeTestimonial, emblaApi]);
 
   // Mutation to submit testimonial
   const [submitReview, { loading: isSubmitting }] = useMutation<any, any>(SUBMIT_TESTIMONIAL, {
@@ -260,7 +265,7 @@ export default function Testimonials() {
                     key={t.id}
                     className="min-w-0 flex-[0_0_88%] px-3 sm:flex-[0_0_50%] lg:flex-[0_0_34%]"
                   >
-                    <TestimonialCard testimonial={t} />
+                    <TestimonialCard testimonial={t} onReadMore={setActiveTestimonial} />
                   </div>
                 ))}
               </div>
@@ -290,6 +295,71 @@ export default function Testimonials() {
           </p>
         )}
       </div>
+
+      {/* Full Review "Read More" Popup Modal — Trustpilot/G2-style */}
+      <AnimatePresence>
+        {activeTestimonial && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveTestimonial(null)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
+
+            {/* Modal Body */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="glass max-w-lg w-full p-6 sm:p-8 rounded-2xl border border-gold/30 glow-gold relative shadow-2xl z-10 max-h-[85vh] overflow-y-auto"
+            >
+              <button
+                onClick={() => setActiveTestimonial(null)}
+                className="absolute top-4 right-4 text-text-secondary hover:text-gold transition-colors p-1"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Top row: decorative quote icon + full star rating */}
+              <div className="flex items-center justify-between mb-6 pr-8">
+                <Quote size={40} className="text-gold/15 transform -scale-x-100" />
+                <div className="flex gap-1">
+                  {Array.from({ length: activeTestimonial.rating }).map((_, i) => (
+                    <Star key={i} size={16} className="fill-gold text-gold" />
+                  ))}
+                </div>
+              </div>
+
+              {/* Full review text */}
+              <p className="text-base leading-relaxed italic text-text-secondary break-words">
+                "{activeTestimonial.description}"
+              </p>
+
+              {/* Divider */}
+              <div className="border-t border-border my-6" />
+
+              {/* Author info */}
+              <div className="flex items-center gap-3">
+                {activeTestimonial.gender === "MALE" ? (
+                  <MaleAvatar className="h-14 w-14" />
+                ) : (
+                  <FemaleAvatar className="h-14 w-14" />
+                )}
+                <div>
+                  <p className="text-base font-bold text-text">{activeTestimonial.name}</p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <CountryFlag country={activeTestimonial.country} className="h-4 w-6" />
+                    <span className="text-sm text-text-secondary">{activeTestimonial.country}</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Review Submission Popup Modal */}
       <AnimatePresence>
