@@ -16,6 +16,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { SUBMIT_CONTACT_MESSAGE } from "@/graphql";
+import { showErrorToast } from "@/lib/toast-error";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -32,7 +33,7 @@ export default function ContactPage() {
       setMessage("");
     },
     onError: (err) => {
-      toast.error(err.message || "Failed to send message. Please try again.");
+      showErrorToast("Failed to send message", err);
     }
   });
 
@@ -40,6 +41,32 @@ export default function ContactPage() {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
       toast.warning("Please fill out all required fields.");
+      return;
+    }
+
+    if (name.trim().length < 2) {
+      toast.warning("Name must be at least 2 characters long.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      toast.warning("Please enter a valid email address.");
+      return;
+    }
+
+    if (subject.trim().length < 3) {
+      toast.warning("Subject must be at least 3 characters long.");
+      return;
+    }
+
+    if (message.trim().length < 10) {
+      toast.warning("Message must be at least 10 characters long.");
+      return;
+    }
+
+    if (message.trim().length > 2000) {
+      toast.warning("Message cannot exceed 2000 characters.");
       return;
     }
 
