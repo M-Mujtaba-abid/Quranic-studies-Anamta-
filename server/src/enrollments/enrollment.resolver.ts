@@ -1,6 +1,7 @@
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Enrollment } from './models/enrollment.model';
+import { EnrollmentProfile } from './models/enrollment-profile.model';
 import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentInput } from './dto/create-enrollment.input';
 import { UpdateEnrollmentInput } from './dto/update-enrollment.input';
@@ -43,6 +44,21 @@ export class EnrollmentResolver {
     return await this.enrollmentService.findOne(id);
   }
 
+  // --- Public Query (ID-based /my-enrollment profile page — no login required) ---
+  // Looks up the enrollment purely to identify which student it belongs to, then returns
+  // that student's full profile plus ALL of their enrollments (not just the one looked up),
+  // matching "found via the student's email/phone" — same Student record the enrollment
+  // flow already finds-or-creates by.
+  @Query(() => EnrollmentProfile, { name: 'enrollmentProfile' })
+  async getEnrollmentProfile(
+    @Args('enrollmentId', { type: () => ID })
+    enrollmentId: string,
+  ) {
+    const enrollment = await this.enrollmentService.findOne(enrollmentId);
+    const student = await this.studentsService.findOne(enrollment.studentId);
+    const enrollments = await this.studentsService.findEnrollments(student.id);
+    return { student, enrollments };
+  }
 
   // --- Admin-only Operations ---
   @Mutation(() => Enrollment)
