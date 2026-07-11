@@ -4,10 +4,10 @@ import { Payment } from './models/payment.model';
 import { PaymentService } from './payment.service';
 import { CreatePaymentInput } from './dto/create-payment.input';
 import { UpdatePaymentInput } from './dto/update-payment.input';
+import { ResubmitPaymentInput } from './dto/resubmit-payment.input';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Role, PaymentStatus } from '@prisma/client';
 import { Enrollment } from '../enrollments/models/enrollment.model';
 
@@ -24,11 +24,15 @@ export class PaymentResolver {
     return await this.service.create(input);
   }
 
-  // --- Authenticated User Queries ---
-  @Query(() => [Payment], { name: 'myPayments' })
-  @UseGuards(JwtAuthGuard)
-  async myPayments(@CurrentUser() user: any) {
-    return await this.service.findByStudentEmail(user.email);
+  // Public/unauthenticated, same trust model as createPayment above — the enrollmentId
+  // itself (a long random id, only ever known to the student via email/the /payment or
+  // /my-enrollment pages) is the capability, matching the rest of this guest payment flow.
+  @Mutation(() => Payment)
+  async resubmitPayment(
+    @Args('input')
+    input: ResubmitPaymentInput,
+  ) {
+    return await this.service.resubmit(input);
   }
 
   // --- Admin-only Queries ---
