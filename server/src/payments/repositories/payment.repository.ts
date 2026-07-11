@@ -73,6 +73,24 @@ export class PaymentRepository {
     });
   }
 
+  // Student-initiated resubmission of a rejected payment: replaces the proof and puts it
+  // back into review. Ownership and REJECTED-status checks happen in PaymentService.
+  async resubmit(
+    id: string,
+    data: { screenshotUrl: string; screenshotPublicId: string; transactionId?: string },
+  ): Promise<Payment> {
+    return await this.database.payment.update({
+      where: { id },
+      data: {
+        screenshotUrl: data.screenshotUrl,
+        screenshotPublicId: data.screenshotPublicId,
+        transactionId: data.transactionId,
+        status: 'UNDER_REVIEW',
+        adminNote: null,
+      },
+    });
+  }
+
   async update(input: UpdatePaymentInput): Promise<Payment> {
     const { id, ...data } = input;
     return await this.database.payment.update({
