@@ -27,6 +27,15 @@ export const DELETE_COURSE_MUTATION = gql`
   }
 `;
 
+export const REORDER_COURSES_MUTATION = gql`
+  mutation ReorderCourses($input: ReorderCoursesInput!) {
+    reorderCourses(input: $input) {
+      id
+      sortOrder
+    }
+  }
+`;
+
 export const GENERATE_UPLOAD_SIGNATURE = gql`
   mutation GenerateUploadSignature($input: GenerateUploadSignatureInput!) {
     generateUploadSignature(input: $input) {

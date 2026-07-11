@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, Float, registerEnumType } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Float, Int, registerEnumType } from '@nestjs/graphql';
 import { Region, PackageTier, EnrollmentMode } from '@prisma/client';
 
 registerEnumType(Region, {
@@ -72,6 +72,9 @@ export class Course {
 
   @Field()
   isActive!: boolean;
+
+  @Field(() => Int)
+  sortOrder!: number;
 
   @Field(() => [CoursePackage], { nullable: true })
   packages?: CoursePackage[];

@@ -39,6 +39,7 @@ export const GET_ALL_COURSES_WITH_PRICING = gql`
       isActive
       category
       features
+      sortOrder
       createdAt
       updatedAt
       pricing(country: $country) {

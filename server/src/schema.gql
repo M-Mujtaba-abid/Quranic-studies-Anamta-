@@ -56,6 +56,7 @@ type Course {
   features: [String!]
   category: EnrollmentMode!
   isActive: Boolean!
+  sortOrder: Int!
   packages: [CoursePackage!]
   pricing(country: String): [CoursePackage!]
   createdAt: DateTime!
@@ -362,6 +363,7 @@ type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
   createCourse(createCourseInput: CreateCourseInput!): Course!
   updateCourse(updateCourseInput: UpdateCourseInput!): Course!
+  reorderCourses(input: ReorderCoursesInput!): [Course!]!
   deleteCourse(id: ID!): Course!
   subscribeToNewsletter(subscribeNewsletterInput: SubscribeNewsletterInput!): Subscriber!
   generateUploadSignature(input: GenerateUploadSignatureInput!): UploadSignature!
@@ -467,6 +469,15 @@ input UpdateCourseInput {
   packages: [CreateCoursePackageInput!]
   id: ID!
   isActive: Boolean
+}
+
+input ReorderCoursesInput {
+  items: [CourseSortOrderInput!]!
+}
+
+input CourseSortOrderInput {
+  id: ID!
+  sortOrder: Int!
 }
 
 input SubscribeNewsletterInput {

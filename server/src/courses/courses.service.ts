@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseInput } from './dto/create-course.input';
 import { UpdateCourseInput } from './dto/update.course.input';
+import { ReorderCoursesInput } from './dto/reorder-courses.input';
 import { CourseRepository } from './repositories/course.repository';
 import { mapCountryToRegion } from '../common/utils/region.util';
 import { Region, Course } from '@prisma/client';
@@ -87,6 +88,10 @@ export class CoursesService {
     }
 
     return updatedCourse;
+  }
+
+  async reorder(reorderCoursesInput: ReorderCoursesInput) {
+    return await this.courseRepository.reorder(reorderCoursesInput.items);
   }
 
   async remove(id: string) {

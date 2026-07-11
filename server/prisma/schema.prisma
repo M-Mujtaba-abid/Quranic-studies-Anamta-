@@ -48,12 +48,17 @@ model Course {
 
   isActive    Boolean  @default(true)
 
+  // Manual display order within a category (lower shows first). Backfilled from
+  // createdAt on existing rows; new rows default to 0 until explicitly reordered.
+  sortOrder   Int      @default(0)
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   enrollments Enrollment[]
   packages    CoursePackage[]
 
+  @@index([category, sortOrder])
   @@map("courses")
 }
 

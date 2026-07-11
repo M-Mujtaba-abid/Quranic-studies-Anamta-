@@ -3,6 +3,7 @@ import { Course, CoursePackage } from './models/course.model';
 import { CoursesService } from './courses.service';
 import { CreateCourseInput } from './dto/create-course.input';
 import { UpdateCourseInput } from './dto/update.course.input';
+import { ReorderCoursesInput } from './dto/reorder-courses.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -68,6 +69,16 @@ export class CoursesResolver {
     updateCourseInput: UpdateCourseInput,
   ) {
     return await this.coursesService.update(updateCourseInput);
+  }
+
+  @Mutation(() => [Course])
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async reorderCourses(
+    @Args('input')
+    input: ReorderCoursesInput,
+  ) {
+    return await this.coursesService.reorder(input);
   }
 
   @Mutation(() => Course)

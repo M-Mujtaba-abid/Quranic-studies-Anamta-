@@ -26,6 +26,7 @@ export const COURSE_FIELDS = gql`
     isActive
     features
     category
+    sortOrder
     createdAt
     updatedAt
     packages {
