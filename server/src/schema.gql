@@ -165,6 +165,7 @@ type User {
 enum Role {
   ADMIN
   USER
+  STUDENT
 }
 
 type LoginResponse {
@@ -186,6 +187,11 @@ type UploadSignature {
   apiKey: String!
   cloudName: String!
   folder: String!
+}
+
+type EnrollmentProfile {
+  student: Student!
+  enrollments: [Enrollment!]!
 }
 
 type PaymentSetting {
@@ -317,7 +323,6 @@ type Country {
 
 type Query {
   healthCheck: String!
-  myStudentProfile: Student!
   students: [Student!]!
   student(id: ID!): Student!
   users: [User!]!
@@ -327,9 +332,9 @@ type Query {
   coursePricesForRegion(courseId: ID!, country: String): [CoursePackage!]!
   subscribers: [Subscriber!]!
   publicEnrollment(id: ID!): Enrollment!
+  enrollmentProfile(enrollmentId: ID!): EnrollmentProfile!
   enrollments: [Enrollment!]!
   enrollment(id: ID!): Enrollment!
-  myPayments: [Payment!]!
   payments: [Payment!]!
   payment(id: ID!): Payment!
   activePaymentSetting: PaymentSetting!
@@ -372,6 +377,7 @@ type Mutation {
   updateEnrollment(updateEnrollmentInput: UpdateEnrollmentInput!): Enrollment!
   deleteEnrollment(id: ID!): Enrollment!
   createPayment(createPaymentInput: CreatePaymentInput!): Payment!
+  resubmitPayment(input: ResubmitPaymentInput!): Payment!
   approvePayment(id: ID!, adminNote: String): Payment!
   rejectPayment(id: ID!, adminNote: String): Payment!
   updatePaymentStatus(id: ID!, status: PaymentStatus!, adminNote: String): Payment!
@@ -533,6 +539,13 @@ input CreatePaymentInput {
   transactionId: String
   screenshotUrl: String!
   screenshotPublicId: String!
+}
+
+input ResubmitPaymentInput {
+  enrollmentId: String!
+  screenshotUrl: String!
+  screenshotPublicId: String!
+  transactionId: String
 }
 
 input UpdatePaymentInput {

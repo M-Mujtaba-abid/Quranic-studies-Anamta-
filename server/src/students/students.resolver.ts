@@ -7,19 +7,12 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Role } from '@prisma/client';
 import { Enrollment } from '../enrollments/models/enrollment.model';
 
 @Resolver(() => Student)
 export class StudentsResolver {
   constructor(private readonly studentsService: StudentsService) {}
-
-  @Query(() => Student, { name: 'myStudentProfile' })
-  @UseGuards(JwtAuthGuard)
-  async myStudentProfile(@CurrentUser() user: any) {
-    return await this.studentsService.findOneByEmail(user.email);
-  }
 
   @Mutation(() => Student)
   @UseGuards(JwtAuthGuard, RolesGuard)

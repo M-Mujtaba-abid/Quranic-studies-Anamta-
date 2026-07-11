@@ -15,6 +15,7 @@ import type { StudentInfoValues } from './enrollment.types';
 import { LOCAL_REGION } from '@/constants/regions';
 import { useCountrySelection } from '@/providers/CountryProvider';
 import { getCurrencySymbol } from '@/constants/countries';
+import { addMyEnrollmentId } from '@/lib/my-enrollment-ids';
 
 interface EnrollmentPanelProps {
   // Course-specific flow passes the id it already knows and the dropdown never renders.
@@ -84,9 +85,16 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
 
   const [enrollStudent, { loading: isEnrolling }] = useMutation<any, any>(ENROLL_STUDENT_MUTATION, {
     onCompleted: (res) => {
-      setEnrolledResult(res?.enrollStudent ?? null);
+      const enrollment = res?.enrollStudent ?? null;
+      setEnrolledResult(enrollment);
       setEnrollmentSuccess(true);
       toast.success('Successfully registered for the course!');
+
+      // So the navbar can show a "My Profile" shortcut and /my-enrollment can be reached
+      // with zero typing on a return visit — no account/login involved.
+      if (enrollment?.id) {
+        addMyEnrollmentId(enrollment.id);
+      }
     },
     onError: (err) => {
       console.error(err);

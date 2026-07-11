@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreatePaymentInput } from './dto/create-payment.input';
 import { UpdatePaymentInput } from './dto/update-payment.input';
+import { ResubmitPaymentInput } from './dto/resubmit-payment.input';
 import { PaymentRepository } from './repositories/payment.repository';
 import cloudinary from '../upload/cloudinary.config';
 import { ConfigService } from '@nestjs/config';
@@ -67,6 +68,7 @@ export class PaymentService {
           amount: Number(payment.amount),
           paymentMethod: payment.paymentMethod,
           transactionId: payment.transactionId,
+          enrollmentId: payment.enrollmentId,
         }
       ).catch(err => console.error('Failed to send student payment submission confirmation:', err));
 
@@ -75,6 +77,57 @@ export class PaymentService {
       await this.deleteCloudinaryImage(input.screenshotPublicId);
       throw error;
     }
+  }
+
+  // Lets a student replace the proof on a REJECTED payment and put it back into review,
+  // instead of being stuck once an admin rejects it. Public/unauthenticated — same trust
+  // model as create() above, where knowing the enrollmentId is itself the capability.
+  async resubmit(input: ResubmitPaymentInput) {
+    const enrollment = await this.repository.findEnrollmentWithDetails(input.enrollmentId);
+    if (!enrollment) {
+      await this.deleteCloudinaryImage(input.screenshotPublicId);
+      throw new NotFoundException('Enrollment not found.');
+    }
+
+    const existingPayment = await this.repository.findByEnrollmentId(input.enrollmentId);
+    if (!existingPayment) {
+      await this.deleteCloudinaryImage(input.screenshotPublicId);
+      throw new NotFoundException('No payment found for this enrollment.');
+    }
+
+    if (existingPayment.status !== 'REJECTED') {
+      await this.deleteCloudinaryImage(input.screenshotPublicId);
+      throw new BadRequestException('Only a rejected payment can be resubmitted.');
+    }
+
+    const oldPublicId = existingPayment.screenshotPublicId;
+
+    const payment = await this.repository.resubmit(existingPayment.id, {
+      screenshotUrl: input.screenshotUrl,
+      screenshotPublicId: input.screenshotPublicId,
+      transactionId: input.transactionId,
+    });
+
+    if (oldPublicId && oldPublicId !== input.screenshotPublicId) {
+      await this.deleteCloudinaryImage(oldPublicId);
+    }
+
+    // Re-notify admin — reuses the same "new payment submitted" template since a
+    // resubmission needs exactly the same review action as a first-time submission.
+    const adminEmail = this.configService.get<string>('ADMIN_EMAIL') || 'anamtainstitute@gmail.com';
+    this.mailService.sendPaymentSubmissionNotification(
+      adminEmail,
+      enrollment.student,
+      enrollment.course,
+      {
+        amount: Number(payment.amount),
+        paymentMethod: payment.paymentMethod,
+        transactionId: payment.transactionId,
+        screenshotUrl: payment.screenshotUrl,
+      }
+    ).catch(err => console.error('Failed to send admin payment resubmission notification:', err));
+
+    return payment;
   }
 
   async findAll() {

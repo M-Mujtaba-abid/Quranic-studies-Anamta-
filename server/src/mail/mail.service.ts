@@ -155,6 +155,7 @@ export class MailService implements OnModuleInit {
     student: { firstName: string; lastName: string },
     course: { title: string },
     enrollment: {
+      id: string;
       preferredHour?: number | null;
       preferredMinute?: number | null;
       preferredPeriod?: string | null;
@@ -166,6 +167,8 @@ export class MailService implements OnModuleInit {
     }
   ) {
     const sender = this.configService.get<string>('GMAIL_USER');
+    const frontendUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:3000';
+    const profileUrl = `${frontendUrl}/my-enrollment?enrollmentId=${enrollment.id}`;
     const scheduleOrPackageRows = enrollment.preferredHour != null
       ? `
               <tr>
@@ -212,7 +215,11 @@ export class MailService implements OnModuleInit {
 
           <p>Our academic administration team is reviewing your preferences and will get in touch with you shortly to finalize your schedule.</p>
           <p>If you have any questions or notice any errors in the details, please reach out to us at <a href="mailto:anamtainstitute@gmail.com">anamtainstitute@gmail.com</a>.</p>
-          
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${profileUrl}" style="background-color: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">View My Profile</a>
+          </div>
+
           <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 12px; border-top: 1px solid #eee; padding-top: 15px;">
             JazakAllahu Khairan,<br/>
             <strong>Quranic Studies Anamta Institute Team</strong>
@@ -286,9 +293,11 @@ export class MailService implements OnModuleInit {
     studentEmail: string,
     student: { firstName: string; lastName: string },
     course: { title: string },
-    payment: { amount: number; paymentMethod: string; transactionId?: string | null }
+    payment: { amount: number; paymentMethod: string; transactionId?: string | null; enrollmentId?: string }
   ) {
     const sender = this.configService.get<string>('GMAIL_USER');
+    const frontendUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:3000';
+    const profileUrl = `${frontendUrl}/my-enrollment?enrollmentId=${payment.enrollmentId}`;
     const mailOptions = {
       from: `"Anamta Institute" <${sender}>`,
       to: studentEmail,
@@ -323,7 +332,11 @@ export class MailService implements OnModuleInit {
 
           <p>Once our team verifies the transfer, your enrollment will be activated and you will receive a confirmation email. This typically takes 12-24 hours.</p>
           <p>JazakAllahu Khairan for your patience.</p>
-          
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${profileUrl}" style="background-color: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">View My Profile</a>
+          </div>
+
           <p style="margin-top: 30px; text-align: center; color: #7f8c8d; font-size: 12px; border-top: 1px solid #eee; padding-top: 15px;">
             Quranic Studies Anamta Institute Team
           </p>
@@ -391,7 +404,9 @@ export class MailService implements OnModuleInit {
     const isApproved = payment.status === 'PAID';
     const statusText = isApproved ? 'APPROVED' : 'REJECTED';
     const themeColor = isApproved ? '#2e7d32' : '#c62828';
-    const resubmitUrl = `${frontendUrl}/payment?enrollmentId=${payment.enrollmentId}`;
+    // /my-enrollment is where resubmission actually happens (guest-only /payment can't
+    // replace an already-REJECTED payment) — same page the "View My Profile" link uses.
+    const profileUrl = `${frontendUrl}/my-enrollment?enrollmentId=${payment.enrollmentId}`;
 
     const mailOptions = {
       from: `"Anamta Institute" <${sender}>`,
@@ -427,10 +442,13 @@ export class MailService implements OnModuleInit {
 
           ${isApproved ? `
           <p><strong>Your enrollment is now APPROVED and fully active!</strong> Our academic coordinator will contact you shortly with class links and login details.</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${profileUrl}" style="background-color: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">View My Profile</a>
+          </div>
           ` : `
           <p>Unfortunately, we were unable to verify your payment. Please review the note above and submit a new payment proof, or contact support at <a href="mailto:anamtainstitute@gmail.com">anamtainstitute@gmail.com</a> if you think this is a mistake.</p>
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${resubmitUrl}" style="background-color: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Resubmit Payment</a>
+            <a href="${profileUrl}" style="background-color: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">View My Profile &amp; Resubmit</a>
           </div>
           `}
 
