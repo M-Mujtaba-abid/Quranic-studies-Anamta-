@@ -25,6 +25,12 @@ model Student {
 
   isActive    Boolean  @default(true)
 
+  // Auth fields for the optional student dashboard login. Nullable — a student who
+  // never opted in during enrollment has no password and stays fully guest/email-only.
+  password         String?
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -242,6 +248,7 @@ enum TestimonialStatus {
 enum Role {
   ADMIN
   USER
+  STUDENT
 }
 
 enum EnrollmentStatus {
