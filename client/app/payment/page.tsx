@@ -53,7 +53,10 @@ function PaymentContent() {
     {
       variables: { id: enrollmentId || '' },
       skip: !enrollmentId,
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
+      // Needed so `loading` actually reflects the manual refetch() called from
+      // handleLookup below (Apollo doesn't flip loading on a bare refetch otherwise).
+      notifyOnNetworkStatusChange: true
     }
   );
 
@@ -71,13 +74,45 @@ function PaymentContent() {
   }, [enrollmentData]);
 
   // Handle Lookup Redirect
-  const handleLookup = (e: React.FormEvent) => {
+  const handleLookup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchId.trim()) {
+    const trimmedId = searchId.trim();
+    if (!trimmedId) {
       toast.warning('Please enter a valid Enrollment ID.');
       return;
     }
-    router.push(`/payment?enrollmentId=${searchId.trim()}`);
+
+    // Clear payment-form state tied to whatever enrollment is currently on screen —
+    // otherwise a screenshot/transaction ID uploaded for one enrollment could silently
+    // get submitted against a different one after switching IDs here.
+    setAmount('');
+    setTransactionId('');
+    setScreenshotUrl('');
+    setScreenshotPublicId('');
+
+    router.push(`/payment?enrollmentId=${trimmedId}`);
+
+    // The very first lookup (no enrollmentId in the URL yet) is driven entirely by the
+    // `skip: !enrollmentId` flag flipping false once the URL updates above — refetching a
+    // still-skipped query here would be a no-op at best. Once an enrollment is already
+    // loaded, though, the query is already mounted and unskipped, so switching to a
+    // different ID needs an explicit refetch: Apollo keeps showing the previous
+    // enrollment's data across a passive variables change, which is exactly why this
+    // "Load"/"Look Up ID" action could look like it does nothing.
+    if (enrollmentId) {
+      try {
+        const result = await refetchEnrollment({ id: trimmedId });
+        if (!result.data?.publicEnrollment) {
+          toast.error('Enrollment not found', {
+            description: 'Please check the ID and try again.',
+          });
+        }
+      } catch (err: any) {
+        toast.error('Enrollment not found', {
+          description: err.message || 'Please check the ID and try again.',
+        });
+      }
+    }
   };
 
   // Copy Clipboard Helper
@@ -186,7 +221,11 @@ function PaymentContent() {
     }
   };
 
-  const enrollment = enrollmentData?.publicEnrollment;
+  // Guard against Apollo momentarily (or, on a failed refetch, indefinitely) holding onto
+  // the previous enrollment's data after enrollmentId has already changed — without this,
+  // switching IDs via the lookup forms below could keep rendering stale enrollment details.
+  const rawEnrollment = enrollmentData?.publicEnrollment;
+  const enrollment = rawEnrollment && rawEnrollment.id === enrollmentId ? rawEnrollment : null;
   const paymentSetting = settingsData?.activePaymentSetting;
 
   return (
