@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { CreateCourseInput } from '../dto/create-course.input';
 import { UpdateCourseInput } from '../dto/update.course.input';
+import { CourseSortOrderInput } from '../dto/reorder-courses.input';
 import { Course, CoursePackage, Region, Prisma } from '@prisma/client';
 
 type CourseWithPackages = Prisma.CourseGetPayload<{ include: { packages: true } }>;
@@ -49,9 +50,9 @@ export class CourseRepository {
 
   async findAll(): Promise<CourseWithPackages[]> {
     return await this.database.course.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
+      // sortOrder drives manual admin ordering; createdAt is only a tiebreaker for
+      // rows that share a sortOrder (e.g. legacy rows before backfill/reordering).
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       include: { packages: true },
     });
   }
@@ -81,6 +82,18 @@ export class CourseRepository {
       },
       include: { packages: true },
     });
+  }
+
+  async reorder(items: CourseSortOrderInput[]): Promise<CourseWithPackages[]> {
+    return await this.database.$transaction(
+      items.map((item) =>
+        this.database.course.update({
+          where: { id: item.id },
+          data: { sortOrder: item.sortOrder },
+          include: { packages: true },
+        }),
+      ),
+    );
   }
 
   async delete(id: string): Promise<Course> {

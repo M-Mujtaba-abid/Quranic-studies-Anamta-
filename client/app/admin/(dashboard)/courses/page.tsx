@@ -1,35 +1,71 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { toast } from 'sonner';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates,
+  arrayMove,
+} from '@dnd-kit/sortable';
 import {
   GET_ALL_COURSES,
   CREATE_COURSE_MUTATION,
   UPDATE_COURSE_MUTATION,
   DELETE_COURSE_MUTATION,
+  REORDER_COURSES_MUTATION,
 } from '@/graphql';
 import { showErrorToast } from '@/lib/toast-error';
 import { Button } from '@/components/ui/Button';
 import { CourseForm } from '@/components/admin/courses/CourseForm';
+import { SortableCourseRow } from '@/components/admin/courses/SortableCourseRow';
 import type { CourseSubmitInput } from '@/components/admin/courses/CourseForm.types';
-import { LOCAL_REGION } from '@/constants/regions';
 import {
   Plus,
-  Edit,
-  Trash2,
   RefreshCw,
   BookOpen,
   X,
-  Image as ImageIcon,
 } from 'lucide-react';
-import Image from 'next/image';
-import TiptapEditor from '@/lib/TiptapEditor';
+
+// Reordering is scoped per category, so courses are grouped into tabs rather
+// than one flat list — dragging only ever reorders within the active tab.
+const CATEGORY_TABS = [
+  { value: 'ONE_ON_ONE', label: 'One-on-One' },
+  { value: 'GROUP', label: 'Group' },
+] as const;
+
+type CategoryValue = (typeof CATEGORY_TABS)[number]['value'];
+
 export default function AdminCoursesPage() {
   // Query all courses
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES, {
     fetchPolicy: 'network-only',
   });
+
+  // Local copy of courses so drag-and-drop can reorder instantly, ahead of the mutation response
+  const [localCourses, setLocalCourses] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<CategoryValue>('ONE_ON_ONE');
+
+  useEffect(() => {
+    if (data?.courses) {
+      setLocalCourses(data.courses);
+    }
+  }, [data]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,6 +105,17 @@ export default function AdminCoursesPage() {
     }
   });
 
+  const [reorderCourses] = useMutation<any, any>(REORDER_COURSES_MUTATION, {
+    onCompleted: () => {
+      toast.success('Course order updated');
+    },
+    onError: (err) => {
+      showErrorToast('Failed to update course order', err);
+      // Local order is now out of sync with the server — pull the last-saved order back.
+      refetch();
+    },
+  });
+
   // Modal actions
   const openAddModal = () => {
     setActiveCourse(null);
@@ -104,6 +151,37 @@ export default function AdminCoursesPage() {
     if (confirm(`Are you sure you want to delete the course "${title}"?`)) {
       await deleteCourse({ variables: { id } });
     }
+  };
+
+  // Drag-and-drop reorder — scoped to whichever category tab is active
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const categoryItems = localCourses
+      .filter((c: any) => c.category === activeTab)
+      .sort((a: any, b: any) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+
+    const oldIndex = categoryItems.findIndex((c: any) => c.id === active.id);
+    const newIndex = categoryItems.findIndex((c: any) => c.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reordered = arrayMove(categoryItems, oldIndex, newIndex).map((course: any, index: number) => ({
+      ...course,
+      sortOrder: index,
+    }));
+
+    const reorderedIds = new Set(reordered.map((c: any) => c.id));
+    const otherCourses = localCourses.filter((c: any) => !reorderedIds.has(c.id));
+    setLocalCourses([...otherCourses, ...reordered]);
+
+    reorderCourses({
+      variables: {
+        input: {
+          items: reordered.map((c: any) => ({ id: c.id, sortOrder: c.sortOrder })),
+        },
+      },
+    });
   };
 
   // Form Submission (packages array stripped of `region`-derived currency is left intact —
@@ -176,8 +254,10 @@ export default function AdminCoursesPage() {
     );
   }
 
-  const courses = data?.courses || [];
-  console.log("courses me ye arha he ", courses)
+  const courses = localCourses;
+  const activeCourses = courses
+    .filter((course: any) => course.category === activeTab)
+    .sort((a: any, b: any) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 
   return (
     <div className="space-y-6 pb-12 relative min-h-[80vh]">
@@ -186,7 +266,7 @@ export default function AdminCoursesPage() {
         <div>
           <h2 className="text-2xl font-bold font-display tracking-tight text-text">Course Management</h2>
           <p className="text-sm text-text-secondary mt-1">
-            Create, modify, toggle active status, and manage regional pricing of Quranic studies programs.
+            Create, modify, toggle active status, reorder, and manage regional pricing of Quranic studies programs.
           </p>
         </div>
         <div className="flex gap-2">
@@ -197,116 +277,71 @@ export default function AdminCoursesPage() {
         </div>
       </div>
 
-      {/* Courses List Table */}
-      <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto scrollbar-hide">
-          {courses.length === 0 ? (
-            <div className="py-20 text-center text-text-secondary">
-              <BookOpen size={48} className="mx-auto text-text-secondary/35 mb-4" />
-              <p className="font-semibold">No courses created yet.</p>
-              <p className="text-xs text-text-secondary mt-1">Get started by clicking the "Add Course" button above.</p>
-            </div>
-          ) : (
-            <table className="w-full text-left text-sm border-collapse">
-              <thead>
-                <tr className="bg-surface-light/45 text-text-secondary font-medium border-b border-border">
-                  <th className="p-4 pl-6">Thumbnail</th>
-                  <th className="p-4">Title & Description</th>
-                  <th className="p-4">Class Type</th>
-                  <th className="p-4">Local Price (PKR)</th>
-                  <th className="p-4">Regions Priced</th>
-                  <th className="p-4 text-center">Status</th>
-                  <th className="p-4 pr-6 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {courses.map((course: any) => {
-                  const packages = course.packages || [];
-                  const localPackage = packages.find((pkg: any) => pkg.region === LOCAL_REGION);
-                  const internationalRegionCount = new Set(
-                    packages.filter((pkg: any) => pkg.region !== LOCAL_REGION).map((pkg: any) => pkg.region)
-                  ).size;
-
-                  return (
-                    <tr key={course.id} className="hover:bg-surface-light/45 transition-colors">
-                      <td className="p-4 pl-6">
-                        <div className="relative h-12 w-20 rounded-lg overflow-hidden bg-bg border border-border">
-                          {course.imageUrl ? (
-                            <Image
-                              src={course.imageUrl}
-                              alt={course.title}
-                              fill
-                              className="object-cover"
-                              sizes="80px"
-                            />
-                          ) : (
-                            <div className="h-full w-full flex items-center justify-center text-text-secondary">
-                              <ImageIcon size={16} className="text-gold/40" />
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="p-4 max-w-sm">
-                        <div className="font-bold text-text text-sm truncate">{course.title}</div>
-                        <div className="text-xs text-text-secondary line-clamp-1 mt-0.5">
-                          {course.description?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()}
-                        </div>
-                      </td>
-                      {/* class type  */}
-                      <td className="p-4 font-bold text-gold">
-                        <span className="text-xs text-text-secondary">{course.category}</span>
-                      </td>
-                      <td className="p-4 font-bold text-gold">
-                        {localPackage ? `PKR ${localPackage.price}` : (
-                          <span className="text-text-secondary font-normal">Not set</span>
-                        )}
-                      </td>
-                      <td className="p-4 text-text-secondary">
-                        {internationalRegionCount} region{internationalRegionCount === 1 ? '' : 's'}
-                      </td>
-                      <td className="p-4 text-center">
-                        <button
-                          onClick={() => handleToggleActive(course)}
-                          className="inline-flex items-center justify-center focus:outline-none cursor-pointer text-text-secondary hover:text-gold transition-colors"
-                          title={course.isActive ? 'Deactivate course' : 'Activate course'}
-                        >
-                          {course.isActive ? (
-                            <span className="flex items-center gap-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded-full text-xs font-semibold">
-                              Active
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1 bg-red-500/10 text-red-500 border border-red-500/20 px-2 py-0.5 rounded-full text-xs font-semibold">
-                              Inactive
-                            </span>
-                          )}
-                        </button>
-                      </td>
-                      <td className="p-4 pr-6 text-right">
-                        <div className="flex justify-end gap-2">
-                          <button
-                            onClick={() => openEditModal(course)}
-                            className="h-8 w-8 rounded bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/20 flex items-center justify-center transition-all cursor-pointer"
-                            title="Edit Course"
-                          >
-                            <Edit size={14} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(course.id, course.title)}
-                            className="h-8 w-8 rounded bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 flex items-center justify-center transition-all cursor-pointer"
-                            title="Delete Course"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
+      {/* Category Tabs — drag-and-drop reordering only ever applies within the active tab */}
+      <div className="flex gap-1 border-b border-border">
+        {CATEGORY_TABS.map((tab) => {
+          const count = courses.filter((course: any) => course.category === tab.value).length;
+          const isActive = activeTab === tab.value;
+          return (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => setActiveTab(tab.value)}
+              className={`px-4 py-2.5 text-sm font-semibold transition-colors border-b-2 -mb-px cursor-pointer ${isActive
+                ? 'border-gold text-gold'
+                : 'border-transparent text-text-secondary hover:text-text'
+                }`}
+            >
+              {tab.label} <span className="text-xs opacity-70">({count})</span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* Courses List Table */}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <div className="bg-surface border border-border rounded-2xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto scrollbar-hide">
+            {activeCourses.length === 0 ? (
+              <div className="py-20 text-center text-text-secondary">
+                <BookOpen size={48} className="mx-auto text-text-secondary/35 mb-4" />
+                <p className="font-semibold">No courses in this category yet.</p>
+                <p className="text-xs text-text-secondary mt-1">Get started by clicking the "Add Course" button above.</p>
+              </div>
+            ) : (
+              <table className="w-full text-left text-sm border-collapse">
+                <thead>
+                  <tr className="bg-surface-light/45 text-text-secondary font-medium border-b border-border">
+                    <th className="p-4 pl-6 w-10"></th>
+                    <th className="p-4">Thumbnail</th>
+                    <th className="p-4">Title & Description</th>
+                    <th className="p-4">Local Price (PKR)</th>
+                    <th className="p-4">Regions Priced</th>
+                    <th className="p-4 text-center">Status</th>
+                    <th className="p-4 pr-6 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <SortableContext
+                  items={activeCourses.map((course: any) => course.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <tbody className="divide-y divide-border">
+                    {activeCourses.map((course: any) => (
+                      <SortableCourseRow
+                        key={course.id}
+                        course={course}
+                        onEdit={openEditModal}
+                        onDelete={handleDelete}
+                        onToggleActive={handleToggleActive}
+                      />
+                    ))}
+                  </tbody>
+                </SortableContext>
+              </table>
+            )}
+          </div>
+        </div>
+      </DndContext>
 
       <CourseForm
         isOpen={isModalOpen}
