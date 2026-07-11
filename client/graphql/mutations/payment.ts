@@ -37,3 +37,12 @@ export const CREATE_PAYMENT_MUTATION = gql`
   ${PAYMENT_FIELDS}
 `;
 
+export const RESUBMIT_PAYMENT_MUTATION = gql`
+  mutation ResubmitPayment($input: ResubmitPaymentInput!) {
+    resubmitPayment(input: $input) {
+      ...PaymentFields
+    }
+  }
+  ${PAYMENT_FIELDS}
+`;
+
