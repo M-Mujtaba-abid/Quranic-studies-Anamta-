@@ -334,7 +334,7 @@ export default function AdminStudentsPage() {
                               </>
                             ) : (
                               <span className="flex items-center gap-1">
-                                {enrollment.packageTier && enrollment.packageTier !== 'NONE' ? `${enrollment.packageTier} package` : 'International enrollment'}
+                                {enrollment.packageTier && enrollment.packageTier !== 'NONE' ? `${enrollment.packageTier} package` : 'Group class pak Student'}
                               </span>
                             )}
                           </div>

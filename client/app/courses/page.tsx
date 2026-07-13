@@ -257,7 +257,7 @@ function CoursesDirectoryContent() {
                         const prefix = country.region === LOCAL_REGION ? '' : 'From ';
                         return (
                           <span className="text-sm font-bold text-gold">
-                            {/* {prefix}{getCurrencySymbol(displayPackage.currency)} {displayPackage.price} */}
+                            {prefix}{getCurrencySymbol(displayPackage.currency)} {displayPackage.price}
                           </span>
                         );
                       })()}

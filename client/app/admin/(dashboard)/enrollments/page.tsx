@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client/react';
-import { 
-  GET_ALL_ENROLLMENTS, 
-  UPDATE_ENROLLMENT_MUTATION, 
-  DELETE_ENROLLMENT_MUTATION 
+import {
+  GET_ALL_ENROLLMENTS,
+  UPDATE_ENROLLMENT_MUTATION,
+  DELETE_ENROLLMENT_MUTATION
 } from '@/graphql';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -33,7 +33,7 @@ export default function AdminEnrollmentsPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
-  
+
   // Edit Modal States
   const [editingEnrollment, setEditingEnrollment] = useState<any>(null);
   const [editForm, setEditForm] = useState({
@@ -73,7 +73,7 @@ export default function AdminEnrollmentsPage() {
     const studentName = `${enrollment.student?.firstName} ${enrollment.student?.lastName}`.toLowerCase();
     const courseTitle = enrollment.course?.title.toLowerCase();
     const matchesSearch = studentName.includes(searchTerm.toLowerCase()) || courseTitle.includes(searchTerm.toLowerCase());
-    
+
     if (statusFilter === 'ALL') return matchesSearch;
     return matchesSearch && enrollment.status === statusFilter;
   });
@@ -152,16 +152,16 @@ export default function AdminEnrollmentsPage() {
 
   return (
     <div className="space-y-6">
-      
+
       {/* Title Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border/40 pb-4">
         <div>
           <h1 className="text-2xl font-bold font-display tracking-tight text-text">Enrollments</h1>
           <p className="text-xs text-text-secondary">Approve trial enrollments, edit class schedules, and review student applications.</p>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => refetch()}
           leftIcon={<RefreshCw size={14} className={loading ? 'animate-spin' : ''} />}
         >
@@ -179,18 +179,17 @@ export default function AdminEnrollmentsPage() {
             leftIcon={<Search size={16} />}
           />
         </div>
-        
+
         {/* Status Filters */}
         <div className="flex flex-wrap gap-1.5 bg-surface/50 border border-border p-1 rounded-xl">
           {['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'COMPLETED'].map((status) => (
             <button
               key={status}
               onClick={() => setStatusFilter(status)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                statusFilter === status 
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${statusFilter === status
                   ? 'bg-gold text-primary-dark shadow-sm'
                   : 'text-text-secondary hover:text-text'
-              }`}
+                }`}
             >
               {status}
             </button>
@@ -274,7 +273,7 @@ export default function AdminEnrollmentsPage() {
                           <div className="flex items-center gap-1">
                             <DollarSign size={11} className="text-gold shrink-0" />
                             <span>
-                              {enrollment.packageTier && enrollment.packageTier !== 'NONE' ? `${enrollment.packageTier}` : 'International'}
+                              {enrollment.packageTier && enrollment.packageTier !== 'NONE' ? `${enrollment.packageTier}` : 'Group class Pak Student'}
                               {enrollment.enrollmentType === 'FREE_TRIAL' ? ' (Free Trial)' : ''}
                             </span>
                           </div>
@@ -282,13 +281,12 @@ export default function AdminEnrollmentsPage() {
                       </td>
                       <td className="py-3.5 px-4">
                         {enrollment.payment ? (
-                          <span className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded font-semibold text-[9px] ${
-                            enrollment.payment.status === 'PAID'
+                          <span className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded font-semibold text-[9px] ${enrollment.payment.status === 'PAID'
                               ? 'bg-emerald-500/10 border border-emerald-500/25 text-emerald-500'
                               : enrollment.payment.status === 'UNDER_REVIEW'
-                              ? 'bg-yellow-500/10 border border-yellow-500/25 text-yellow-500 animate-pulse'
-                              : 'bg-red-500/10 border border-red-500/25 text-red-500'
-                          }`}>
+                                ? 'bg-yellow-500/10 border border-yellow-500/25 text-yellow-500 animate-pulse'
+                                : 'bg-red-500/10 border border-red-500/25 text-red-500'
+                            }`}>
                             <DollarSign size={8} /> {enrollment.payment.status}
                           </span>
                         ) : (
@@ -334,11 +332,11 @@ export default function AdminEnrollmentsPage() {
       {editingEnrollment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-surface border border-border w-full max-w-md rounded-2xl overflow-hidden shadow-2xl animate-fade-in">
-            
+
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-bg/50">
               <h3 className="text-sm font-bold font-display text-text">Edit Enrollment Details</h3>
-              <button 
+              <button
                 onClick={() => setEditingEnrollment(null)}
                 className="p-1 rounded-lg border border-border/80 text-text-secondary hover:text-text transition-all cursor-pointer"
               >
@@ -348,7 +346,7 @@ export default function AdminEnrollmentsPage() {
 
             {/* Modal Form */}
             <form onSubmit={handleEditSubmit} className="p-6 space-y-4 text-xs">
-              
+
               {/* Enrollment Brief */}
               <div className="bg-bg/40 border border-border/40 p-3 rounded-lg space-y-1">
                 <p className="text-text-secondary"><span className="text-text font-medium">Student:</span> {editingEnrollment.student?.firstName} {editingEnrollment.student?.lastName}</p>
@@ -422,19 +420,19 @@ export default function AdminEnrollmentsPage() {
               )}
 
               <div className="flex justify-end gap-2 pt-4 border-t border-border mt-6">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => setEditingEnrollment(null)}
                   disabled={updating}
                 >
                   Cancel
                 </Button>
-                <Button 
-                  type="submit" 
-                  variant="gold" 
-                  size="sm" 
+                <Button
+                  type="submit"
+                  variant="gold"
+                  size="sm"
                   isLoading={updating}
                 >
                   Save Changes
