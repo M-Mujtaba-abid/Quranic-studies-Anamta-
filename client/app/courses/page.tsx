@@ -163,14 +163,31 @@ function CoursesDirectoryContent() {
           </div>
 
           {activeCategory !== 'GROUP' && (
-            <button
-              type="button"
-              onClick={() => openCountryModal('ONE_ON_ONE')}
-              className="flex items-center gap-1.5 text-xs font-semibold text-text bg-bg border border-border hover:border-gold hover:text-gold hover:bg-gold/5 transition-colors sm:ml-auto shrink-0 px-3.5 py-2 rounded-full shadow-sm"
-            >
-              <Globe2 size={14} className="text-gold" />
-              {country ? `Pricing shown for ${country.name} — change` : 'Select your country'}
-            </button>
+            <div className="flex items-center justify-center gap-2 w-full sm:w-auto sm:ml-auto shrink-0">
+              <Globe2 size={14} className="text-gold shrink-0" />
+              {country ? (
+                <>
+                  <span className="text-xs text-text-secondary">
+                    Pricing shown for <span className="font-semibold text-text">{country.name}</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => openCountryModal('ONE_ON_ONE')}
+                    className="text-xs font-semibold text-gold bg-gold/10 border border-gold/30 hover:bg-gold/20 hover:border-gold transition-colors px-3 py-1.5 rounded-full shadow-sm shrink-0"
+                  >
+                    change
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => openCountryModal('ONE_ON_ONE')}
+                  className="text-xs font-semibold text-gold bg-gold/10 border border-gold/30 hover:bg-gold/20 hover:border-gold transition-colors px-4 py-2 rounded-full shadow-sm"
+                >
+                  Select your country
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
