@@ -12,7 +12,8 @@ import { EnrollmentPanel } from '@/components/enrollment/EnrollmentPanel';
 // import { ExpandableDescription } from ''; // Path adjust kar lein
 import { ExpandableDescription } from '../../courses/ExpandableDescription'
 import { useCountrySelection } from '@/providers/CountryProvider';
-import { LOCAL_COUNTRY } from '@/constants/countries';
+import { LOCAL_COUNTRY, getCurrencySymbol } from '@/constants/countries';
+import { LOCAL_REGION, pickDisplayPackage } from '@/constants/regions';
 import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Users } from 'lucide-react';
 
 export default function CourseDetailsPage() {
@@ -138,6 +139,20 @@ export default function CourseDetailsPage() {
               {course.title}
             </span>
           </h1>
+          {(() => {
+            if (course.category !== 'GROUP') return null;
+            if (!selectedCountry) return null;
+
+            const displayPackage = pickDisplayPackage(course.packages ?? [], selectedCountry.region);
+            if (!displayPackage) return null;
+
+            const prefix = selectedCountry.region === LOCAL_REGION ? '' : 'From ';
+            return (
+              <div className="text-xl md:text-2xl font-bold text-gold">
+                {prefix}{getCurrencySymbol(displayPackage.currency)} {displayPackage.price}
+              </div>
+            );
+          })()}
         </div>
 
         {/* 3. SPLIT SECTION: Left (Description) & Right (Syllabus) */}

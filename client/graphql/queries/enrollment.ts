@@ -60,6 +60,31 @@ export const GET_ENROLLMENT_PROFILE = gql`
   ${PAYMENT_FIELDS}
 `;
 
+// Email-based, unauthenticated profile lookup for /my-enrollment — for students who never
+// opened their confirmation email and so never got an Enrollment ID.
+export const GET_ENROLLMENT_PROFILE_BY_EMAIL = gql`
+  query GetEnrollmentProfileByEmail($email: String!) {
+    enrollmentProfileByEmail(email: $email) {
+      student {
+        ...StudentFields
+      }
+      enrollments {
+        ...EnrollmentFields
+        course {
+          ...CourseFields
+        }
+        payment {
+          ...PaymentFields
+        }
+      }
+    }
+  }
+  ${STUDENT_FIELDS}
+  ${ENROLLMENT_FIELDS}
+  ${COURSE_FIELDS}
+  ${PAYMENT_FIELDS}
+`;
+
 export const GET_ALL_ENROLLMENTS = gql`
   query GetAllEnrollments {
     enrollments {
