@@ -2,14 +2,15 @@
 
 import React, { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useQuery } from '@apollo/client/react';
+import { useQuery, useLazyQuery } from '@apollo/client/react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ResubmitPaymentModal } from '@/components/student/ResubmitPaymentModal';
-import { GET_ENROLLMENT_PROFILE } from '@/graphql';
+import { GET_ENROLLMENT_PROFILE, GET_ENROLLMENT_PROFILE_BY_EMAIL } from '@/graphql';
 import { getCurrencySymbol } from '@/constants/countries';
+import { addMyEnrollmentId } from '@/lib/my-enrollment-ids';
 import {
   Search,
   FileText,
@@ -73,6 +74,8 @@ function MyEnrollmentContent() {
   // Collapsed by default once a profile has loaded — the common case is the correct
   // profile showing up automatically, so the lookup box shouldn't compete for attention.
   const [showLookupBox, setShowLookupBox] = useState(false);
+  const [lookupMode, setLookupMode] = useState<'id' | 'email'>('id');
+  const [searchEmail, setSearchEmail] = useState('');
 
   const { data, loading, error, refetch } = useQuery<any>(GET_ENROLLMENT_PROFILE, {
     variables: { enrollmentId: enrollmentId || '' },
@@ -80,6 +83,10 @@ function MyEnrollmentContent() {
     fetchPolicy: 'network-only',
     // So `loading` also reflects the manual refetch() triggered from handleLookup below.
     notifyOnNetworkStatusChange: true,
+  });
+
+  const [lookupByEmail, { loading: emailLoading }] = useLazyQuery<any>(GET_ENROLLMENT_PROFILE_BY_EMAIL, {
+    fetchPolicy: 'network-only',
   });
 
   const handleLookup = async (e: React.FormEvent) => {
@@ -109,6 +116,34 @@ function MyEnrollmentContent() {
           description: err.message || 'Please check the ID and try again.',
         });
       }
+    }
+  };
+
+  const handleEmailLookup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedEmail = searchEmail.trim();
+    if (!trimmedEmail) {
+      toast.warning('Please enter the email you enrolled with.');
+      return;
+    }
+
+    try {
+      const result = await lookupByEmail({ variables: { email: trimmedEmail } });
+      const foundEnrollments = result.data?.enrollmentProfileByEmail?.enrollments ?? [];
+      if (foundEnrollments.length === 0) {
+        toast.error('Enrollment not found', {
+          description: 'No enrollment is linked to that email. Please check it and try again.',
+        });
+        return;
+      }
+
+      // Add every enrollment (not just the one seeding the URL) so the navbar reflects all of them.
+      foundEnrollments.forEach((enrollment: any) => addMyEnrollmentId(enrollment.id));
+      router.push(`/my-enrollment?enrollmentId=${foundEnrollments[0].id}`);
+    } catch (err: any) {
+      toast.error('Enrollment not found', {
+        description: err.message || 'No enrollment is linked to that email. Please check it and try again.',
+      });
     }
   };
 
@@ -146,26 +181,68 @@ function MyEnrollmentContent() {
                 <Search size={22} />
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-bold font-display text-text">Enter your Enrollment ID</h3>
+                <h3 className="text-lg font-bold font-display text-text">
+                  {lookupMode === 'id' ? 'Enter your Enrollment ID' : 'Look up by email'}
+                </h3>
                 <p className="text-xs text-text-secondary">
-                  You'll find this ID on your registration success page or in your confirmation email.
+                  {lookupMode === 'id'
+                    ? "You'll find this ID on your registration success page or in your confirmation email."
+                    : "Enter the email you enrolled with — we'll find every enrollment linked to it."}
                 </p>
               </div>
             </div>
 
-            <form onSubmit={handleLookup} className="space-y-4">
-              <Input
-                label="Enrollment ID"
-                placeholder="e.g. cld7x2v1e00003b5x5t9x4u7a"
-                value={searchId}
-                onChange={(e) => setSearchId(e.target.value)}
-                required
-                leftIcon={<FileText size={16} />}
-              />
-              <Button type="submit" variant="gold" className="w-full text-xs font-semibold py-2.5">
-                View Details <ArrowRight size={14} className="ml-2" />
-              </Button>
-            </form>
+            <div className="flex gap-1 bg-surface-light border border-border rounded-lg p-1">
+              <button
+                type="button"
+                onClick={() => setLookupMode('id')}
+                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-colors cursor-pointer ${
+                  lookupMode === 'id' ? 'bg-gold text-primary-dark' : 'text-text-secondary hover:text-text'
+                }`}
+              >
+                By Enrollment ID
+              </button>
+              <button
+                type="button"
+                onClick={() => setLookupMode('email')}
+                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-colors cursor-pointer ${
+                  lookupMode === 'email' ? 'bg-gold text-primary-dark' : 'text-text-secondary hover:text-text'
+                }`}
+              >
+                By Email
+              </button>
+            </div>
+
+            {lookupMode === 'id' ? (
+              <form onSubmit={handleLookup} className="space-y-4">
+                <Input
+                  label="Enrollment ID"
+                  placeholder="e.g. cld7x2v1e00003b5x5t9x4u7a"
+                  value={searchId}
+                  onChange={(e) => setSearchId(e.target.value)}
+                  required
+                  leftIcon={<FileText size={16} />}
+                />
+                <Button type="submit" variant="gold" className="w-full text-xs font-semibold py-2.5">
+                  View Details <ArrowRight size={14} className="ml-2" />
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleEmailLookup} className="space-y-4">
+                <Input
+                  label="Email Address"
+                  type="email"
+                  placeholder="e.g. student@example.com"
+                  value={searchEmail}
+                  onChange={(e) => setSearchEmail(e.target.value)}
+                  required
+                  leftIcon={<Mail size={16} />}
+                />
+                <Button type="submit" variant="gold" className="w-full text-xs font-semibold py-2.5" disabled={emailLoading}>
+                  {emailLoading ? 'Searching...' : <>Find My Enrollment <ArrowRight size={14} className="ml-2" /></>}
+                </Button>
+              </form>
+            )}
           </div>
         )}
 

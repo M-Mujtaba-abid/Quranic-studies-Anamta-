@@ -299,9 +299,9 @@ export function EnrollmentPanel({ presetCourseId }: EnrollmentPanelProps) {
             <button
               type="button"
               onClick={() => openCountryModal(enrollmentMode)}
-              className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-gold transition-colors"
+              className="flex items-center gap-1.5 text-xs font-semibold text-text bg-bg border border-border hover:border-gold hover:text-gold hover:bg-gold/5 transition-colors px-3.5 py-2 rounded-full shadow-sm"
             >
-              <Globe2 size={12} />
+              <Globe2 size={12} className="text-gold" />
               <span>{selectedCountry.name} — change country</span>
             </button>
           )}

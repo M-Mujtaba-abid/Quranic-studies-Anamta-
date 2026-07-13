@@ -24,7 +24,7 @@ function CoursesDirectoryContent() {
   };
 
   // const { country, openCountryModal, openGroupAlertModal } = useCountrySelection();
-  const { country, setCountry, openCountryModal,openGroupAlertModal } = useCountrySelection();
+  const { country, setCountry, openCountryModal, openGroupAlertModal } = useCountrySelection();
 
   const { data, loading, error, refetch } = useQuery<any>(GET_ALL_COURSES_WITH_PRICING, {
     variables: { country: country?.name },
@@ -166,7 +166,7 @@ function CoursesDirectoryContent() {
             <button
               type="button"
               onClick={() => openCountryModal('ONE_ON_ONE')}
-              className="flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-gold transition-colors sm:ml-auto shrink-0"
+              className="flex items-center gap-1.5 text-xs font-semibold text-text bg-bg border border-border hover:border-gold hover:text-gold hover:bg-gold/5 transition-colors sm:ml-auto shrink-0 px-3.5 py-2 rounded-full shadow-sm"
             >
               <Globe2 size={14} className="text-gold" />
               {country ? `Pricing shown for ${country.name} — change` : 'Select your country'}
@@ -239,7 +239,7 @@ function CoursesDirectoryContent() {
                         const prefix = country.region === LOCAL_REGION ? '' : 'From ';
                         return (
                           <span className="text-sm font-bold text-gold">
-                            {prefix}{getCurrencySymbol(displayPackage.currency)} {displayPackage.price}
+                            {/* {prefix}{getCurrencySymbol(displayPackage.currency)} {displayPackage.price} */}
                           </span>
                         );
                       })()}

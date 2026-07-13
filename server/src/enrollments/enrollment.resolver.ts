@@ -1,5 +1,5 @@
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Enrollment } from './models/enrollment.model';
 import { EnrollmentProfile } from './models/enrollment-profile.model';
 import { EnrollmentService } from './enrollment.service';
@@ -56,6 +56,18 @@ export class EnrollmentResolver {
   ) {
     const enrollment = await this.enrollmentService.findOne(enrollmentId);
     const student = await this.studentsService.findOne(enrollment.studentId);
+    const enrollments = await this.studentsService.findEnrollments(student.id);
+    return { student, enrollments };
+  }
+
+  // --- Public Query (email-based /my-enrollment lookup — for students who never opened
+  // their confirmation email and so never got an Enrollment ID) ---
+  @Query(() => EnrollmentProfile, { name: 'enrollmentProfileByEmail' })
+  async getEnrollmentProfileByEmail(@Args('email') email: string) {
+    const student = await this.studentsService.findOneByEmail(email);
+    if (!student) {
+      throw new NotFoundException('No enrollment found for this email.');
+    }
     const enrollments = await this.studentsService.findEnrollments(student.id);
     return { student, enrollments };
   }

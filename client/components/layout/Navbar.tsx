@@ -6,7 +6,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, UserCircle } from "lucide-react";
 import { useCountrySelection } from "@/providers/CountryProvider";
-import { getMyEnrollmentIds } from "@/lib/my-enrollment-ids";
+import { getMyEnrollmentIds, MY_ENROLLMENT_IDS_CHANGED_EVENT } from "@/lib/my-enrollment-ids";
 
 const navLinks = [
   { label: "Courses", href: "/courses" },
@@ -32,7 +32,10 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    setMyEnrollmentIds(getMyEnrollmentIds());
+    const refresh = () => setMyEnrollmentIds(getMyEnrollmentIds());
+    refresh();
+    window.addEventListener(MY_ENROLLMENT_IDS_CHANGED_EVENT, refresh);
+    return () => window.removeEventListener(MY_ENROLLMENT_IDS_CHANGED_EVENT, refresh);
   }, []);
 
   const latestEnrollmentId = myEnrollmentIds[myEnrollmentIds.length - 1];
@@ -121,17 +124,6 @@ export default function Navbar() {
             <Search size={16} strokeWidth={2.5} />
           </button> */}
 
-          {latestEnrollmentId && (
-            <Link
-              href={`/my-enrollment?enrollmentId=${latestEnrollmentId}`}
-              aria-label="My Enrollment Profile"
-              title="My Enrollment Profile"
-              className="p-2 text-text-secondary transition-colors duration-200 hover:text-gold"
-            >
-              <UserCircle size={20} strokeWidth={2} />
-            </Link>
-          )}
-
           <Link
             href="/sponsor-a-student"
             className="rounded-xl border border-primary/60 bg-primary/5 px-5 py-2.5 font-display text-xs font-semibold text-text backdrop-blur-sm transition-all duration-300 hover:border-gold hover:text-gold"
@@ -145,6 +137,17 @@ export default function Navbar() {
           >
             Book a Free Trial Class
           </button>
+
+          {latestEnrollmentId && (
+            <Link
+              href={`/my-enrollment?enrollmentId=${latestEnrollmentId}`}
+              aria-label="My Enrollment Profile"
+              title="My Enrollment Profile"
+              className="p-2 text-text-secondary transition-colors duration-200 hover:text-gold"
+            >
+              <UserCircle size={20} strokeWidth={2} />
+            </Link>
+          )}
         </div>
 
         {/* Mobile menu toggle action */}
@@ -208,16 +211,7 @@ export default function Navbar() {
                 transition={{ duration: 0.2, delay: 0.18 }}
                 className="mt-4 flex flex-col gap-3 border-t border-primary/10 pt-4"
               >
-                {latestEnrollmentId && (
-                  <Link
-                    href={`/my-enrollment?enrollmentId=${latestEnrollmentId}`}
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-center gap-1.5 py-3 font-display text-xs font-semibold uppercase tracking-widest text-text-secondary transition-colors hover:text-gold"
-                  >
-                    <UserCircle size={14} strokeWidth={2.5} />
-                    My Profile
-                  </Link>
-                )}
+
                 <Link
                   href="/sponsor-a-student"
                   onClick={() => setOpen(false)}
@@ -234,6 +228,16 @@ export default function Navbar() {
                 >
                   Book a Free Trial Class
                 </button>
+                {latestEnrollmentId && (
+                  <Link
+                    href={`/my-enrollment?enrollmentId=${latestEnrollmentId}`}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-primary/60 bg-primary/5 py-3 text-center font-display text-xs font-semibold text-text backdrop-blur-sm"
+                  >
+                    <UserCircle size={14} strokeWidth={2.5} />
+                    My Profile
+                  </Link>
+                )}
               </motion.li>
             </motion.ul>
           </motion.div>
