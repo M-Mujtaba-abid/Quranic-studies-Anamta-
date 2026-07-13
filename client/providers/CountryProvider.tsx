@@ -8,6 +8,10 @@ import { COUNTRIES, type CountryOption, LOCAL_COUNTRY } from '@/constants/countr
 
 interface CountryContextValue {
   country: CountryOption | null;
+  // True only when the user actually picked a country via the selection modal/trial dropdown —
+  // false when `country` is just Group's Pakistan auto-default. Lets 1-on-1 flows tell the
+  // difference and re-prompt instead of silently reusing a country that was never chosen for them.
+  countryExplicitlySelected: boolean;
   setCountry: (country: CountryOption | null) => void;
   openCountryModal: (mode: 'ONE_ON_ONE' | 'GROUP', onSelected?: (country: CountryOption) => void) => void;
   openModeSelectionModal: () => void;
@@ -20,6 +24,7 @@ const CountryContext = createContext<CountryContextValue | null>(null);
 export function CountryProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [country, setCountry] = useState<CountryOption | null>(null);
+  const [countryExplicitlySelected, setCountryExplicitlySelected] = useState(false);
 
   // Modal visibility states
   const [isCountryModalOpen, setIsCountryModalOpen] = useState(false);
@@ -52,6 +57,7 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
 
   const handleCountrySelect = (selected: CountryOption) => {
     setCountry(selected);
+    setCountryExplicitlySelected(true);
     setIsCountryModalOpen(false);
     onSelectedRef.current?.(selected);
     onSelectedRef.current = undefined;
@@ -71,6 +77,9 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
 
   const proceedAsPakistanGroup = () => {
     setCountry(LOCAL_COUNTRY);
+    // Pakistan here is Group's auto-default, not something the user chose for 1-on-1 —
+    // switching back to 1-on-1 should still prompt for a real country.
+    setCountryExplicitlySelected(false);
     setIsGroupAlertOpen(false);
     router.push(`/courses?mode=GROUP`);
   };
@@ -78,6 +87,7 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
   const proceedTrial = () => {
     const selected = COUNTRIES.find((c) => c.code === trialCountryCode) || LOCAL_COUNTRY;
     setCountry(selected);
+    setCountryExplicitlySelected(true);
     setIsTrialModalOpen(false);
     router.push(`/enrollement?mode=ONE_ON_ONE&trial=true`);
   };
@@ -86,6 +96,7 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
     <CountryContext.Provider
       value={{
         country,
+        countryExplicitlySelected,
         setCountry,
         openCountryModal,
         openModeSelectionModal,
