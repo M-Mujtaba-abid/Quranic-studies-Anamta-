@@ -169,13 +169,17 @@ export default function Testimonials() {
   // Pause autoplay while the "read more" modal is open so slides don't shift underneath it
   useEffect(() => {
     const autoplay: any = emblaApi?.plugins()?.autoplay;
-    if (!autoplay) return;
-    if (activeTestimonial) {
-      autoplay.stop();
-    } else {
-      autoplay.play();
+    if (!autoplay || displayTestimonials.length <= 1) return;
+    try {
+      if (activeTestimonial) {
+        autoplay.stop();
+      } else {
+        autoplay.play();
+      }
+    } catch (error) {
+      console.warn("Failed to toggle autoplay:", error);
     }
-  }, [activeTestimonial, emblaApi]);
+  }, [activeTestimonial, emblaApi, displayTestimonials.length]);
 
   // Mutation to submit testimonial
   const [submitReview, { loading: isSubmitting }] = useMutation<any, any>(SUBMIT_TESTIMONIAL, {
