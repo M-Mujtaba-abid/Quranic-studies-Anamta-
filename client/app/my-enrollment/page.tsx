@@ -24,6 +24,8 @@ import {
   BookOpen,
   User,
   X,
+  Copy,
+  Check,
 } from 'lucide-react';
 
 // Payment status drives the primary badge shown per enrollment — it's the thing a
@@ -76,6 +78,16 @@ function MyEnrollmentContent() {
   const [showLookupBox, setShowLookupBox] = useState(false);
   const [lookupMode, setLookupMode] = useState<'id' | 'email'>('id');
   const [searchEmail, setSearchEmail] = useState('');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopy = (id: string) => {
+    navigator.clipboard.writeText(id);
+    setCopiedId(id);
+    toast.success('Enrollment ID copied successfully!');
+    setTimeout(() => {
+      setCopiedId(null);
+    }, 1000);
+  };
 
   const { data, loading, error, refetch } = useQuery<any>(GET_ENROLLMENT_PROFILE, {
     variables: { enrollmentId: enrollmentId || '' },
@@ -196,18 +208,16 @@ function MyEnrollmentContent() {
               <button
                 type="button"
                 onClick={() => setLookupMode('id')}
-                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-colors cursor-pointer ${
-                  lookupMode === 'id' ? 'bg-gold text-primary-dark' : 'text-text-secondary hover:text-text'
-                }`}
+                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-colors cursor-pointer ${lookupMode === 'id' ? 'bg-gold text-primary-dark' : 'text-text-secondary hover:text-text'
+                  }`}
               >
                 By Enrollment ID
               </button>
               <button
                 type="button"
                 onClick={() => setLookupMode('email')}
-                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-colors cursor-pointer ${
-                  lookupMode === 'email' ? 'bg-gold text-primary-dark' : 'text-text-secondary hover:text-text'
-                }`}
+                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-colors cursor-pointer ${lookupMode === 'email' ? 'bg-gold text-primary-dark' : 'text-text-secondary hover:text-text'
+                  }`}
               >
                 By Email
               </button>
@@ -355,10 +365,12 @@ function MyEnrollmentContent() {
 
             {/* Enrollments */}
             <div className="space-y-4">
-              <h3 className="text-sm font-bold font-display text-text uppercase tracking-wider">
-                My Enrollments
-              </h3>
+              <div className='flex'>
+                <h3 className="text-sm font-bold font-display text-text uppercase tracking-wider">
+                  My Enrollments
+                </h3>
 
+              </div>
               {enrollments.length === 0 ? (
                 <div className="bg-surface border border-border rounded-2xl p-12 text-center">
                   <BookOpen size={40} className="mx-auto text-text-secondary/35 mb-3" />
@@ -375,6 +387,7 @@ function MyEnrollmentContent() {
                         <div>
                           <h4 className="font-bold text-text text-sm">{enrollment.course?.title}</h4>
                           <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-text-secondary">
+                            <Link href={`/payment?enrollmentId=${enrollment.id}`} className='py-2 px-4 rounded-lg bg-gold text-white text-xs'>Monthly Fee</Link>
                             <span>{enrollment.course?.category === 'GROUP' ? 'Group Class' : '1-on-1 Class'}</span>
                             {enrollment.packageTier && enrollment.packageTier !== 'NONE' && (
                               <>
@@ -382,6 +395,7 @@ function MyEnrollmentContent() {
                                 <span>{enrollment.packageTier}</span>
                               </>
                             )}
+
                             {enrollment.appliedPrice !== null && enrollment.appliedPrice !== undefined && (
                               <>
                                 <span>&middot;</span>
@@ -395,6 +409,20 @@ function MyEnrollmentContent() {
                           </div>
                         </div>
                         <PaymentStatusBadge status={enrollment.payment?.status} />
+                        <div className="flex items-center gap-1.5 text-xs text-text-secondary">
+                          <span>ID: {enrollment.id}</span>
+                          <button
+                            onClick={() => handleCopy(enrollment.id)}
+                            className="p-1 hover:text-gold transition-colors cursor-pointer"
+                            title="Copy Enrollment ID"
+                          >
+                            {copiedId === enrollment.id ? (
+                              <Check size={12} className="text-emerald-500" />
+                            ) : (
+                              <Copy size={12} />
+                            )}
+                          </button>
+                        </div>
                       </div>
 
                       {enrollment.payment?.status === 'REJECTED' && (
