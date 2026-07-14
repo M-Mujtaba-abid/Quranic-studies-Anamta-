@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useQuery } from '@apollo/client/react';
 import Link from 'next/link';
@@ -32,18 +32,21 @@ function CoursesDirectoryContent() {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const initialized = useRef(false);
+
   useEffect(() => {
+    if (initialized.current) return;
+
+    initialized.current = true;
+
     if (activeCategory === 'GROUP') {
       if (country?.name !== 'Pakistan') {
         openGroupAlertModal();
       }
     } else if (!country || !countryExplicitlySelected) {
-      // Covers both "no country yet" and "country is just Group's Pakistan default left
-      // over from switching tabs" — either way, 1-on-1 needs the user to actually choose.
       openCountryModal('ONE_ON_ONE');
     }
-  }, [country, countryExplicitlySelected, activeCategory, openCountryModal, openGroupAlertModal]);
-
+  }, []);
   if (loading && !data) {
     return (
       <div className="min-h-screen bg-bg text-text">
