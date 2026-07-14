@@ -17,6 +17,8 @@ async function bootstrap() {
       'http://localhost:3001',
       'https://quranic-studies-anamta-1eaq.vercel.app',
       'https://quranic-studies-anamta.vercel.app'
+      'https://anamata.live',
+      'https://www.anamata.live',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
