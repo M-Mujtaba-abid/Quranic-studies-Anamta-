@@ -15,10 +15,12 @@ import { useCountrySelection } from '@/providers/CountryProvider';
 import { LOCAL_COUNTRY, getCurrencySymbol } from '@/constants/countries';
 import { LOCAL_REGION, pickDisplayPackage } from '@/constants/regions';
 import { RefreshCw, ArrowLeft, ShieldCheck, Globe2, Clock, Calendar, Award, Compass, BookOpen, CheckCircle2, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function CourseDetailsPage() {
   const params = useParams();
   const id = params.id as string;
+  const router = useRouter();
 
   const { data, loading, error } = useQuery<any>(GET_COURSE_BY_ID, {
     variables: { id },
@@ -69,11 +71,13 @@ export default function CourseDetailsPage() {
           </div>
           <h3 className="text-xl font-bold font-display">Course not found</h3>
           <p className="text-text-secondary max-w-md">{error?.message || "The course you are looking for doesn't exist."}</p>
-          <Link href="/courses">
-            <Button variant="outline" size="sm" leftIcon={<ArrowLeft size={16} />}>
-              Back to Courses
-            </Button>
-          </Link>
+
+          <Button
+            onClick={() => router.back()}
+            variant="outline" size="sm" leftIcon={<ArrowLeft size={16} />}>
+            Back to Courses
+          </Button>
+
         </div>
       </div>
     );
@@ -92,13 +96,13 @@ export default function CourseDetailsPage() {
       <div className="max-w-7xl mx-auto px-6 lg:px-10 mt-6 relative z-10 space-y-8">
 
         {/* Back Link */}
-        <Link
-          href="/courses"
+        <button
+          onClick={() => router.back()}
           className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-gold transition-all duration-300 hover:translate-x-[-4px]"
         >
           <ArrowLeft size={16} />
-          <span className="font-semibold tracking-wide font-display text-xs uppercase">Back to Courses</span>
-        </Link>
+          <span className="font-semibold tracking-wide font-display text-xs uppercase">Back to Courses </span>
+        </button>
 
         {/* 1. TOP BANNER IMAGE */}
         <div className="relative w-full h-[280px] md:h-[420px] rounded-2xl overflow-hidden bg-surface border border-gold/15 shadow-xl">
